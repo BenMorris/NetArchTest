@@ -47,7 +47,7 @@
         /// Convert the definition to a <see cref="Type"/> object instance.
         /// </summary>
         /// <param name="typeDefinition">The type definition to convert.</param>
-        /// <returns>The equivalent <see cref="Type"/> object instance.</see></returns>
+        /// <returns>The equivalent <see cref="Type"/> object instance.</returns>
         public static Type ToType(this TypeDefinition typeDefinition)
         {
             // Nested types have a forward slash that should be replaced with "+"

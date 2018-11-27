@@ -1,0 +1,921 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NetArchTest.Rules</name>
+    </assembly>
+    <members>
+        <member name="T:NetArchTest.Rules.ConditionList">
+            <summary>
+            A set of conditions and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), GetResult()) applied to them.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.ConditionList._types">
+            <summary> A list of types that conditions can be applied to. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.ConditionList._sequence">
+            <summary> The sequence of conditions that is applied to the type of list. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.ConditionList._should">
+            <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Boolean,NetArchTest.Rules.FunctionSequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.ConditionList"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.GetResult">
+            <summary>
+            Returns an indication of whether all the selected types satisfy the conditions.
+            </summary>
+            <returns>An indication of whether the conditions are true.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.Count">
+            <summary>
+            Returns the number of types that satisfy the conditions.
+            </summary>
+            <returns>A list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.GetTypes">
+            <summary>
+            Returns the list of types that satisfy the conditions.
+            </summary>
+            <returns>A list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.And">
+            <summary>
+            Specifies that any subsequent condition should be treated as an "and" condition.
+            </summary>
+            <returns>An set of conditions that can be applied to a list of classes.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.ConditionList.Or">
+            <summary>
+            Specifies that any subsequent conditions should be treated as part of an "or" condition.
+            </summary>
+            <returns>An set of conditions that can be applied to a list of classes.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Conditions">
+            <summary>
+            A set of conditions that can be applied to a list of types.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Conditions._types">
+            <summary> A list of types that conditions can be applied to. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Conditions._sequence">
+            <summary> The sequence of conditions that is applied to the type of list. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Conditions._should">
+            <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Conditions"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Boolean,NetArchTest.Rules.FunctionSequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Conditions"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveName(System.String)">
+            <summary>
+            Selects types that have a specific name.
+            </summary>
+            <param name="name">The name of the class to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveName(System.String)">
+            <summary>
+            Selects types that do not have a particular name.
+            </summary>
+            <param name="name">The name of the class to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveNameMatching(System.String)">
+            <summary>
+            Selects types according to a regular expression matching their name.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveNameMatching(System.String)">
+            <summary>
+            Selects types according to a regular expression that does not match their name.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveNameStartingWith(System.String)">
+            <summary>
+            Selects types whose names start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveNameStartingWith(System.String)">
+            <summary>
+            Selects types whose names do not start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveNameEndingWith(System.String)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveNameEndingWith(System.String)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveCustomAttribute(System.Type)">
+            <summary>
+            Selects types that implement a specific custom attribute.
+            </summary>
+            <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveCustomAttribute(System.Type)">
+            <summary>
+            Selects types that do not implement a specific custom attribute.
+            </summary>
+            <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.Inherit(System.Type)">
+            <summary>
+            Selects types that inherit a particular type.
+            </summary>
+            <param name="type">The type to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotInherit(System.Type)">
+            <summary>
+            Selects types that do not inherit a particular type.
+            </summary>
+            <param name="type">The type to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.ImplementInterface(System.Type)">
+            <summary>
+            Selects types that implement a particular interface.
+            </summary>
+            <param name="interfaceType">The interface type to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotImplementInterface(System.Type)">
+            <summary>
+            Selects types that do not implement a particular interface.
+            </summary>
+            <param name="interfaceType">The interface type to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeAbstract">
+            <summary>
+            Selects types that are marked as abstract.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeAbstract">
+            <summary>
+            Selects types that are not marked as abstract.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeClasses">
+            <summary>
+            Selects types that are classes.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeClasses">
+            <summary>
+            Selects types that are not classes.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeGeneric">
+            <summary>
+            Selects types that have generic parameters.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeGeneric">
+            <summary>
+            Selects types that do not have generic parameters.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeInterfaces">
+            <summary>
+            Selects types that are interfaces.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeInterfaces">
+            <summary>
+            Selects types that are not interfaces.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeNested">
+            <summary>
+            Selects types that are nested.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeNested">
+            <summary>
+            Selects types that are not nested.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BePublic">
+            <summary>
+            Selects types that are have public scope.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBePublic">
+            <summary>
+            Selects types that do not have public scope.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeSealed">
+            <summary>
+            Selects types according that are marked as sealed.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeSealed">
+            <summary>
+            Selects types according that are not marked as sealed.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.ResideInNamespace(System.String)">
+            <summary>
+            Selects types that reside in a particular namespace.
+            </summary>
+            <param name="name">The namespace to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotResideInNamespace(System.String)">
+            <summary>
+            Selects types that do not reside in a particular namespace.
+            </summary>
+            <param name="name">The namespace to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.String)">
+            <summary>
+            Selects types that have a dependency on a particular type.
+            </summary>
+            <param name="dependency">The dependency to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOn(System.String)">
+            <summary>
+            Selects types that do not have a dependency on a particular type.
+            </summary>
+            <param name="dependency">The dependency type to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Dependencies.DependencySearch">
+            <summary>
+            Finds dependencies within a given set of types.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesWithDependencies(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Finds types that have dependencies on a given list of type definitions.
+            </summary>
+            <param name="input">The set of type definitions to search.</param>
+            <param name="dependencies">The set of dependencies to look for.</param>
+            <returns>A list of dependencies found in the input classes.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckType(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given type by walking through the type contents.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethod(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given method by walking through the IL instructions.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckProperties(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given method by walking through the properties.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckFields(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given method by walking through the fields.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckEvents(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given method by walking through the events.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethodBody(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a given method by scanning the code.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter},NetArchTest.Rules.Dependencies.SearchDefinition@)">
+            <summary>
+            Finds matching dependencies for a set of generic parameters
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.Dependencies.SearchDefinition">
+            <summary>
+            Manages the parameters and results for a dependency search.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._found">
+            <summary> The list of dependencies that has been found in the search. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._checked">
+            <summary> The list of types that has been checked by the search. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Dependencies.SearchDefinition"/> class.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.SearchList">
+            <summary>
+            Gets the list of dependencies being searched for.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.DependenciesFound">
+            <summary>
+            Gets the list of dependency names that have been found.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.TypesFound">
+            <summary>
+            Gets the list of types that have dependencies.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.IsChecked(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Gets an indication of whether a type has been searched.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.AddToChecked(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Adds an item to the list of types that have been searched.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.AddToFound(Mono.Cecil.TypeDefinition,System.String)">
+            <summary>
+            Adds an item to the list of dependencies that have been found.
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.Extensions.TypeDefinitionExtensions">
+            <summary>
+            Extensions for the <see cref="T:Mono.Cecil.TypeDefinition"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.IsSubclassOf(Mono.Cecil.TypeDefinition,Mono.Cecil.TypeDefinition)">
+            <summary>
+            Tests whether one class inherits from another.
+            </summary>
+            <param name="child">The class that is inheriting from the parent.</param>
+            <param name="parent">The parent that is inherited.</param>
+            <returns>An indication of whether the child inherits from the parent.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.EnumerateBaseClasses(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Enumerate the base classes throughout the chain of inheritence.
+            </summary>
+            <param name="classType">The class to enumerate.</param>
+            <returns>The enumeration of base classes.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.ToType(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Convert the definition to a <see cref="T:System.Type"/> object instance.
+            </summary>
+            <param name="typeDefinition">The type definition to convert.</param>
+            <returns>The equivalent <see cref="T:System.Type"/> object instance.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Extensions.TypeExtensions">
+            <summary>
+            Extensions for the <see cref="T:System.Type"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeExtensions.ToTypeDefinition(System.Type)">
+            <summary>
+            Converts the value to a <see cref="T:Mono.Cecil.TypeDefinition"/> instance.
+            </summary>
+            <param name="type">The type to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.FunctionDelegates">
+            <summary>
+            Defines the various functions that can be applied to a collection of types.
+            </summary>
+            <remarks>
+            These are used by both predicates and conditions so warrant a common definition.
+            </remarks>
+        </member>
+        <member name="T:NetArchTest.Rules.FunctionDelegates.FunctionDelegate`1">
+            <summary> The base delegate type used by every function. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveName">
+            <summary> Function for finding a specific type name. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveNameMatching">
+            <summary> Function for matching a type name using a regular expression. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveNameStartingWith">
+            <summary> Function for matching the start of a type name. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveNameEndingWith">
+            <summary> Function for matching the end of a type name. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveCustomAttribute">
+            <summary> Function for finding classes with a particular custom attribute. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.Inherits">
+            <summary> Function for finding classes that inherit from a particular type. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.ImplementsInterface">
+            <summary> Function for finding classes that implement a particular interface. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeAbstract">
+            <summary> Function for finding abstract classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeClass">
+            <summary> Function for finding classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeInterface">
+            <summary> Function for finding interfaces. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeGeneric">
+            <summary> Function for finding types with generic parameters. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeNested">
+            <summary> Function for finding nested classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BePublic">
+            <summary> Function for finding public classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeSealed">
+            <summary> Function for finding sealed classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.ResideInNamespace">
+            <summary> Function for finding types in a particular namespace. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveDependencyOn">
+            <summary> Function for finding types that have a dependency on a specific type. </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.FunctionSequence">
+            <summary>
+            A sequence of function calls that are combined to select types.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionSequence._groups">
+            <summary> Holds the groups of function calls. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.FunctionSequence.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.FunctionSequence"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.FunctionSequence.AddFunctionCall``1(NetArchTest.Rules.FunctionDelegates.FunctionDelegate{``0},``0,System.Boolean)">
+            <summary>
+            Adds a function call to the current list.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.FunctionSequence.CreateGroup">
+            <summary>
+            Creates a new logical grouping of function calls.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.FunctionSequence.Execute(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
+            <summary>
+            Executes all the function calls that have been specified.
+            </summary>
+            <returns>A list of types that are selected by the predicates.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.FunctionSequence.FunctionCall">
+            <summary>
+            Represents a single function call.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.FunctionSequence.FunctionCall.#ctor(System.Delegate,System.Object,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.FunctionSequence.FunctionCall"/> class.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.FunctionSequence.FunctionCall.FunctionDelegate">
+            <summary>
+            A delegate for a function call.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.FunctionSequence.FunctionCall.Value">
+            <summary>
+            The input value for the function call.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.FunctionSequence.FunctionCall.Condition">
+            <summary>
+            The Condition to apply to the call - i.e. "is" or "is not".
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.PredicateList">
+            <summary>
+            A set of predicates and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), TypeDefinitions()) applied to them.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.PredicateList._types">
+            <summary> A list of types that conditions can be applied to. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.PredicateList._sequence">
+            <summary> The sequence of conditions that is applied to the type of list. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},NetArchTest.Rules.FunctionSequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.PredicateList"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.Should">
+            <summary>
+            Links a predicate defining a set of classes to a condition that tests them.
+            </summary>
+            <returns>A condition that tests classes against a given criteria.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.ShouldNot">
+            <summary>
+            Links a predicate defining a set of classes to a condition that tests them.
+            </summary>
+            <returns>A condition that tests classes against a given criteria.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.GetTypeDefinitions">
+            <summary>
+            Returns the type definitions returned by these predicate.
+            </summary>
+            <returns>A list of type definitions.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.GetTypes">
+            <summary>
+            Returns the types returned by these predicates.
+            </summary>
+            <returns>A list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.And">
+            <summary>
+            Specifies that any subsequent predicates should be treated as "and" conditions.
+            </summary>
+            <returns>An set of predicates that can be applied to a list of classes.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.PredicateList.Or">
+            <summary>
+            Specifies that any subsequent predicates should be treated as part of an "or" condition.
+            </summary>
+            <returns>An set of predicates that can be applied to a list of classes.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Predicates">
+            <summary>
+            A set of predicates that can be applied to a list of types.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Predicates._types">
+            <summary> A list of types that conditions can be applied to. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Predicates._sequence">
+            <summary> The sequence of conditions that is applied to the type of list. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Predicates"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},NetArchTest.Rules.FunctionSequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Predicates"/> class.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveName(System.String)">
+            <summary>
+            Selects types that have a specific name.
+            </summary>
+            <param name="name">The name of the class to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveName(System.String)">
+            <summary>
+            Selects types that do not have a particular name.
+            </summary>
+            <param name="name">The name of the class to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameMatching(System.String)">
+            <summary>
+            Selects types according to a regular expression matching their name.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameMatching(System.String)">
+            <summary>
+            Selects types according to a regular expression that does not match their name.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameStartingWith(System.String)">
+            <summary>
+            Selects types whose names start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameStartingWith(System.String)">
+            <summary>
+            Selects types whose names do not start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameEndingWith(System.String)">
+            <summary>
+            Selects types whose names end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameEndingWith(System.String)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveCustomAttribute(System.Type)">
+            <summary>
+            Selects types that implement a specific custom attribute.
+            </summary>
+            <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveCustomAttribute(System.Type)">
+            <summary>
+            Selects types that do not implement a specific custom attribute.
+            </summary>
+            <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.Inherit(System.Type)">
+            <summary>
+            Selects types that inherit a particular type.
+            </summary>
+            <param name="type">The type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotInherit(System.Type)">
+            <summary>
+            Selects types that do not inherit a particular type.
+            </summary>
+            <param name="type">The type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ImplementInterface(System.Type)">
+            <summary>
+            Selects types that implement a particular interface.
+            </summary>
+            <param name="interfaceType">The interface type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotImplementInterface(System.Type)">
+            <summary>
+            Selects types that do not implement a particular interface.
+            </summary>
+            <param name="interfaceType">The interface type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreAbstract">
+            <summary>
+            Selects types that are marked as abstract.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotAbstract">
+            <summary>
+            Selects types that are not marked as abstract.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreClasses">
+            <summary>
+            Selects types that are classes.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotClasses">
+            <summary>
+            Selects types that are not classes.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreGeneric">
+            <summary>
+            Selects types that have generic parameters.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotGeneric">
+            <summary>
+            Selects types that do not have generic parameters.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreInterfaces">
+            <summary>
+            Selects types that are interfaces.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotInterfaces">
+            <summary>
+            Selects types that are not interfaces.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNested">
+            <summary>
+            Selects types that are nested.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotNested">
+            <summary>
+            Selects types that are not nested.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ArePublic">
+            <summary>
+            Selects types that have public scope.
+            </summary>
+            <remarks>
+            This method will only act on types that are visible to the function. Use InternalsVisibleTo if testing from a separate assembly.
+            </remarks>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotPublic">
+            <summary>
+            Selects types that do not have public scope.
+            </summary>
+            <remarks>
+            This method will only act on types that are visible to the function. Use InternalsVisibleTo if testing from a separate assembly.
+            </remarks>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreSealed">
+            <summary>
+            Selects types according that are marked as sealed.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotSealed">
+            <summary>
+            Selects types according that are not marked as sealed.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespace(System.String)">
+            <summary>
+            Selects types that reside in a particular namespace.
+            </summary>
+            <param name="name">The namespace to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.String)">
+            <summary>
+            Selects types that do not reside in a particular namespace.
+            </summary>
+            <param name="name">The namespace to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.String)">
+            <summary>
+            Selects types that have a dependency on a particular type.
+            </summary>
+            <param name="dependency">The dependency type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveDependencyOn(System.String)">
+            <summary>
+            Selects types that do not have a dependency on a particular type.
+            </summary>
+            <param name="dependency">The dependency type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Types">
+            <summary>
+            Creates a list of types that can have predicates and conditions applied to it.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Types._types">
+            <summary> The list of types represented by this instance. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Types._exclusionList">
+            <summary> The list of namespaces to exclude from the current domain. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
+            <summary>
+            Prevents any external class initializing a new instance of the <see cref="T:NetArchTest.Rules.Types"/> class.
+            </summary>
+            <param name="types">The list of types for the instance.</param>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.InCurrentDomain">
+            <summary>
+            Creates a list of types based on all the assemblies in the current AppDomain
+            </summary>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.InAssembly(System.Reflection.Assembly)">
+            <summary>
+            Creates a list of types based on a particular assembly.
+            </summary>
+            <param name="assembly">The assembly to base the list on.</param>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.InAssemblies(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            Creates a list of types based on a list of assemblies.
+            </summary>
+            <param name="assemblies">The assemblies to base the list on.</param>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.InNamespace(System.String)">
+            <summary>
+            Creates a list of all the types in a particular namespace.
+            </summary>
+            <param name="name">The namespace to list types for. This is case insensitive.</param>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.FromFile(System.String)">
+            <summary>
+            Creates a list of all the types in a particular module file.
+            </summary>
+            <param name="filename">The filename of the module. This is case insensitive.</param>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+            <remarks>Assumes that the module is in the same directory as the executing assembly.</remarks>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.FromPath(System.String)">
+            <summary>
+            Creates a list of all the types found on a particular path.
+            </summary>
+            <param name="path">The relative path to load types from.</param>
+            <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.GetAllTypes(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
+            <summary>
+            Recursively fetch all the nested types in a collection of types.
+            </summary>
+            <returns>The expanded collection of types</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.GetTypeDefinitions">
+            <summary>
+            Returns the list of <see cref="T:Mono.Cecil.TypeDefinition"/> objects describing the types in this list.
+            </summary>
+            <returns>The list of <see cref="T:Mono.Cecil.TypeDefinition"/> objects in this list.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.GetTypes">
+            <summary>
+            Returns the list of <see cref="T:System.Type"/> objects describing the types in this list.
+            </summary>
+            <returns>The list of <see cref="T:System.Type"/> objects in this list.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.That">
+            <summary>
+            Allows a list of types to be applied to one or more filters.
+            </summary>
+            <returns>A list of types onto which you can apply a series of filters.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.Should">
+            <summary>
+            Applies a set of conditions to the list of types.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.ShouldNot">
+            <summary>
+            Applies a negative set of conditions to the list of types.
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

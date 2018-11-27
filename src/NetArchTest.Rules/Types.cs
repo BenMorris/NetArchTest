@@ -66,7 +66,7 @@
         /// <summary>
         /// Creates a list of types based on a list of assemblies.
         /// </summary>
-        /// <param name="assembly">The assemblies to base the list on.</param>
+        /// <param name="assemblies">The assemblies to base the list on.</param>
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
         public static Types InAssemblies(IEnumerable<Assembly> assemblies)
         {
