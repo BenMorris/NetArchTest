@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\NetArchTest.Rules\NetArchTest.Rules.csproj" />
+    <ProjectReference Include="..\NetArchTest.SampleLibrary\NetArchTest.SampleLibrary.csproj" />
+  </ItemGroup>
+
+</Project>
