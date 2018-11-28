@@ -41,8 +41,8 @@
         /// <summary>
         /// Executes all the function calls that have been specified.
         /// </summary>
-        /// <returns>A list of types that are selected by the predicates.</returns>
-        internal IEnumerable<TypeDefinition> Execute(IEnumerable<TypeDefinition> input)
+        /// <returns>A list of types that are selected by the predicates (or not selected if optional reversing flag is passed).</returns>
+        internal IEnumerable<TypeDefinition> Execute(IEnumerable<TypeDefinition> input, bool selected = true)
         {
             var resultSets = new List<List<TypeDefinition>>();
 
@@ -59,7 +59,7 @@
                 // Invoke the functions iteratively - functions within a group are treated as "and" statements
                 foreach (var func in group)
                 {
-                    var funcResults = func.FunctionDelegate.DynamicInvoke(results, func.Value, func.Condition) as IEnumerable<TypeDefinition>;
+                    var funcResults = func.FunctionDelegate.DynamicInvoke(results, func.Value, selected ? func.Condition : !func.Condition) as IEnumerable<TypeDefinition>;
                     results = funcResults.ToList();
                 }
 
