@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.Dependencies
+﻿using Mono.Collections.Generic;
+
+namespace NetArchTest.Rules.Dependencies
 {
     using System;
     using System.Collections.Generic;
@@ -112,6 +114,8 @@
             {
                 results.AddToFound(type, method.ReturnType.FullName);
             }
+            
+            CheckMethodParameters(type, method.Parameters, ref results);
 
             // Check for any generic parameters
             if (method.ContainsGenericParameter)
@@ -121,6 +125,31 @@
 
             // Check the contents of the method body
             CheckMethodBody(type, method, ref results);
+        }
+
+        private void CheckMethodParameters(TypeDefinition type,
+            Collection<ParameterDefinition> parameters, ref SearchDefinition results)
+        {
+            foreach (var parameter in parameters)
+            {
+                if (parameter.ParameterType is GenericInstanceType genericInstanceType)
+                {
+                    foreach (var genericArgument in genericInstanceType.GenericArguments)
+                    {
+                        if (results.SearchList.Any(m => genericArgument.FullName.StartsWith(m)))
+                        {
+                            results.AddToFound(type, genericArgument.FullName);
+                        }
+                    }
+
+                    CheckGenericParameters(type, parameter.ParameterType.GenericParameters, ref results);
+                }
+
+                if (results.SearchList.Any(m => parameter.ParameterType.FullName.StartsWith(m)))
+                {
+                    results.AddToFound(type, parameter.ParameterType.FullName);
+                }
+            }
         }
 
         /// <summary>
