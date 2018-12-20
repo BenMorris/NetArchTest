@@ -161,6 +161,10 @@ namespace NetArchTest.Rules.Dependencies
 
         private void CheckTypeReference(TypeDefinition type, TypeReference typeReference)
         {
+            if (typeReference.IsGenericParameter)
+            {
+                return;
+            }
             if (IsRefChecked(typeReference.FullName))
             {
                 return;
@@ -248,7 +252,7 @@ namespace NetArchTest.Rules.Dependencies
                     // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator. 
                     if (variable.VariableType.IsNested)
                     {
-                        CheckTypeDefinition(variable.VariableType.Resolve());
+                        CheckTypeReference(type, variable.VariableType);
                     }
                     else
                     {

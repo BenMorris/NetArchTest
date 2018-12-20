@@ -356,6 +356,17 @@
             _sequence.AddFunctionCall(FunctionDelegates.MatchNamespace, match, true);
             return new PredicateList(_types, _sequence);
         }
+        
+        /// <summary>
+        /// Selects types that reside in a particular namespace.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList FullNameMatch(Func<string, bool> match)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.FullNameMatch, match, true);
+            return new PredicateList(_types, _sequence);
+        }
 
         /// <summary>
         /// Selects types that do not reside in a particular namespace.

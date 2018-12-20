@@ -785,6 +785,13 @@
             <param name="match">The match method.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.FullNameMatch(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that reside in a particular namespace.
+            </summary>
+            <param name="match">The match method.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.String)">
             <summary>
             Selects types that do not reside in a particular namespace.
