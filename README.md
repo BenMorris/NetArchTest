@@ -1,6 +1,6 @@
 # NetArchTest
 
-[![Build status](https://dev.azure.com/ben-morris-uk/Open-Source/_apis/build/status/NetArchTest-CI-Build)](https://dev.azure.com/ben-morris-uk/Open-Source/_build/latest?definitionId=2)
+[![Build Status](https://xiaoyvr.visualstudio.com/NArchUnit/_apis/build/status/NArchUnit-CI?branchName=master)](https://xiaoyvr.visualstudio.com/NArchUnit/_build/latest?definitionId=1?branchName=master)
 
 A fluent API for .Net Standard that can enforce architectural rules in unit tests. 
 
