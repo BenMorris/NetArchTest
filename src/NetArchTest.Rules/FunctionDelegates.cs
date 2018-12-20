@@ -196,85 +196,32 @@
         };
 
         /// <summary> Function for finding public classes. </summary>
-        internal static FunctionDelegate<bool> BePublic = delegate (IList<TypeDefinition> input, bool dummy, bool condition)
+        internal static FunctionDelegate<bool> BePublic = (input, dummy, condition) =>
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsPublic);
-            }
-            else
-            {
-                return input.Where(c => c.IsNotPublic);
-            }
+            return condition ? input.Where(c => c.IsPublic) : input.Where(c => c.IsNotPublic);
         };
 
         /// <summary> Function for finding sealed classes. </summary>
-        internal static FunctionDelegate<bool> BeSealed = delegate (IList<TypeDefinition> input, bool dummmy, bool condition)
-        {
-            if (condition)
-            {
-                return input.Where(c => c.IsSealed);
-            }
-            else
-            {
-                return input.Where(c => !c.IsSealed);
-            }
-        };
+        internal static FunctionDelegate<bool> BeSealed = (input, dummmy, condition) =>
+            condition ? input.Where(c => c.IsSealed) : input.Where(c => !c.IsSealed);
 
         /// <summary> Function for finding types in a particular namespace. </summary>
-        internal static FunctionDelegate<string> ResideInNamespace = 
-            delegate (IList<TypeDefinition> input, string name, bool condition)
-        {
-            if (condition)
-            {
-                return input.Where(c => c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                return input.Where(c => !c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
-            }
-        };
+        internal static FunctionDelegate<string> ResideInNamespace =
+            (input, name, condition) =>
+                condition
+                    ? input.Where(c => c.FullName.StartsWith(name))
+                    : input.Where(c => !c.FullName.StartsWith(name));
         
-        internal static FunctionDelegate<Func<string, bool>> MatchNamespace = 
-            delegate (IList<TypeDefinition> input, Func<string, bool> match, bool condition)
-        {
-            if (condition)
-            {
-                return input.Where(c => match(c.Namespace));
-            }
-            else
-            {
-                return input.Where(c => !match(c.Namespace));
-            }
-        };
+        internal static FunctionDelegate<Func<string, bool>> MatchNamespace =
+            (input, match, condition) => condition ? input.Where(c => match(c.Namespace)) : input.Where(c => !match(c.Namespace));
 
         /// <summary> Function for finding types that have a dependency on a specific type. </summary>
-        internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOn = delegate (IList<TypeDefinition> inputs, 
-            IEnumerable<string> dependencies, bool condition)
-        {
-            Action<TypeDefinition, string, SearchResults> matchAct = (type, target, res) =>
-            {
-                foreach (var dependency in dependencies)
-                {
-                    if (target.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        res.AddToFound(type, dependency);
-                    }
-                }
-            };
-
-            // Get the types that contain the dependencies
-            var search = new DependencySearch(target => dependencies.Any(target.StartsWith));
-            var searchResults = search.FindTypesWithDependenciesMatch(inputs);
-            
-            return searchResults.GetResults(condition);
-        };
+        internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOn = (inputs, dependencies, condition) =>
+            new DependencySearch(target => dependencies.Any(target.StartsWith))
+                .FindTypesWithDependenciesMatch(inputs).GetResults(condition);
 
         internal static FunctionDelegate<Func<string, bool>> HaveMatchedDependencyOn 
-            = delegate (IList<TypeDefinition> input, Func<string, bool> match, bool condition)
-        {
-            // Get the types that contain the dependencies
-            return new DependencySearch(match).FindTypesWithDependenciesMatch(input).GetResults(condition);
-        };
+            = (input, match, condition) =>
+                new DependencySearch(match).FindTypesWithDependenciesMatch(input).GetResults(condition);
     }
 }
