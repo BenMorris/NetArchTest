@@ -17,3 +17,6 @@ steps:
     testResultsFiles: '**/*.trx'
 
 - task: PublishBuildArtifacts@1
+
+trigger:
+  - master
