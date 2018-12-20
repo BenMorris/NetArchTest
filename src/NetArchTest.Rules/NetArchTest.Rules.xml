@@ -280,6 +280,13 @@
             <param name="dependency">The dependency to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that have a dependency on a particular type.
+            </summary>
+            <param name="dependencyMatch">The dependency to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOn(System.String)">
             <summary>
             Selects types that do not have a dependency on a particular type.
@@ -287,96 +294,66 @@
             <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
-        <member name="T:NetArchTest.Rules.Dependencies.DependencySearch">
-            <summary>
-            Finds dependencies within a given set of types.
-            </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesWithDependencies(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Finds types that have dependencies on a given list of type definitions.
-            </summary>
-            <param name="input">The set of type definitions to search.</param>
-            <param name="dependencies">The set of dependencies to look for.</param>
-            <returns>A list of dependencies found in the input classes.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckType(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckTypeDefinition(Mono.Cecil.TypeDefinition)">
             <summary>
             Finds matching dependencies for a given type by walking through the type contents.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethod(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethod(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition)">
             <summary>
             Finds matching dependencies for a given method by walking through the IL instructions.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckProperties(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckProperties(Mono.Cecil.TypeDefinition)">
             <summary>
             Finds matching dependencies for a given method by walking through the properties.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckFields(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckFields(Mono.Cecil.TypeDefinition)">
             <summary>
             Finds matching dependencies for a given method by walking through the fields.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckEvents(Mono.Cecil.TypeDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckEvents(Mono.Cecil.TypeDefinition)">
             <summary>
             Finds matching dependencies for a given method by walking through the events.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethodBody(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition,NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethodBody(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition)">
             <summary>
             Finds matching dependencies for a given method by scanning the code.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter},NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter})">
             <summary>
             Finds matching dependencies for a set of generic parameters
             </summary>
         </member>
-        <member name="T:NetArchTest.Rules.Dependencies.SearchDefinition">
+        <member name="T:NetArchTest.Rules.Dependencies.SearchResults">
             <summary>
             Manages the parameters and results for a dependency search.
             </summary>
         </member>
-        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._found">
+        <member name="F:NetArchTest.Rules.Dependencies.SearchResults._found">
             <summary> The list of dependencies that has been found in the search. </summary>
         </member>
-        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._checked">
-            <summary> The list of types that has been checked by the search. </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:NetArchTest.Rules.Dependencies.SearchResults.#ctor(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
             <summary>
-            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Dependencies.SearchDefinition"/> class.
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Dependencies.SearchResults"/> class.
             </summary>
+            <param name="inputs"></param>
         </member>
-        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.SearchList">
-            <summary>
-            Gets the list of dependencies being searched for.
-            </summary>
-        </member>
-        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.DependenciesFound">
+        <member name="P:NetArchTest.Rules.Dependencies.SearchResults.DependenciesFound">
             <summary>
             Gets the list of dependency names that have been found.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.TypesFound">
+        <member name="P:NetArchTest.Rules.Dependencies.SearchResults.TypesFound">
             <summary>
             Gets the list of types that have dependencies.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.IsChecked(Mono.Cecil.TypeDefinition)">
-            <summary>
-            Gets an indication of whether a type has been searched.
-            </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.AddToChecked(Mono.Cecil.TypeDefinition)">
-            <summary>
-            Adds an item to the list of types that have been searched.
-            </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.AddToFound(Mono.Cecil.TypeDefinition,System.String)">
+        <member name="M:NetArchTest.Rules.Dependencies.SearchResults.AddToFound(Mono.Cecil.TypeDefinition,System.String)">
             <summary>
             Adds an item to the list of dependencies that have been found.
             </summary>
@@ -801,6 +778,13 @@
             <param name="name">The namespace to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespace(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that reside in a particular namespace.
+            </summary>
+            <param name="match">The match method.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.String)">
             <summary>
             Selects types that do not reside in a particular namespace.
@@ -808,11 +792,25 @@
             <param name="name">The namespace to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that do not reside in a particular namespace.
+            </summary>
+            <param name="match">The match method.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.String)">
             <summary>
             Selects types that have a dependency on a particular type.
             </summary>
             <param name="dependency">The dependency type to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that have a dependency on a particular type.
+            </summary>
+            <param name="match">The match method.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotHaveDependencyOn(System.String)">

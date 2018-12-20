@@ -366,6 +366,17 @@
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, true);
             return new ConditionList(_types, _should, _sequence);
         }
+        
+        /// <summary>
+        /// Selects types that have a dependency on a particular type.
+        /// </summary>
+        /// <param name="dependencyMatch">The dependency to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveDependencyOn(Func<string, bool> dependencyMatch)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveMatchedDependencyOn, dependencyMatch, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
 
         /// <summary>
         /// Selects types that do not have a dependency on a particular type.

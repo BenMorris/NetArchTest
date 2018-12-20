@@ -3,24 +3,26 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.0.2</Version>
-    <Authors>Ben Morris</Authors>
+    <Authors>xiaoyvr</Authors>
     <Product>NetArchTest</Product>
     <Description>A fluent API for .Net Standard that can enforce architectural rules in unit tests.</Description>
-    <Copyright>Copyright (c) 2018 Ben Morris</Copyright>
-    <PackageLicenseUrl>https://github.com/BenMorris/NetArchTest/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/BenMorris/NetArchTest</PackageProjectUrl>
-    <PackageIconUrl>https://www.ben-morris.com/wp-content/library/bm-nuget-icon.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/BenMorris/NetArchTest</RepositoryUrl>
+    <Copyright>Copyright (c) 2018 xiaoyvr</Copyright>
+    <PackageLicenseUrl>https://github.com/xiaoyvr/NetArchTest/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/xiaoyvr/NetArchTest</PackageProjectUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <RepositoryUrl>https://github.com/xiaoyvr/NetArchTest</RepositoryUrl>
     <PackageTags>test architecture dependencies archtest</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>xNetArchTest.Rules</PackageId>
+    <PackageVersion>1.0.1</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Work\NetArchTest\src\NetArchTest.Rules\NetArchTest.Rules.xml</DocumentationFile>
+    <DocumentationFile>NetArchTest.Rules.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Work\NetArchTest\src\NetArchTest.Rules\NetArchTest.Rules.xml</DocumentationFile>
+    <DocumentationFile>NetArchTest.Rules.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

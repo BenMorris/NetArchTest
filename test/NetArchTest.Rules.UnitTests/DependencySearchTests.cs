@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using Mono.Cecil;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Collections.Generic;
@@ -111,13 +113,14 @@
         private void RunDependencyTest(Type input, bool expectToFind = true)
         {
             // Arrange
-            var search = new DependencySearch();
+            var dependencies = new List<string> { typeof(ExampleDependency).FullName };
+            var search = new DependencySearch(target => dependencies.Any(target.StartsWith));
             var subject = Types
                 .InAssembly(Assembly.GetAssembly(input))
-                .That().HaveName(input.Name).GetTypeDefinitions();
+                .That().HaveName(input.Name).GetTypeDefinitions().ToArray();
 
             // Act
-            var result = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).FullName });
+            var result = search.FindTypesWithDependenciesMatch(subject).GetResults(true).ToArray();
 
             // Assert
             if (expectToFind)
@@ -127,7 +130,7 @@
             }
             else
             {
-                Assert.Equal(0, result.Count); // No dependencies found
+                Assert.Empty(result); // No dependencies found
             }
         }
     }

@@ -1,197 +1,187 @@
 ﻿using Mono.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using Mono.Cecil;
 
 namespace NetArchTest.Rules.Dependencies
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Mono.Cecil;
-  
-    /// <summary>
-    /// Finds dependencies within a given set of types.
-    /// </summary>
     internal class DependencySearch
     {
-        /// <summary>
-        /// Finds types that have dependencies on a given list of type definitions.
-        /// </summary>
-        /// <param name="input">The set of type definitions to search.</param>
-        /// <param name="dependencies">The set of dependencies to look for.</param>
-        /// <returns>A list of dependencies found in the input classes.</returns>
-        internal IReadOnlyList<TypeDefinition> FindTypesWithDependencies(IEnumerable<TypeDefinition> input, 
-            IEnumerable<string> dependencies)
+        private readonly IDictionary<string, (bool RefChecked, bool DefChecked)> _checkedTypes 
+            = new Dictionary<string, (bool, bool)>();
+        private SearchResults _results;
+
+        public DependencySearch(Func<string, bool> match)
         {
-            // Set up the search definition
-            var results = new SearchDefinition();
+            _match = match;
+        }
 
-            Action<TypeDefinition, string> matchAct = (type, target) =>
+        private void AddRefChecked(string fullName)
+        {
+            if (_checkedTypes.TryGetValue(fullName, out var result))
             {
-                foreach (var dependency in dependencies)
-                {
-                    if (target.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        results.AddToFound(type, dependency);
-                    }
-                }
-            };
+                result.RefChecked = true;
+                _checkedTypes[fullName] = result;
+            }
+            else
+            {
+                result.RefChecked = true;
+                _checkedTypes.Add(fullName, result);                
+            }
+        }
 
-            return FindTypesWithDependenciesMatch(input, matchAct, ref results);
+        private void AddDefChecked(string fullName)
+        {
+            if (_checkedTypes.TryGetValue(fullName, out var result))
+            {
+                result.DefChecked = true;
+                _checkedTypes[fullName] = result;
+            }
+            else
+            {
+                result.DefChecked = true;
+                _checkedTypes.Add(fullName, result);                
+            }
+        }
+
+        private bool IsDefChecked(string fullName)
+        {
+            _checkedTypes.TryGetValue(fullName, out var result);
+            return result.DefChecked;
         }
         
-        /// <summary>
-        /// Finds types that have dependencies on a given list of type definitions.
-        /// </summary>
-        /// <param name="input">The set of type definitions to search.</param>
-        /// <param name="dependenciesMatch">The match rule.</param>
-        /// <returns>A list of dependencies found in the input classes.</returns>
-        internal IReadOnlyList<TypeDefinition> FindTypesWithDependenciesMatch(IEnumerable<TypeDefinition> input, 
-            Func<string, bool> dependenciesMatch)
+        private bool IsRefChecked(string fullName)
         {
-            // Set up the search definition
-            var results = new SearchDefinition();
-            Action<TypeDefinition, string> matchAct = (type, target) =>
-            {
-                if (dependenciesMatch(target))
-                {
-                    results.AddToFound(type, "");
-                }
-            };
-
-            return FindTypesWithDependenciesMatch(input, matchAct, ref results);
+            _checkedTypes.TryGetValue(fullName, out var result);
+            return result.RefChecked;
         }
 
-        private IReadOnlyList<TypeDefinition> FindTypesWithDependenciesMatch(IEnumerable<TypeDefinition> input, 
-            Action<TypeDefinition, string> matchAct, ref SearchDefinition results)
+        private void MatchAction(TypeDefinition type, string target)
         {
+            if (_match(target))
+            {
+                _results.AddToFound(type, target);
+            }            
+        }
+
+        private readonly Func<string, bool> _match;
+        public SearchResults FindTypesWithDependenciesMatch(IList<TypeDefinition> inputs)
+        {
+            _results = new SearchResults(inputs);
             // Check each type in turn
-            foreach (var type in input)
+            foreach (var type in inputs)
             {
-                CheckType(type, results, matchAct);
-            }
-
-            var output = new List<TypeDefinition>();
-
-            foreach (var found in results.TypesFound)
-            {
-                // NB: Nested classes won't be picked up here
-                var match = input.FirstOrDefault(d => d.FullName.Equals(found, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null)
-                {
-                    output.Add(match);
-                }
-            }
-
-            return output;
+                CheckTypeDefinition(type);
+            }            
+            return _results;
         }
-
 
         /// <summary>
         /// Finds matching dependencies for a given type by walking through the type contents.
         /// </summary>
-        private void CheckType(TypeDefinition type, SearchDefinition results, Action<TypeDefinition, string> matchAct)
+        private void CheckTypeDefinition(TypeDefinition type)
         {
             // Have we already checked this type?
-            if (results.IsChecked(type.FullName))
+            if (IsDefChecked(type.FullName))
             {
                 return;
             }
-
-            // Add the current type to the checked list - this prevents any circular checks
-            results.AddToChecked(type);
+            AddDefChecked(type.FullName);
 
             // Does this directly inherit from a dependency?
             if (type.BaseType != null)
             {
-                CheckTypeReference(type, matchAct, type.BaseType, results);
+                CheckTypeReference(type, type.BaseType);
             }
 
             // Check the properties
-            CheckProperties(type, matchAct);
+            CheckProperties(type);
 
             // Check the generic parameters for the type
             if (type.HasGenericParameters)
             {
-                CheckGenericParameters(type, type.GenericParameters, matchAct);
+                CheckGenericParameters(type, type.GenericParameters);
             }
 
             // Check the fields
-            CheckFields(type, matchAct);
+            CheckFields(type);
 
             // Check the events
-            CheckEvents(type, ref results, matchAct);
+            CheckEvents(type);
 
             // Check the nested types
             foreach (var nested in type.NestedTypes)
             {
-                CheckType(nested, results, matchAct);
+                CheckTypeDefinition(nested);
             }
 
             // Check each method 
             foreach (var method in type.Methods)
             {
-                CheckMethod(type, method, results, matchAct);
+                CheckMethod(type, method);
             }
         }
         
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the IL instructions.
         /// </summary>
-        private void CheckMethod(TypeDefinition type, MethodDefinition method, SearchDefinition results, 
-            Action<TypeDefinition, string> matchAct)
+        private void CheckMethod(TypeDefinition type, MethodDefinition method)
         {
             // Check the return type
             if (method.ReturnType.ContainsGenericParameter)
             {
-                CheckGenericParameters(type, method.ReturnType.GenericParameters, matchAct);
+                CheckGenericParameters(type, method.ReturnType.GenericParameters);
             }
 
-            matchAct(type, method.ReturnType.FullName);
+            MatchAction(type, method.ReturnType.FullName);
             
-            CheckMethodParameters(type, method.Parameters, matchAct, results);
+            CheckMethodParameters(type, method.Parameters);
 
             // Check for any generic parameters
             if (method.ContainsGenericParameter)
             {
-                CheckGenericParameters(type, method.GenericParameters, matchAct);
+                CheckGenericParameters(type, method.GenericParameters);
             }
 
             // Check the contents of the method body
-            CheckMethodBody(type, method, ref results, matchAct);
+            CheckMethodBody(type, method);
         }
 
         private void CheckMethodParameters(TypeDefinition type,
-            Collection<ParameterDefinition> parameters,
-            Action<TypeDefinition, string> matchAct, SearchDefinition results)
+            Collection<ParameterDefinition> parameters)
         {
             foreach (var parameter in parameters)
             {
-                CheckTypeReference(type, matchAct, parameter.ParameterType, results);
+                if (parameter.ParameterType != null)
+                {
+                    CheckTypeReference(type, parameter.ParameterType);    
+                }
             }
         }
 
-        private static void CheckTypeReference(TypeDefinition type, Action<TypeDefinition, string> matchAct, 
-            TypeReference typeReference, SearchDefinition results)
+        private void CheckTypeReference(TypeDefinition type, TypeReference typeReference)
         {
-            if (results.IsChecked(typeReference?.FullName))
+            if (IsRefChecked(typeReference.FullName))
             {
                 return;
             }
+            AddRefChecked(typeReference.FullName);
 
             if (typeReference is GenericInstanceType genericInstanceType)
             {
                 foreach (var genericArgument in genericInstanceType.GenericArguments)
                 {
-                    matchAct(type, genericArgument.FullName);
+                    MatchAction(type, genericArgument.FullName);
                 }
-                CheckGenericParameters(type, typeReference.GenericParameters, matchAct);
+                CheckGenericParameters(type, typeReference.GenericParameters);
             }
-            matchAct(type, typeReference.FullName);
+            MatchAction(type, typeReference.FullName);
         }
 
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the properties.
         /// </summary>
-        private void CheckProperties(TypeDefinition type, Action<TypeDefinition, string> matchAct)
+        private void CheckProperties(TypeDefinition type)
         {
             if (type.HasProperties)
             {
@@ -200,9 +190,9 @@ namespace NetArchTest.Rules.Dependencies
                     // The property could be a generic property
                     if (property.ContainsGenericParameter)
                     {
-                        CheckGenericParameters(type, property.PropertyType.GenericParameters, matchAct);
+                        CheckGenericParameters(type, property.PropertyType.GenericParameters);
                     }
-                    matchAct(type, property.PropertyType.FullName);
+                    MatchAction(type, property.PropertyType.FullName);
                 }
             }
         }
@@ -210,8 +200,7 @@ namespace NetArchTest.Rules.Dependencies
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the fields.
         /// </summary>
-        private void CheckFields(TypeDefinition type,
-            Action<TypeDefinition, string> matchAct)
+        private void CheckFields(TypeDefinition type)
         {
             if (type.HasFields)
             {
@@ -220,9 +209,9 @@ namespace NetArchTest.Rules.Dependencies
                     // The field could be a generic property
                     if (field.ContainsGenericParameter)
                     {
-                        CheckGenericParameters(type, field.FieldType.GenericParameters, matchAct);
+                        CheckGenericParameters(type, field.FieldType.GenericParameters);
                     }
-                    matchAct(type, field.FieldType.FullName); 
+                    MatchAction(type, field.FieldType.FullName); 
                 }
             }
         }
@@ -230,7 +219,7 @@ namespace NetArchTest.Rules.Dependencies
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the events.
         /// </summary>
-        private void CheckEvents(TypeDefinition type, ref SearchDefinition results, Action<TypeDefinition, string> matchAct)
+        private void CheckEvents(TypeDefinition type)
         {
             if (type.HasEvents)
             {
@@ -240,7 +229,7 @@ namespace NetArchTest.Rules.Dependencies
                     {
                         foreach (var method in eventDef.OtherMethods)
                         {
-                            CheckMethod(type, method, results, matchAct);
+                            CheckMethod(type, method);
                         }
                     }
                 }
@@ -250,8 +239,7 @@ namespace NetArchTest.Rules.Dependencies
         /// <summary>
         /// Finds matching dependencies for a given method by scanning the code.
         /// </summary>
-        private void CheckMethodBody(TypeDefinition type, MethodDefinition method, ref SearchDefinition results, 
-            Action<TypeDefinition, string> matchAct)
+        private void CheckMethodBody(TypeDefinition type, MethodDefinition method)
         {
             if (method.HasBody)
             {
@@ -260,15 +248,15 @@ namespace NetArchTest.Rules.Dependencies
                     // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator. 
                     if (variable.VariableType.IsNested)
                     {
-                        CheckType(variable.VariableType.Resolve(), results, matchAct);
+                        CheckTypeDefinition(variable.VariableType.Resolve());
                     }
                     else
                     {
                         if (variable.VariableType.ContainsGenericParameter)
                         {
-                            CheckGenericParameters(type, variable.VariableType.GenericParameters, matchAct);
+                            CheckGenericParameters(type, variable.VariableType.GenericParameters);
                         }
-                        matchAct(type, variable.VariableType.FullName);
+                        MatchAction(type, variable.VariableType.FullName);
                     }
                 }
 
@@ -279,7 +267,10 @@ namespace NetArchTest.Rules.Dependencies
                     {
                         if (instruction.Operand is MemberReference mf)
                         {
-                            CheckTypeReference(type, matchAct, mf.DeclaringType, results);
+                            if (mf.DeclaringType != null)
+                            {
+                                CheckTypeReference(type, mf.DeclaringType);    
+                            }
                         }
                     }
                 }
@@ -289,11 +280,11 @@ namespace NetArchTest.Rules.Dependencies
         /// <summary>
         /// Finds matching dependencies for a set of generic parameters
         /// </summary>
-        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, Action<TypeDefinition, string> matchAct)
+        private void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters)
         {
             foreach (var generic in parameters)
             {
-                matchAct(type, generic.FullName);
+                MatchAction(type, generic.FullName);
             }
         }
     }
