@@ -11,15 +11,15 @@
     public sealed class FunctionSequence
     {
         /// <summary> Holds the groups of function calls. </summary>
-        private readonly List<List<FunctionCall>> _groups;
+        private readonly List<List<IFunctionCall>> _groups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionSequence"/> class.
         /// </summary>
         internal FunctionSequence()
         {
-            _groups = new List<List<FunctionCall>>();
-            _groups.Add(new List<FunctionCall>());
+            _groups = new List<List<IFunctionCall>>();
+            _groups.Add(new List<IFunctionCall>());
         }
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// </summary>
         internal void CreateGroup()
         {
-            _groups.Add(new List<FunctionCall>());
+            _groups.Add(new List<IFunctionCall>());
         }
 
         /// <summary>
@@ -59,7 +59,7 @@
                 // Invoke the functions iteratively - functions within a group are treated as "and" statements
                 foreach (var func in group)
                 {
-                    var funcResults = func.FunctionDelegate.DynamicInvoke(results, func.Value, func.Condition) as IEnumerable<TypeDefinition>;
+                    var funcResults = func.Invoke(results);
                     results = funcResults.ToList();
                 }
 
@@ -74,10 +74,16 @@
         }
 
 
+        internal interface IFunctionCall
+        {
+            Delegate FunctionDelegate { get; }
+            IEnumerable<TypeDefinition> Invoke(List<TypeDefinition> results);
+        }
+        
         /// <summary>
         /// Represents a single function call.
         /// </summary>
-        internal class FunctionCall
+        internal class FunctionCall : IFunctionCall
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="FunctionCall"/> class.
@@ -94,6 +100,11 @@
             /// </summary>
             public Delegate FunctionDelegate { get; private set; }
 
+            public IEnumerable<TypeDefinition> Invoke(List<TypeDefinition> results)
+            {
+                return FunctionDelegate.DynamicInvoke(results, Value, Condition) as IEnumerable<TypeDefinition>;
+            }
+
             /// <summary>
             /// The input value for the function call.
             /// </summary>
@@ -104,6 +115,6 @@
             /// </summary>
             public bool Condition { get; private set; }
 
-        }
+        }        
     }
 }

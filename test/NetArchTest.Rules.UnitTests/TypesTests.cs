@@ -68,7 +68,8 @@
         public void FromPath_TypesReturned()
         {
             // Arrange
-            var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
+            var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure")
+                .GetTypeDefinitions().Count();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // Act
@@ -77,6 +78,6 @@
             // Assert
             Assert.Equal(expected, result.Count());
             Assert.All(result, r => r.FullName.StartsWith("NetArchTest.TestStructure"));
-        }
+        }        
     }
 }

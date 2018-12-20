@@ -18,17 +18,11 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchDefinition"/> class.
         /// </summary>
-        internal SearchDefinition(IEnumerable<string> dependencies)
+        internal SearchDefinition()
         {
             _found = new Dictionary<string, HashSet<string>>();
             _checked = new HashSet<string>();
-            SearchList = dependencies;
         }
-
-        /// <summary>
-        /// Gets the list of dependencies being searched for.
-        /// </summary>
-        internal IEnumerable<string> SearchList { get; }
 
         /// <summary>
         /// Gets the list of dependency names that have been found.
@@ -55,16 +49,9 @@
         /// <summary>
         /// Gets an indication of whether a type has been searched.
         /// </summary>
-        internal bool IsChecked(TypeDefinition type)
+        internal bool IsChecked(string typeFullName)
         {
-            if (type != null)
-            {
-                return _checked.Contains(type.FullName);
-            }
-            else
-            {
-                return true;
-            }
+            return string.IsNullOrEmpty(typeFullName) || _checked.Contains(typeFullName);
         }
 
         /// <summary>

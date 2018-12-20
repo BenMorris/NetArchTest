@@ -222,7 +222,8 @@
         };
 
         /// <summary> Function for finding types in a particular namespace. </summary>
-        internal static FunctionDelegate<string> ResideInNamespace = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
+        internal static FunctionDelegate<string> ResideInNamespace = 
+            delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
         {
             if (condition)
             {
@@ -233,6 +234,19 @@
                 return input.Where(c => !c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
             }
         };
+        
+        internal static FunctionDelegate<Func<string, bool>> MatchNamespace = 
+            delegate (IEnumerable<TypeDefinition> input, Func<string, bool> match, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(c => match(c.Namespace));
+            }
+            else
+            {
+                return input.Where(c => !match(c.Namespace));
+            }
+        };
 
         /// <summary> Function for finding types that have a dependency on a specific type. </summary>
         internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOn = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
@@ -240,6 +254,23 @@
             // Get the types that contain the dependencies
             var search = new DependencySearch();
             var results = search.FindTypesWithDependencies(input, dependencies);
+
+            if (condition)
+            {
+                return results;
+            }
+            else
+            {
+                return input.Where(t => !results.Contains(t));
+            }
+        };
+        
+        internal static FunctionDelegate<Func<string, bool>> HaveMatchedDependencyOn 
+            = delegate (IEnumerable<TypeDefinition> input, Func<string, bool> match, bool condition)
+        {
+            // Get the types that contain the dependencies
+            var search = new DependencySearch();
+            var results = search.FindTypesWithDependenciesMatch(input, match);
 
             if (condition)
             {

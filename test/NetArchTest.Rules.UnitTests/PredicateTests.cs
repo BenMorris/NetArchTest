@@ -445,6 +445,21 @@
             Assert.Contains<Type>(typeof(ClassA2), result);
             Assert.Contains<Type>(typeof(ClassB1), result);
         }
+        
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]
+        public void CustomizedResideInNamespace_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace1"))
+                .GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(ClassA1), result);
+            Assert.Contains<Type>(typeof(ClassA2), result);
+            Assert.Contains<Type>(typeof(ClassB1), result);
+        }
 
         [Fact(DisplayName = "Types can be selected if they do not reside in a namespace.")]
         public void DoNotResideInNamespace_MatchesFound_ClassSelected()
@@ -455,6 +470,23 @@
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
                 .And()
                 .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(ClassA1), result);
+            Assert.Contains<Type>(typeof(ClassA2), result);
+            Assert.Contains<Type>(typeof(ClassB1), result);
+        }        
+        
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace.")]
+        public void CustomizedDoNotResideInNamespace_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace(name=> name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found

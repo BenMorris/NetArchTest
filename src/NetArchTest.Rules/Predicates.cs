@@ -345,6 +345,17 @@
             _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, true);
             return new PredicateList(_types, _sequence);
         }
+        
+        /// <summary>
+        /// Selects types that reside in a particular namespace.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList ResideInNamespace(Func<string, bool> match)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.MatchNamespace, match, true);
+            return new PredicateList(_types, _sequence);
+        }
 
         /// <summary>
         /// Selects types that do not reside in a particular namespace.
@@ -356,6 +367,16 @@
             _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, false);
             return new PredicateList(_types, _sequence);
         }
+        /// <summary>
+        /// Selects types that do not reside in a particular namespace.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotResideInNamespace(Func<string, bool> match)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.MatchNamespace, match, false);
+            return new PredicateList(_types, _sequence);
+        }
 
         /// <summary>
         /// Selects types that have a dependency on a particular type.
@@ -365,6 +386,17 @@
         public PredicateList HaveDependencyOn(string dependency)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, true);
+            return new PredicateList(_types, _sequence);
+        }
+        
+        /// <summary>
+        /// Selects types that have a dependency on a particular type.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList HaveDependencyOn(Func<string, bool> match)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveMatchedDependencyOn, match, true);
             return new PredicateList(_types, _sequence);
         }
 
