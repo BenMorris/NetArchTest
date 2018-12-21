@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System.Reflection;
     using NetArchTest.TestStructure.CustomAttributes;
@@ -421,8 +423,7 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .HaveNameStartingWith("ClassA")
-                .Should()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching").GetResult();
+                .Should().ResideInNamespace(Globbing.New("NetArchTest.TestStructure.NameMatching.*")).GetResult();
 
             Assert.True(result);
         }
@@ -447,8 +448,7 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .HaveName("ClassB2")
-                .Should()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching").GetResult();
+                .Should().ResideInNamespace(Globbing.New("NetArchTest.TestStructure.NameMatching.*")).GetResult();
 
             Assert.True(result);
         }

@@ -215,9 +215,6 @@
         internal static FunctionDelegate<Func<string, bool>> MatchNamespace =
             (input, match, condition) => condition ? input.Where(c => match(c.Namespace)) : input.Where(c => !match(c.Namespace));
 
-        internal static FunctionDelegate<Func<string, bool>> FullNameMatch =
-            (input, match, condition) => condition ? input.Where(c => match(c.FullName)) : input.Where(c => !match(c.FullName));
-
         /// <summary> Function for finding types that have a dependency on a specific type. </summary>
         internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOn = (inputs, dependencies, condition) =>
             new DependencySearch(target => dependencies.Any(target.StartsWith))

@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Linq;
@@ -27,7 +29,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .HaveName("ClassA1").GetTypes();
 
@@ -41,7 +43,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .DoNotHaveName("ClassA1").GetTypes();
 
@@ -58,7 +60,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .HaveNameStartingWith("ClassA").GetTypes();
 
@@ -74,7 +76,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .DoNotHaveNameStartingWith("ClassA").GetTypes();
 
@@ -89,7 +91,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .HaveNameEndingWith("A1").GetTypes();
 
@@ -103,7 +105,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .DoNotHaveNameEndingWith("A1").GetTypes();
 
@@ -120,7 +122,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .HaveNameMatching(@"Class\w1").GetTypes();
 
@@ -135,7 +137,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
                 .DoNotHaveNameMatching(@"Class\w1").GetTypes();
 
@@ -151,7 +153,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes.*")
                 .And()
                 .HaveCustomAttribute(typeof(ClassCustomAttribute)).GetTypes();
 
@@ -165,7 +167,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes.*")
                 .And()
                 .DoNotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetTypes();
 
@@ -180,7 +182,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance")
+                .ResideInNamespace("NetArchTest.TestStructure.Inheritance.*")
                 .And()
                 .Inherit(typeof(BaseClass)).GetTypes();
 
@@ -195,7 +197,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance")
+                .ResideInNamespace("NetArchTest.TestStructure.Inheritance.*")
                 .And()
                 .DoNotInherit(typeof(BaseClass)).GetTypes();
 
@@ -210,7 +212,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                .ResideInNamespace("NetArchTest.TestStructure.Interfaces.*")
                 .And()
                 .ImplementInterface(typeof(IExample)).GetTypes();
 
@@ -224,7 +226,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                .ResideInNamespace("NetArchTest.TestStructure.Interfaces.*")
                 .And()
                 .DoNotImplementInterface(typeof(IExample)).GetTypes();
 
@@ -239,7 +241,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract")
+                .ResideInNamespace("NetArchTest.TestStructure.Abstract.*")
                 .And()
                 .AreAbstract().GetTypes();
 
@@ -253,7 +255,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract")
+                .ResideInNamespace("NetArchTest.TestStructure.Abstract.*")
                 .And()
                 .AreNotAbstract().GetTypes();
 
@@ -267,7 +269,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
+                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
                 .And()
                 .AreClasses().GetTypes();
 
@@ -281,7 +283,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
+                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
                 .And()
                 .AreNotClasses().GetTypes();
 
@@ -295,7 +297,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic")
+                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
                 .And()
                 .AreGeneric().GetTypes();
 
@@ -309,7 +311,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic")
+                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
                 .And()
                 .AreNotGeneric().GetTypes();
 
@@ -323,7 +325,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
+                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
                 .And()
                 .AreInterfaces().GetTypes();
 
@@ -337,7 +339,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
+                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
                 .And()
                 .AreNotInterfaces().GetTypes();
 
@@ -351,7 +353,7 @@
                 var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested")
+                .ResideInNamespace("NetArchTest.TestStructure.Nested.*")
                 .And()
                 .AreNested().GetTypes();
 
@@ -365,7 +367,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested")
+                .ResideInNamespace("NetArchTest.TestStructure.Nested.*")
                 .And()
                 .AreNotNested().GetTypes();
 
@@ -381,7 +383,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
+                .ResideInNamespace("NetArchTest.TestStructure.Scope.*")
                 .And()
                 .ArePublic().GetTypes();
 
@@ -395,7 +397,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
+                .ResideInNamespace("NetArchTest.TestStructure.Scope.*")
                 .And()
                 .AreNotPublic().GetTypes();
 
@@ -409,7 +411,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Sealed")
+                .ResideInNamespace("NetArchTest.TestStructure.Sealed.*")
                 .And()
                 .AreSealed().GetTypes();
 
@@ -423,7 +425,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Sealed")
+                .ResideInNamespace("NetArchTest.TestStructure.Sealed.*")
                 .And()
                 .AreNotSealed().GetTypes();
 
@@ -437,7 +439,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1.*")
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -452,7 +454,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace1"))
+                .FullNameMatches(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace1"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -467,9 +469,9 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
-                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .FullNameNotMatches(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -484,9 +486,9 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
                 .And()
-                .DoNotResideInNamespace(name=> name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
+                .FullNameNotMatches(name=> name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -500,8 +502,7 @@
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .That().FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
                 .GetTypes();
 
             // Should return all the types that are in three nested namespaces
@@ -519,9 +520,9 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation.*")
                 .And()
-                .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                .HaveDependencyOn(Globbing.New("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
                 .GetTypes();
 
             Assert.Single(result); // Only one type found
@@ -534,9 +535,9 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation.*")
                 .And()
-                .DoNotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                .DoNotHaveDependencyOn(Globbing.New("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
                 .GetTypes();
 
             Assert.Single(result); // Only one type found

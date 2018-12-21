@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.SampleRules
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.SampleRules
 {
     using NetArchTest.Rules;
     using NetArchTest.SampleLibrary.Data;
@@ -24,7 +26,7 @@
 
             // Only classes in the data namespace can have a dependency on System.Data
             result = Types.InCurrentDomain()
-                .That().HaveDependencyOn("System.Data")
+                .That().HaveDependencyOn(Globbing.New("System.Data"))
                 .And().ResideInNamespace(("ArchTest"))
                 .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
                 .GetResult();

@@ -259,39 +259,11 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Conditions.ResideInNamespace(System.String)">
-            <summary>
-            Selects types that reside in a particular namespace.
-            </summary>
-            <param name="name">The namespace to match against.</param>
-            <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Conditions.NotResideInNamespace(System.String)">
-            <summary>
-            Selects types that do not reside in a particular namespace.
-            </summary>
-            <param name="name">The namespace to match against.</param>
-            <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.String)">
-            <summary>
-            Selects types that have a dependency on a particular type.
-            </summary>
-            <param name="dependency">The dependency to match against.</param>
-            <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.Func{System.String,System.Boolean})">
             <summary>
             Selects types that have a dependency on a particular type.
             </summary>
             <param name="dependencyMatch">The dependency to match against.</param>
-            <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOn(System.String)">
-            <summary>
-            Selects types that do not have a dependency on a particular type.
-            </summary>
-            <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckTypeDefinition(Mono.Cecil.TypeDefinition)">
@@ -322,11 +294,6 @@
         <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckMethodBody(Mono.Cecil.TypeDefinition,Mono.Cecil.MethodDefinition)">
             <summary>
             Finds matching dependencies for a given method by scanning the code.
-            </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter})">
-            <summary>
-            Finds matching dependencies for a set of generic parameters
             </summary>
         </member>
         <member name="T:NetArchTest.Rules.Dependencies.SearchResults">
@@ -771,48 +738,6 @@
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespace(System.String)">
-            <summary>
-            Selects types that reside in a particular namespace.
-            </summary>
-            <param name="name">The namespace to match against.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespace(System.Func{System.String,System.Boolean})">
-            <summary>
-            Selects types that reside in a particular namespace.
-            </summary>
-            <param name="match">The match method.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Predicates.FullNameMatch(System.Func{System.String,System.Boolean})">
-            <summary>
-            Selects types that reside in a particular namespace.
-            </summary>
-            <param name="match">The match method.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.String)">
-            <summary>
-            Selects types that do not reside in a particular namespace.
-            </summary>
-            <param name="name">The namespace to match against.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespace(System.Func{System.String,System.Boolean})">
-            <summary>
-            Selects types that do not reside in a particular namespace.
-            </summary>
-            <param name="match">The match method.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.String)">
-            <summary>
-            Selects types that have a dependency on a particular type.
-            </summary>
-            <param name="dependency">The dependency type to match against.</param>
-            <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.Func{System.String,System.Boolean})">
             <summary>
             Selects types that have a dependency on a particular type.
@@ -820,11 +745,18 @@
             <param name="match">The match method.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveDependencyOn(System.String)">
+        <member name="M:NetArchTest.Rules.Predicates.FullNameMatches(System.Func{System.String,System.Boolean})">
             <summary>
-            Selects types that do not have a dependency on a particular type.
+            Selects types that full name matches.
             </summary>
-            <param name="dependency">The dependency type to match against.</param>
+            <param name="match">The match method.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.FullNameNotMatches(System.Func{System.String,System.Boolean})">
+            <summary>
+            Selects types that full name matches.
+            </summary>
+            <param name="match">The match method.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="T:NetArchTest.Rules.Types">

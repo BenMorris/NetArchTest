@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Linq;
@@ -17,11 +19,11 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1.*")
                 .Or()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.*")
                 .Or()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic")
+                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
                 .GetTypes();
 
             Assert.Equal(7, result.Count()); // seven types found
@@ -40,7 +42,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace1.*"))
                 .And()
                 .HaveNameStartingWith("Class")
                 .And()
@@ -58,13 +60,11 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                // First group (returns ClassA1 and ClassB1)
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace1.*"))
                 .And()
                 .HaveNameStartingWith("ClassA")
                 .Or()
-                // Second group (returns ClassB2)
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace2.*"))
                 .And()
                 .HaveNameStartingWith("ClassB")
                 .GetTypes();

@@ -1,9 +1,10 @@
-﻿namespace NetArchTest.Rules
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
 
     /// <summary>
@@ -334,71 +335,6 @@
             _sequence.AddFunctionCall(FunctionDelegates.BeSealed, true, false);
             return new PredicateList(_types, _sequence);
         }
-
-        /// <summary>
-        /// Selects types that reside in a particular namespace.
-        /// </summary>
-        /// <param name="name">The namespace to match against.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList ResideInNamespace(string name)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, true);
-            return new PredicateList(_types, _sequence);
-        }
-        
-        /// <summary>
-        /// Selects types that reside in a particular namespace.
-        /// </summary>
-        /// <param name="match">The match method.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList ResideInNamespace(Func<string, bool> match)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.MatchNamespace, match, true);
-            return new PredicateList(_types, _sequence);
-        }
-        
-        /// <summary>
-        /// Selects types that reside in a particular namespace.
-        /// </summary>
-        /// <param name="match">The match method.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList FullNameMatch(Func<string, bool> match)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.FullNameMatch, match, true);
-            return new PredicateList(_types, _sequence);
-        }
-
-        /// <summary>
-        /// Selects types that do not reside in a particular namespace.
-        /// </summary>
-        /// <param name="name">The namespace to match against.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList DoNotResideInNamespace(string name)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, false);
-            return new PredicateList(_types, _sequence);
-        }
-        /// <summary>
-        /// Selects types that do not reside in a particular namespace.
-        /// </summary>
-        /// <param name="match">The match method.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList DoNotResideInNamespace(Func<string, bool> match)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.MatchNamespace, match, false);
-            return new PredicateList(_types, _sequence);
-        }
-
-        /// <summary>
-        /// Selects types that have a dependency on a particular type.
-        /// </summary>
-        /// <param name="dependency">The dependency type to match against.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList HaveDependencyOn(string dependency)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, true);
-            return new PredicateList(_types, _sequence);
-        }
         
         /// <summary>
         /// Selects types that have a dependency on a particular type.
@@ -410,16 +346,38 @@
             _sequence.AddFunctionCall(FunctionDelegates.HaveMatchedDependencyOn, match, true);
             return new PredicateList(_types, _sequence);
         }
-
-        /// <summary>
-        /// Selects types that do not have a dependency on a particular type.
-        /// </summary>
-        /// <param name="dependency">The dependency type to match against.</param>
-        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList DoNotHaveDependencyOn(string dependency)
+        
+        public PredicateList DoNotHaveDependencyOn(Func<string, bool> match)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, false);
+            _sequence.AddFunctionCall(FunctionDelegates.HaveMatchedDependencyOn, match, false);
             return new PredicateList(_types, _sequence);
+        }
+        
+        /// <summary>
+        /// Selects types that full name matches.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList FullNameMatches(Func<string, bool> match)
+        {            
+            _sequence.Add(input => input.Where(c => match(c.FullName)) );
+            return new PredicateList(_types, _sequence);
+        }
+        
+        /// <summary>
+        /// Selects types that full name matches.
+        /// </summary>
+        /// <param name="match">The match method.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList FullNameNotMatches(Func<string, bool> match)
+        {            
+            _sequence.Add(input => input.Where(c => !match(c.FullName)));
+            return new PredicateList(_types, _sequence);
+        }
+
+        public PredicateList ResideInNamespace(string netarchtestTeststructureNamematchingNamespace2)
+        {
+            return this.FullNameMatches(Globbing.New(netarchtestTeststructureNamematchingNamespace2));
         }
     }
 }

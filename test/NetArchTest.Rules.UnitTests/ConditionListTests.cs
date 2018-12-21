@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Linq;
@@ -16,7 +18,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
                 .Should()
                 .HaveNameStartingWith("ClassA")
                 .Or()
@@ -39,7 +41,7 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
                 .Should()
                 .HaveNameStartingWith("Class")
                 .And()
@@ -58,8 +60,7 @@
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .That().FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace2.*"))
                 .Should()
                 // First group (ClassA3)
                 .HaveNameStartingWith("ClassA")
@@ -74,8 +75,8 @@
 
             // Results will be everything returned by both groups of statements
             Assert.Equal(2, result.Count()); // five types found
-            Assert.Contains<Type>(typeof(ClassA3), result);
-            Assert.Contains<Type>(typeof(ClassB2), result);
+            Assert.Contains(typeof(ClassA3), result);
+            Assert.Contains(typeof(ClassB2), result);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿namespace NetArchTest.Rules
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Mono.Cecil;
+
+namespace NetArchTest.Rules
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Mono.Cecil;
 
     /// <summary>
     /// A sequence of function calls that are combined to select types.
@@ -28,6 +29,11 @@
         internal void AddFunctionCall<T>(FunctionDelegates.FunctionDelegate<T> method, T value, bool condition)
         {
             _groups.Last().Add(new FunctionCall(method, value, condition));
+        }
+        
+        internal void Add(Func<IList<TypeDefinition>, IEnumerable<TypeDefinition>> method)
+        {
+            _groups.Last().Add(new FuncCall(method));
         }
 
         /// <summary>
@@ -76,8 +82,22 @@
 
         internal interface IFunctionCall
         {
-            Delegate FunctionDelegate { get; }
             IEnumerable<TypeDefinition> Invoke(List<TypeDefinition> results);
+        }
+
+        internal class FuncCall : IFunctionCall
+        {
+            private readonly Func<IList<TypeDefinition>, IEnumerable<TypeDefinition>> func;
+
+            public FuncCall(Func<IList<TypeDefinition>, IEnumerable<TypeDefinition>> func)
+            {
+                this.func = func;
+            }
+
+            public IEnumerable<TypeDefinition> Invoke(List<TypeDefinition> results)
+            {
+                return func(results);
+            }
         }
         
         /// <summary>
@@ -108,13 +128,12 @@
             /// <summary>
             /// The input value for the function call.
             /// </summary>
-            public object Value { get; private set; }
+            public object Value { get; }
 
             /// <summary>
             /// The Condition to apply to the call - i.e. "is" or "is not".
             /// </summary>
-            public bool Condition { get; private set; }
-
+            public bool Condition { get; }
         }        
     }
 }

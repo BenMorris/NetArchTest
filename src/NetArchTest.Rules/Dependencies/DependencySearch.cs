@@ -280,10 +280,7 @@ namespace NetArchTest.Rules.Dependencies
                 }
             }
         }
-
-        /// <summary>
-        /// Finds matching dependencies for a set of generic parameters
-        /// </summary>
+        
         private void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters)
         {
             foreach (var generic in parameters)

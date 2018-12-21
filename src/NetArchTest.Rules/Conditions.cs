@@ -1,4 +1,7 @@
-﻿namespace NetArchTest.Rules
+﻿using NetArchTest.Rules.Dependencies;
+using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules
 {
     using System;
     using System.Collections.Generic;
@@ -335,57 +338,57 @@
         }
 
         /// <summary>
-        /// Selects types that reside in a particular namespace.
-        /// </summary>
-        /// <param name="name">The namespace to match against.</param>
-        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList ResideInNamespace(string name)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, true);
-            return new ConditionList(_types, _should, _sequence);
-        }
-
-        /// <summary>
-        /// Selects types that do not reside in a particular namespace.
-        /// </summary>
-        /// <param name="name">The namespace to match against.</param>
-        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList NotResideInNamespace(string name)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespace, name, false);
-            return new ConditionList(_types, _should, _sequence);
-        }
-
-        /// <summary>
-        /// Selects types that have a dependency on a particular type.
-        /// </summary>
-        /// <param name="dependency">The dependency to match against.</param>
-        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList HaveDependencyOn(string dependency)
-        {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, true);
-            return new ConditionList(_types, _should, _sequence);
-        }
-        
-        /// <summary>
         /// Selects types that have a dependency on a particular type.
         /// </summary>
         /// <param name="dependencyMatch">The dependency to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList HaveDependencyOn(Func<string, bool> dependencyMatch)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveMatchedDependencyOn, dependencyMatch, true);
+            _sequence.Add((input) =>
+                new DependencySearch(dependencyMatch)
+                    .FindTypesWithDependenciesMatch(input)
+                    .GetResults(true));
             return new ConditionList(_types, _should, _sequence);
         }
-
-        /// <summary>
-        /// Selects types that do not have a dependency on a particular type.
-        /// </summary>
-        /// <param name="dependency">The dependency type to match against.</param>
-        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList NotHaveDependencyOn(string dependency)
+        
+        public ConditionList NotHaveDependencyOn(Func<string, bool> dependencyMatch)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, false);
+            _sequence.Add((input) =>
+                new DependencySearch(dependencyMatch)
+                    .FindTypesWithDependenciesMatch(input)
+                    .GetResults(false));
+            return new ConditionList(_types, _should, _sequence);
+        }
+        
+        public ConditionList HaveDependencyOn(string bla)
+        {
+            return this.HaveDependencyOn(Globbing.New(bla));
+        }
+        
+        public ConditionList NotHaveDependencyOn(string bla)
+        {
+            return this.NotHaveDependencyOn(Globbing.New(bla));
+        }
+
+        public ConditionList ResideInNamespace(string netarchtestTeststructureNamematching)
+        {
+            return ResideInNamespace(Globbing.New(netarchtestTeststructureNamematching));
+        }
+        
+        public ConditionList ResideInNamespace(Func<string, bool> match)
+        {
+            _sequence.Add(input => input.Where(c => match(c.FullName)) );
+            return new ConditionList(_types, _should,_sequence);
+        }
+        
+        public ConditionList NotResideInNamespace(string netarchtestTeststructureNamematching)
+        {
+            return NotResideInNamespace(Globbing.New(netarchtestTeststructureNamematching));
+        }
+        
+        public ConditionList NotResideInNamespace(Func<string, bool> match)
+        {
+            _sequence.Add(input => input.Where(c => !match(c.FullName)) );
             return new ConditionList(_types, _should, _sequence);
         }
     }
