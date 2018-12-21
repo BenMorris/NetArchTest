@@ -1,6 +1,7 @@
 ﻿using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.Cecil;
 
 namespace NetArchTest.Rules.Dependencies
@@ -88,6 +89,8 @@ namespace NetArchTest.Rules.Dependencies
             }
             AddDefChecked(type.FullName);
 
+            CheckCustomAttributes(type, type.CustomAttributes);
+
             // Does this directly inherit from a dependency?
             if (type.BaseType != null)
             {
@@ -121,12 +124,33 @@ namespace NetArchTest.Rules.Dependencies
                 CheckMethod(type, method);
             }
         }
-        
+
+        private void CheckCustomAttributes(TypeDefinition type, Collection<CustomAttribute> typeCustomAttributes)
+        {
+            foreach (var attr in typeCustomAttributes)
+            {
+                CheckTypeReference(type, attr.AttributeType);
+
+                var args = attr.Fields.Concat(attr.Properties).Select(na => na.Argument)
+                    .Concat(attr.ConstructorArguments);
+
+                foreach (var arg in args)
+                {
+                    if (arg.Value is TypeDefinition typeDefinition)
+                    {
+                        CheckTypeReference(type, typeDefinition);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the IL instructions.
         /// </summary>
         private void CheckMethod(TypeDefinition type, MethodDefinition method)
         {
+            CheckCustomAttributes(type, method.CustomAttributes);
+            
             // Check the return type
             if (method.ReturnType.ContainsGenericParameter)
             {

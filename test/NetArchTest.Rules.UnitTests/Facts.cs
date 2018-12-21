@@ -17,6 +17,8 @@ namespace NetArchTest.Rules.UnitTests
             _output = output;
         }
 
+        
+        [MyAttr(typeof(Bla), Order = 1, FF = 2)]
         void blabla()
         {
 //            Bla bla;
@@ -43,6 +45,41 @@ namespace NetArchTest.Rules.UnitTests
 //            i++;
             blas = new List<Bla>();
             _output.WriteLine(blas.ToString());
+        }
+
+        public class MyAttr : Attribute
+        {
+            private readonly Type _type;
+            public int Order;
+            public int FF { get; set; }
+
+            public MyAttr(Type type)
+            {
+                _type = type;
+            }
+        }
+
+        [Fact]
+        void test1()
+        {
+            var assemblyDef = Mono.Cecil.AssemblyDefinition
+                .ReadAssembly(typeof(Facts).Module.FullyQualifiedName);
+            
+            var types = assemblyDef.Modules.SelectMany(m => m.GetTypes());
+            var definition = types.First(t => t.Name == "Facts");
+            var methodDefinition = definition.Methods.First(m => m.Name == "blabla");
+            
+            foreach (var attr in methodDefinition.CustomAttributes)
+            {
+                var args = attr.Fields.Concat(attr.Properties).Select(na => na.Argument)
+                    .Concat(attr.ConstructorArguments);
+                foreach (var arg in args)
+                {
+                    _output.WriteLine(arg.Type + ": " + arg.Value);    
+                    _output.WriteLine(arg.Value.GetType().ToString());    
+                }
+            }
+            
         }
 
         [Fact]
