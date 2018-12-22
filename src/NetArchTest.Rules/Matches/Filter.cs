@@ -31,7 +31,7 @@ namespace NetArchTest.Rules.Matches
         
         public static Filter operator !(Filter filter)
         {
-            return new Filter(input => input.Except(filter._filterFunc(input)));
+            return new Filter(inputs => inputs.Except(filter._filterFunc(inputs)));
         }
 
     }

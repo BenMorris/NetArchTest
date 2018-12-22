@@ -50,17 +50,6 @@ namespace NetArchTest.Rules
             return new ConditionList(inputs, true, functionSequence);
         }
         
-        public ConditionList ShouldNot(Filter filter = null)
-        {
-            var inputs = _sequence.Execute(_types);
-            var functionSequence = new FunctionSequence();
-            if (filter != null)
-            {
-                functionSequence.Add(!filter);    
-            }
-            return new ConditionList(inputs, true, functionSequence);
-        }
-
         /// <summary>
         /// Returns the type definitions returned by these predicate.
         /// </summary>

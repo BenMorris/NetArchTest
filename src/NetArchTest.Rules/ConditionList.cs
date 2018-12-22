@@ -17,8 +17,6 @@
         /// <summary> The sequence of conditions that is applied to the type of list. </summary>
         private readonly FunctionSequence _sequence;
 
-        /// <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
-        private readonly bool _should;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionList"/> class.
@@ -26,7 +24,6 @@
         internal ConditionList(IEnumerable<TypeDefinition> classes, bool should, FunctionSequence sequence)
         {
             _types = classes.ToList();
-            _should = should;
             _sequence = sequence;
         }
 
@@ -36,32 +33,15 @@
         /// <returns>An indication of whether the conditions are true.</returns>
         public bool GetResult()
         {
-            if (_should)
-            {
-                // All the classes should meet the condition
-                return (_sequence.Execute(_types).Count() == _types.Count());
-            }
-            else
-            {
-                // No classes should meet the condition
-                return (!_sequence.Execute(_types).Any());
-            }
+            return (_sequence.Execute(_types).Count() == _types.Count());
         }
-
-        /// <summary>
-        /// Returns the number of types that satisfy the conditions.
-        /// </summary>
-        /// <returns>A list of types.</returns>
-        public int Count()
+        
+        public IEnumerable<Type> GetViolations()
         {
-            return _sequence.Execute(_types).Count();
+            return _types.Except(_sequence.Execute(_types)).Select(t => t.ToType());
         }
-
-        /// <summary>
-        /// Returns the list of types that satisfy the conditions.
-        /// </summary>
-        /// <returns>A list of types.</returns>
-        public IEnumerable<Type> GetTypes()
+        
+        public IEnumerable<Type> GetRespects()
         {
             return _sequence.Execute(_types).Select(t => t.ToType());
         }

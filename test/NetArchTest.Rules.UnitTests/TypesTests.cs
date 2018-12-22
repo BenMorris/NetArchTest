@@ -1,5 +1,5 @@
 ﻿using Xunit.Abstractions;
-using static NetArchTest.Rules.Matches.Matchers;
+using static NetArchTest.Rules.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {

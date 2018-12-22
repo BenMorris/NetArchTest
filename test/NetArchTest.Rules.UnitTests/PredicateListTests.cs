@@ -1,4 +1,4 @@
-﻿using static NetArchTest.Rules.Matches.Matchers;
+﻿using static NetArchTest.Rules.Matchers;
 using System.Linq;
 using System.Reflection;
 using NetArchTest.TestStructure.Generic;

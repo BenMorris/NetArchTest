@@ -1,5 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
-using static NetArchTest.Rules.Matches.Matchers;
+using static NetArchTest.Rules.Matchers;
 
 namespace NetArchTest.SampleRules
 {
@@ -17,7 +17,7 @@ namespace NetArchTest.SampleRules
             // Controllers should not directly reference repositories
             var result = Types.InCurrentDomain()
                 .That(ResideInNamespace("NetArchTest.SampleLibrary.Presentation"))
-                .ShouldNot(HaveDependencyOn("NetArchTest.SampleLibrary.Data"))
+                .Should(!HaveDependencyOn("NetArchTest.SampleLibrary.Data"))
                 .GetResult();
 
             //****************************************************

@@ -3,9 +3,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NetArchTest.Rules.Dependencies;
 using NetArchTest.Rules.Extensions;
+using NetArchTest.Rules.Matches;
 using NetArchTest.Rules.Utils;
 
-namespace NetArchTest.Rules.Matches
+namespace NetArchTest.Rules
 {
     public static partial class Matchers
     {
@@ -31,10 +32,15 @@ namespace NetArchTest.Rules.Matches
         
         public static Filter HaveDependencyOn(string name)
         {
+            return HaveDependencyOn(Globbing.New(name));
+        }
+        
+        public static Filter HaveDependencyOn(Func<string, bool> match)
+        {
             return new Filter(input => 
-                new DependencySearch(Globbing.New(name))
+                new DependencySearch(match)
                     .FindTypesWithDependenciesMatch(input.ToList())
-                    .GetResults(true));
+                    .GetResults());
         }
 
         public static Matcher BeInterfaces()

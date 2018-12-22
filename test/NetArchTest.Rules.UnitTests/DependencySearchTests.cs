@@ -1,5 +1,5 @@
 ﻿using Mono.Cecil;
-using static NetArchTest.Rules.Matches.Matchers;
+using static NetArchTest.Rules.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -122,7 +122,7 @@ namespace NetArchTest.Rules.UnitTests
                 .GetTypeDefinitions().ToArray();
 
             // Act
-            var result = search.FindTypesWithDependenciesMatch(subject).GetResults(true).ToArray();
+            var result = search.FindTypesWithDependenciesMatch(subject).GetResults().ToArray();
 
             // Assert
             if (expectToFind)

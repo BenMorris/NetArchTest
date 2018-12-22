@@ -1,6 +1,6 @@
 ﻿using NetArchTest.Rules.Matches;
 using Xunit.Abstractions;
-using static NetArchTest.Rules.Matches.Matchers;
+using static NetArchTest.Rules.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -28,13 +28,21 @@ namespace NetArchTest.Rules.UnitTests
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
                 .Should(HaveNameStartingWith("ClassA") | HaveNameEndingWith("1") | HaveNameEndingWith("2"))
-                .GetTypes();
+                .GetRespects();
+            
             Assert.Equal(5, result.Count()); // five types found
             Assert.Contains(typeof(ClassA1), result);
             Assert.Contains(typeof(ClassA2), result);
             Assert.Contains(typeof(ClassA3), result);
             Assert.Contains(typeof(ClassB1), result);
             Assert.Contains(typeof(ClassB2), result);
+            
+            result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(HaveNameStartingWith("ClassA") | HaveNameEndingWith("1") | HaveNameEndingWith("2"))
+                .GetViolations();
+            Assert.Equal(0, result.Count());
         }
 
         [Fact(DisplayName = "Conditions can be chained together using 'and' logic.")]
@@ -43,8 +51,7 @@ namespace NetArchTest.Rules.UnitTests
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That(ResideInNamespace(c => c.StartsWith("NetArchTest.TestStructure.NameMatching")))
-                .Should(HaveNameStartingWith("Class") & HaveNameEndingWith("1") & BeClass())
-                .GetTypes();
+                .Should(HaveNameStartingWith("Class") & HaveNameEndingWith("1") & BeClass()).GetRespects();
 
             Assert.Equal(2, result.Count()); // two types found
             Assert.Contains<Type>(typeof(ClassA1), result);
@@ -60,8 +67,7 @@ namespace NetArchTest.Rules.UnitTests
                 .Should(
                     HaveNameStartingWith("ClassA") & HaveNameEndingWith("3")
                     | HaveNameStartingWith("ClassB") & HaveNameEndingWith("2")
-                )
-                .GetTypes();
+                ).GetRespects();
 
             // Results will be everything returned by both groups of statements
             Assert.Equal(2, result.Count()); // five types found

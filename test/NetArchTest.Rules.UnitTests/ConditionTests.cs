@@ -1,5 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
-using static NetArchTest.Rules.Matches.Matchers;
+using static NetArchTest.Rules.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {

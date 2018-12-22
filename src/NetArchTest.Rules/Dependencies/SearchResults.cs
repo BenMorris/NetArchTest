@@ -68,27 +68,11 @@ namespace NetArchTest.Rules.Dependencies
             }
         }
 
-        public IEnumerable<TypeDefinition> GetResults(bool condition)
+        public IEnumerable<TypeDefinition> GetResults()
         {
-            var output = new List<TypeDefinition>();
-            foreach (var found in TypesFound)
-            {
-                // NB: Nested classes won't be picked up here
-                var match = _inputs.FirstOrDefault(d => d.FullName.Equals(found, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null)
-                {
-                    output.Add(match);
-                }
-            }
-
-            if (condition)
-            {
-                return output;
-            }
-            else
-            {
-                return _inputs.Where(t => !output.Contains(t));
-            }
+            return TypesFound.Select(found => 
+                _inputs.FirstOrDefault(d => d.FullName == found))
+                .Where(match => match != null);
         }
     }
 }
