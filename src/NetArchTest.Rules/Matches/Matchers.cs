@@ -14,6 +14,11 @@ namespace NetArchTest.Rules.Matches
             return new Matcher(c => c.GetNamespace().StartsWith(@namespace));
         }
         
+        public static Matcher ResideInNamespace(Func<string, bool> match)
+        {
+            return new Matcher(t => match(t.Namespace));
+        }
+        
         public static Matcher HaveNameStartingWith(string start)
         {
             return new Matcher(c => c.Name.StartsWith(start));

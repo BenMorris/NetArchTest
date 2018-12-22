@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.2</Version>
+    <Version>2.0.1</Version>
     <Authors>xiaoyvr</Authors>
     <Product>NetArchTest</Product>
     <Description>A fluent API for .Net Standard that can enforce architectural rules in unit tests.</Description>
@@ -14,7 +14,7 @@
     <PackageTags>test architecture dependencies archtest</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>xNetArchTest.Rules</PackageId>
-    <PackageVersion>1.0.1</PackageVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

@@ -42,7 +42,7 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .That(ResideInNamespace(c => c.StartsWith("NetArchTest.TestStructure.NameMatching")))
                 .Should(HaveNameStartingWith("Class") & HaveNameEndingWith("1") & BeClass())
                 .GetTypes();
 
