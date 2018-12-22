@@ -1,8 +1,8 @@
 ﻿using Mono.Cecil;
 
-namespace NetArchTest.Rules
+namespace NetArchTest.Rules.Utils
 {
-    public static class TypeDefinitionExtensions 
+    internal static class TypeDefinitionExtensions 
     {
         public static string GetNamespace(this TypeDefinition type)
         {   

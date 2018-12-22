@@ -1,20 +1,21 @@
 using System;
 using System.Text.RegularExpressions;
+using static NetArchTest.Rules.Matches.MatchFuncs;
 
 namespace NetArchTest.Rules.Matches
 {
     public class Globbing
     {
-        private readonly Func<string, bool> match;
+        private readonly Func<string, bool> _match;
 
         private Globbing(Func<string, bool> match)
         {
-            this.match = match;
+            this._match = match;
         }
         
         public static implicit operator Func<string, bool>(Globbing matchSet)
         {
-            return matchSet.match;
+            return matchSet._match;
         }
         
         public static Globbing Empty() => new Globbing(target => false);
@@ -26,12 +27,12 @@ namespace NetArchTest.Rules.Matches
         
         public static Globbing operator +(Globbing left, Globbing right)
         {
-            return new Globbing(MatchFuncs.Include<string>(left, right));
+            return new Globbing(Include<string>(left, right));
         }
                 
         public static Globbing operator -(Globbing left, Globbing right)
         {
-            return new Globbing(MatchFuncs.Exclude<string>(left, right));
+            return new Globbing(Exclude<string>(left, right));
         }
 
 

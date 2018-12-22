@@ -2,7 +2,7 @@ using System;
 
 namespace NetArchTest.Rules.Matches
 {
-    public static class MatchFuncs
+    internal static class MatchFuncs
     {
         public static Func<T, bool> Exclude<T>(Func<T, bool> left, Func<T, bool> right)
         {

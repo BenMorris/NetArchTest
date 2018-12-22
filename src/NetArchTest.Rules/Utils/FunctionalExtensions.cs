@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NetArchTest.Rules
+namespace NetArchTest.Rules.Utils
 {
-    public static class FunctionalExtensions
+    internal static class FunctionalExtensions
     {
         public static Func<T, bool> Reverse<T>(Func<T, bool> func)
         {

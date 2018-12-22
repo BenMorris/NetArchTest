@@ -1,5 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
-using static NetArchTest.Rules.FunctionalExtensions;
+using static NetArchTest.Rules.Utils.FunctionalExtensions;
 
 namespace NetArchTest.Rules
 {

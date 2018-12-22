@@ -39,12 +39,6 @@ namespace NetArchTest.Rules
             }            
         }
         
-        internal PredicateList(IEnumerable<TypeDefinition> classes) 
-        {
-            _types = classes;
-            _sequence = new FunctionSequence();
-        }
-
         public ConditionList Should(Filter filter = null)
         {
             var inputs = _sequence.Execute(_types);

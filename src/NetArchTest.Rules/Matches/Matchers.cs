@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NetArchTest.Rules.Dependencies;
 using NetArchTest.Rules.Extensions;
+using NetArchTest.Rules.Utils;
 
 namespace NetArchTest.Rules.Matches
 {
