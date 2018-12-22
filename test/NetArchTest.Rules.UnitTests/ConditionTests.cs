@@ -1,4 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
+using static NetArchTest.Rules.Matches.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -17,10 +18,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3")
-                .Should()
-                .HaveName("ClassB2").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3"))
+                .Should(HaveName("ClassB2"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -30,10 +30,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
-                .Should()
-                .NotHaveName("ClassB2").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1"))
+                .Should(!HaveName("ClassB2"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -43,10 +42,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
-                .Should()
-                .HaveNameStartingWith("Class").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(HaveNameStartingWith("Class"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -56,10 +54,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
-                .Should()
-                .NotHaveNameStartingWith("X").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(!HaveNameStartingWith("X"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -69,10 +66,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3")
-                .Should()
-                .HaveNameEndingWith("B2").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3"))
+                .Should(HaveNameEndingWith("B2"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -82,10 +78,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace1")
-                .Should()
-                .NotHaveNameEndingWith("B2").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace1"))
+                .Should(!HaveNameEndingWith("B2"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -95,10 +90,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
-                .Should()
-                .HaveNameMatching(@"Class\w\d").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(HaveNameMatching(@"Class\w\d"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -108,10 +102,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
-                .Should()
-                .NotHaveNameMatching(@"X\w").GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(!HaveNameMatching(@"X\w"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -121,12 +114,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
-                .And()
-                .HaveName("ClassAttributePresent")
-                .Should()
-                .HaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.CustomAttributes") 
+                      & HaveName("ClassAttributePresent"))                
+                .Should(HaveCustomAttribute(typeof(ClassCustomAttribute)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -136,12 +127,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
-                .And()
-                .DoNotHaveName("AttributePresent")
-                .Should()
-                .NotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.CustomAttributes") & !HaveName("AttributePresent"))
+                .Should(!HaveCustomAttribute(typeof(ClassCustomAttribute)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -151,12 +139,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance")
-                .And()
-                .HaveNameStartingWith("Derived")
-                .Should()
-                .Inherit(typeof(BaseClass)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Inheritance")
+                    & HaveNameStartingWith("Derived"))
+                .Should(Inherit(typeof(BaseClass)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -166,12 +152,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance")
-                .And()
-                .DoNotHaveNameStartingWith("Derived")
-                .Should()
-                .NotInherit(typeof(BaseClass)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Inheritance")
+                    & !HaveNameStartingWith("Derived"))
+                .Should(!Inherit(typeof(BaseClass)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -181,12 +165,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces")
-                .And()
-                .HaveNameStartingWith("Implements")
-                .Should()
-                .ImplementInterface(typeof(IExample)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                & HaveNameStartingWith("Implements"))
+                .Should(ImplementInterface(typeof(IExample)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -196,12 +178,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces")
-                .And()
-                .DoNotHaveNameStartingWith("Implements")
-                .Should()
-                .NotImplementInterface(typeof(IExample)).GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                & !HaveNameStartingWith("Implements"))
+                .Should(!ImplementInterface(typeof(IExample)))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -211,12 +191,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract")
-                .And()
-                .HaveNameStartingWith("Abstract")
-                .Should()
-                .BeAbstract().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Abstract")
+                & HaveNameStartingWith("Abstract"))                
+                .Should(BeAbstract())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -226,12 +204,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract")
-                .And()
-                .DoNotHaveNameStartingWith("Abstract")
-                .Should()
-                .NotBeAbstract().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Abstract")
+                & !HaveNameStartingWith("Abstract"))
+                .Should(!BeAbstract())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -241,12 +217,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
-                .And()
-                .HaveNameEndingWith("Class")
-                .Should()
-                .BeClasses().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                & HaveNameEndingWith("Class"))                
+                .Should(BeClass())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -256,12 +230,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
-                .And()
-                .HaveNameEndingWith("Interface")
-                .Should()
-                .NotBeClasses().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes") & 
+                      HaveNameEndingWith("Interface"))
+                .Should(! BeClass())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -271,12 +243,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic")
-                .And()
-                .HaveNameStartingWith("Generic")
-                .Should()
-                .BeGeneric().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Generic") & 
+                      HaveNameStartingWith("Generic"))
+                .Should(BeGeneric())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -286,12 +256,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic")
-                .And()
-                .HaveNameStartingWith("NonGeneric")
-                .Should()
-                .NotBeGeneric().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Generic") & 
+                      HaveNameStartingWith("NonGeneric"))
+                .Should(! BeGeneric())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -301,12 +269,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
-                .And()
-                .HaveNameEndingWith("Interface")
-                .Should()
-                .BeInterfaces().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                & HaveNameEndingWith("Interface"))                
+                .Should( BeInterfaces() )
+                .GetResult();
 
             Assert.True(result);
         }
@@ -316,12 +282,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes")
-                .And()
-                .HaveNameEndingWith("Class")
-                .Should()
-                .NotBeInterfaces().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                & HaveNameEndingWith("Class"))                
+                .Should(! BeInterfaces())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -331,12 +295,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested")
-                .And()
-                .HaveName("NestedClass")
-                .Should()
-                .BeNested().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Nested")
+                & HaveName("NestedClass"))
+                .Should(BeNested())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -346,12 +308,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested")
-                .And()
-                .DoNotHaveName("NestedClass")
-                .Should()
-                .NotBeNested().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Nested")
+                & !HaveName("NestedClass"))
+                .Should(! BeNested())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -361,12 +321,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
-                .And()
-                .HaveName("PublicClass")
-                .Should()
-                .BePublic().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope")
+                & HaveName("PublicClass"))
+                .Should(BePublic())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -376,12 +334,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
-                .And()
-                .DoNotHaveName("PublicClass")
-                .Should()
-                .NotBePublic().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope")
+                & !HaveName("PublicClass"))
+                .Should(! BePublic())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -391,12 +347,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
-                .And()
-                .HaveName("SealedClass")
-                .Should()
-                .BeSealed().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope")
+                & HaveName("SealedClass"))
+                .Should(BeSealed())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -406,12 +360,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope")
-                .And()
-                .DoNotHaveName("SealedClass")
-                .Should()
-                .NotBeSealed().GetResult();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope")
+                    & !HaveName("SealedClass"))
+                .Should(!BeSealed())
+                .GetResult();
 
             Assert.True(result);
         }
@@ -421,9 +373,10 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .HaveNameStartingWith("ClassA")
-                .Should().ResideInNamespace(Globbing.New("NetArchTest.TestStructure.NameMatching.*")).GetResult();
+                .That(HaveNameStartingWith("ClassA"))
+                .Should(
+                    ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                ).GetResult();
 
             Assert.True(result);
         }
@@ -433,10 +386,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .HaveNameStartingWith("ClassA")
-                .Should()
-                .NotResideInNamespace("NetArchTest.TestStructure.Wrong").GetResult();
+                .That(HaveNameStartingWith("ClassA"))
+                .Should(! ResideInNamespace("NetArchTest.TestStructure.Wrong"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -446,9 +398,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .HaveName("ClassB2")
-                .Should().ResideInNamespace(Globbing.New("NetArchTest.TestStructure.NameMatching.*")).GetResult();
+                .That(HaveName("ClassB2"))
+                .Should(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .GetResult();
 
             Assert.True(result);
         }
@@ -458,29 +410,27 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
-                .And()
-                .HaveNameStartingWith("HasDependency")
-                .Should()
-                .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                .That(ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                & HaveNameStartingWith("HasDependency"))
+                .Should(HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
                 .GetResult();
 
             Assert.True(result);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on another type.")]
-        public void NotHaveDepencency_MatchesFound_ClassSelected()
+        public void NotHaveDependency_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
-                .And()
-                .HaveNameStartingWith("NoDependency")
-                .Should()
-                .NotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
-                .GetResult();
+                .That(
+                    ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation") 
+                    & HaveNameStartingWith("NoDependency")
+                    & HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                    )
+                .Should(
+                    HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                ).GetResult();
 
             Assert.True(result);
         }

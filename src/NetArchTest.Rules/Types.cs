@@ -1,4 +1,7 @@
-﻿namespace NetArchTest.Rules
+﻿using NetArchTest.Rules.Matches;
+using static NetArchTest.Rules.FunctionalExtensions;
+
+namespace NetArchTest.Rules
 {
     using System;
     using System.Collections.Generic;
@@ -243,33 +246,10 @@
         {
             return (_types.Select(t => t.ToType()));
         }
-
-        /// <summary>
-        /// Allows a list of types to be applied to one or more filters.
-        /// </summary>
-        /// <returns>A list of types onto which you can apply a series of filters.</returns>
-        public Predicates That()
+        
+        public PredicateList That(Filter filter = null)
         {
-            return new Predicates(_types);
+            return new PredicateList(_types, filter);
         }
-
-        /// <summary>
-        /// Applies a set of conditions to the list of types.
-        /// </summary>
-        /// <returns></returns>
-        public Conditions Should()
-        {
-            return new Conditions(_types, true);
-        }
-
-        /// <summary>
-        /// Applies a negative set of conditions to the list of types.
-        /// </summary>
-        /// <returns></returns>
-        public Conditions ShouldNot()
-        {
-            return new Conditions(_types, false);
-        }
-
     }
 }

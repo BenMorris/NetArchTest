@@ -1,4 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
+using static NetArchTest.Rules.Matches.Matchers;
 
 namespace NetArchTest.SampleRules
 {
@@ -15,10 +16,8 @@ namespace NetArchTest.SampleRules
 
             // Controllers should not directly reference repositories
             var result = Types.InCurrentDomain()
-                .That()
-                .ResideInNamespace("NetArchTest.SampleLibrary.Presentation")
-                .ShouldNot()
-                .HaveDependencyOn("NetArchTest.SampleLibrary.Data")
+                .That(ResideInNamespace("NetArchTest.SampleLibrary.Presentation"))
+                .ShouldNot(HaveDependencyOn("NetArchTest.SampleLibrary.Data"))
                 .GetResult();
 
             //****************************************************
@@ -26,9 +25,10 @@ namespace NetArchTest.SampleRules
 
             // Only classes in the data namespace can have a dependency on System.Data
             result = Types.InCurrentDomain()
-                .That().HaveDependencyOn(Globbing.New("System.Data"))
-                .And().ResideInNamespace(("ArchTest"))
-                .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
+                .That(
+                    HaveDependencyOn("System.Data")
+                    & ResideInNamespace("ArchTest"))
+                .Should(ResideInNamespace("NetArchTest.SampleLibrary.Data"))
                 .GetResult();
 
             //****************************************************
@@ -36,28 +36,28 @@ namespace NetArchTest.SampleRules
 
             // All the classes in the data namespace should implement IRepository
             result = Types.InCurrentDomain()
-                .That().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
-                .And().AreClasses()
-                .Should().ImplementInterface(typeof(IRepository<>))
+                .That(ResideInNamespace("NetArchTest.SampleLibrary.Data") 
+                      & AreClasses())
+                .Should(ImplementInterface(typeof(IRepository<>)))
                 .GetResult();
 
             // Classes that implement IRepository should have the suffix "Repository"
             result = Types.InCurrentDomain()
-                .That().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
-                .And().AreClasses()
-                .Should().HaveNameEndingWith("Repository")
+                .That(ResideInNamespace("NetArchTest.SampleLibrary.Data") 
+                      & AreClasses())
+                .Should(HaveNameEndingWith("Repository"))
                 .GetResult();
 
             // Classes that implement IRepository must reside in the Data namespace
             result = Types.InCurrentDomain()
-                .That().ImplementInterface(typeof(IRepository<>))
-                .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
+                .That(ImplementInterface(typeof(IRepository<>)))
+                .Should(ResideInNamespace("NetArchTest.SampleLibrary.Data"))
                 .GetResult();
 
             // All the service classes should be sealed
             result = Types.InCurrentDomain()
-                .That().ImplementInterface(typeof(IWidgetService))
-                .Should().BeSealed()
+                .That(ImplementInterface(typeof(IWidgetService)))
+                .Should(BeSealed())
                 .GetResult();
 
             //****************************************************
@@ -65,9 +65,8 @@ namespace NetArchTest.SampleRules
 
             // Interface names should start with an "I"
             result = Types.InCurrentDomain()
-                .That().AreInterfaces()
-                .Should()
-                .HaveNameStartingWith("I")
+                .That(AreInterfaces())
+                .Should(HaveNameStartingWith("I"))
                 .GetResult();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using static NetArchTest.Rules.Matches.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -117,7 +118,8 @@ namespace NetArchTest.Rules.UnitTests
             var search = new DependencySearch(target => dependencies.Any(target.StartsWith));
             var subject = Types
                 .InAssembly(Assembly.GetAssembly(input))
-                .That().HaveName(input.Name).GetTypeDefinitions().ToArray();
+                .That(HaveName(input.Name))
+                .GetTypeDefinitions().ToArray();
 
             // Act
             var result = search.FindTypesWithDependenciesMatch(subject).GetResults(true).ToArray();

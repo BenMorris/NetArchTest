@@ -1,4 +1,7 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using Xunit.Abstractions;
+using static NetArchTest.Rules.Matches.Matchers;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.IO;
@@ -11,6 +14,13 @@
 
     public class TypesTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public TypesTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact(DisplayName = "System types should be excluded from the current domain.")]
         public void InCurrentDomain_SystemTypesExcluded()
         {
@@ -54,15 +64,14 @@
         public void FromFile_TypesReturned()
         {
             // Arrange
-            var expected = Types.InCurrentDomain().That()
-                .ResideInNamespace("NetArchTest.TestStructure.*")
-                .GetTypeDefinitions().Count();
+            var expected = Types.InCurrentDomain().That(ResideInNamespace("NetArchTest.TestStructure"))
+                .GetTypeDefinitions();
 
             // Act
-            var result = Types.FromFile("NetArchTest.TestStructure.dll").GetTypes();
-
+            var result = Types.FromFile("NetArchTest.TestStructure.dll").GetTypeDefinitions();
+            
             // Assert
-            Assert.Equal(expected, result.Count());
+            Assert.Equal(expected.Count(), result.Count());
             Assert.All(result, r => r.FullName.StartsWith("NetArchTest.TestStructure"));
         }
 
@@ -70,8 +79,7 @@
         public void FromPath_TypesReturned()
         {
             // Arrange
-            var expected = Types.InCurrentDomain().That()
-                .ResideInNamespace("NetArchTest.TestStructure.*")
+            var expected = Types.InCurrentDomain().That(ResideInNamespace("NetArchTest.TestStructure"))
                 .GetTypeDefinitions().Count();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 

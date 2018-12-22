@@ -1,4 +1,6 @@
 ﻿using NetArchTest.Rules.Matches;
+using Xunit.Abstractions;
+using static NetArchTest.Rules.Matches.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -12,27 +14,27 @@ namespace NetArchTest.Rules.UnitTests
 
     public class ConditionListTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public ConditionListTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact(DisplayName = "Conditions can be grouped together using 'or' logic.")]
         public void Or_AppliedToConditions_SelectCorrectTypes()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
-                .Should()
-                .HaveNameStartingWith("ClassA")
-                .Or()
-                .HaveNameEndingWith("1")
-                .Or()
-                .HaveNameEndingWith("2")
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(HaveNameStartingWith("ClassA") | HaveNameEndingWith("1") | HaveNameEndingWith("2"))
                 .GetTypes();
-
-            Assert.Equal(7, result.Count()); // five types found
-            Assert.Contains<Type>(typeof(ClassA1), result);
-            Assert.Contains<Type>(typeof(ClassA2), result);
-            Assert.Contains<Type>(typeof(ClassA3), result);
-            Assert.Contains<Type>(typeof(ClassB1), result);
-            Assert.Contains<Type>(typeof(ClassB2), result);
+            Assert.Equal(5, result.Count()); // five types found
+            Assert.Contains(typeof(ClassA1), result);
+            Assert.Contains(typeof(ClassA2), result);
+            Assert.Contains(typeof(ClassA3), result);
+            Assert.Contains(typeof(ClassB1), result);
+            Assert.Contains(typeof(ClassB2), result);
         }
 
         [Fact(DisplayName = "Conditions can be chained together using 'and' logic.")]
@@ -40,14 +42,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
-                .Should()
-                .HaveNameStartingWith("Class")
-                .And()
-                .HaveNameEndingWith("1")
-                .And()
-                .BeClasses()
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
+                .Should(HaveNameStartingWith("Class") & HaveNameEndingWith("1") & BeClass())
                 .GetTypes();
 
             Assert.Equal(2, result.Count()); // two types found
@@ -60,17 +56,11 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That().FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace2.*"))
-                .Should()
-                // First group (ClassA3)
-                .HaveNameStartingWith("ClassA")
-                .And()
-                .HaveNameEndingWith("3")
-                .Or()
-                // Second group group (ClassB1)
-                .HaveNameStartingWith("ClassB")
-                .And()
-                .HaveNameEndingWith("2")
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2"))
+                .Should(
+                    HaveNameStartingWith("ClassA") & HaveNameEndingWith("3")
+                    | HaveNameStartingWith("ClassB") & HaveNameEndingWith("2")
+                )
                 .GetTypes();
 
             // Results will be everything returned by both groups of statements

@@ -1,15 +1,14 @@
-﻿using NetArchTest.Rules.Matches;
+﻿using static NetArchTest.Rules.Matches.Matchers;
+using System.Linq;
+using System.Reflection;
+using NetArchTest.TestStructure.Generic;
+using NetArchTest.TestStructure.NameMatching.Namespace1;
+using NetArchTest.TestStructure.NameMatching.Namespace2;
+using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
+using Xunit;
 
 namespace NetArchTest.Rules.UnitTests
 {
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using NetArchTest.TestStructure.Generic;
-    using NetArchTest.TestStructure.NameMatching.Namespace1;
-    using NetArchTest.TestStructure.NameMatching.Namespace2;
-    using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
-    using Xunit;
 
     public class PredicateListTests
     {
@@ -18,22 +17,20 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1.*")
-                .Or()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.*")
-                .Or()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
+                .That(
+                    ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                    | ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2")
+                    | ResideInNamespace("NetArchTest.TestStructure.Generic"))
                 .GetTypes();
 
             Assert.Equal(7, result.Count()); // seven types found
-            Assert.Contains<Type>(typeof(ClassA1), result);
-            Assert.Contains<Type>(typeof(ClassA2), result);
-            Assert.Contains<Type>(typeof(ClassA3), result);
-            Assert.Contains<Type>(typeof(ClassB1), result);
-            Assert.Contains<Type>(typeof(ClassB2), result);
-            Assert.Contains<Type>(typeof(GenericType<>), result);
-            Assert.Contains<Type>(typeof(NonGenericType), result);
+            Assert.Contains(typeof(ClassA1), result);
+            Assert.Contains(typeof(ClassA2), result);
+            Assert.Contains(typeof(ClassA3), result);
+            Assert.Contains(typeof(ClassB1), result);
+            Assert.Contains(typeof(ClassB2), result);
+            Assert.Contains(typeof(GenericType<>), result);
+            Assert.Contains(typeof(NonGenericType), result);
         }
 
         [Fact(DisplayName = "Predicates can be chained together using 'and' logic.")]
@@ -41,17 +38,13 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace1.*"))
-                .And()
-                .HaveNameStartingWith("Class")
-                .And()
-                .HaveNameEndingWith("1")
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                & HaveNameStartingWith("Class") & HaveNameEndingWith("1"))
                 .GetTypes();
 
             Assert.Equal(2, result.Count()); // two types found
-            Assert.Contains<Type>(typeof(ClassA1), result);
-            Assert.Contains<Type>(typeof(ClassB1), result);
+            Assert.Contains(typeof(ClassA1), result);
+            Assert.Contains(typeof(ClassB1), result);
         }
 
         [Fact(DisplayName = "An Or() statement will signal the start of a separate group of predicates")]
@@ -59,22 +52,17 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace1.*"))
-                .And()
-                .HaveNameStartingWith("ClassA")
-                .Or()
-                .FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.Namespace2.*"))
-                .And()
-                .HaveNameStartingWith("ClassB")
+                .That(
+                    ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1") & HaveNameStartingWith("ClassA")
+                    | ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2") & HaveNameStartingWith("ClassB")
+                )
                 .GetTypes();
 
             // Results will be everything returned by both groups of statements
             Assert.Equal(3, result.Count()); // five types found
-            Assert.Contains<Type>(typeof(ClassA1), result);
-            Assert.Contains<Type>(typeof(ClassA2), result);
-            Assert.Contains<Type>(typeof(ClassB2), result);
+            Assert.Contains(typeof(ClassA1), result);
+            Assert.Contains(typeof(ClassA2), result);
+            Assert.Contains(typeof(ClassB2), result);
         }
-
     }
 }

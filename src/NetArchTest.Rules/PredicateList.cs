@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules
+﻿using NetArchTest.Rules.Matches;
+
+namespace NetArchTest.Rules
 {
     using System;
     using System.Collections.Generic;
@@ -25,23 +27,44 @@
             _types = classes;
             _sequence = sequence;
         }
-
-        /// <summary>
-        /// Links a predicate defining a set of classes to a condition that tests them.
-        /// </summary>
-        /// <returns>A condition that tests classes against a given criteria.</returns>
-        public Conditions Should()
+        
+        internal PredicateList(IEnumerable<TypeDefinition> classes, 
+            Func<IEnumerable<TypeDefinition>, IEnumerable<TypeDefinition>> filter) 
         {
-            return new Conditions(_sequence.Execute(_types), true);
+            _types = classes;
+            _sequence = new FunctionSequence();
+            if (filter!= null)
+            {
+                _sequence.Add(filter);    
+            }            
+        }
+        
+        internal PredicateList(IEnumerable<TypeDefinition> classes) 
+        {
+            _types = classes;
+            _sequence = new FunctionSequence();
         }
 
-        /// <summary>
-        /// Links a predicate defining a set of classes to a condition that tests them.
-        /// </summary>
-        /// <returns>A condition that tests classes against a given criteria.</returns>
-        public Conditions ShouldNot()
+        public ConditionList Should(Filter filter = null)
         {
-            return new Conditions(_sequence.Execute(_types), false);
+            var inputs = _sequence.Execute(_types);
+            var functionSequence = new FunctionSequence();
+            if (filter!= null)
+            {
+                functionSequence.Add(filter);    
+            }
+            return new ConditionList(inputs, true, functionSequence);
+        }
+        
+        public ConditionList ShouldNot(Filter filter = null)
+        {
+            var inputs = _sequence.Execute(_types);
+            var functionSequence = new FunctionSequence();
+            if (filter != null)
+            {
+                functionSequence.Add(!filter);    
+            }
+            return new ConditionList(inputs, true, functionSequence);
         }
 
         /// <summary>
@@ -61,26 +84,5 @@
         {
             return _sequence.Execute(_types).Select(t => t.ToType());
         }
-
-        /// <summary>
-        /// Specifies that any subsequent predicates should be treated as "and" conditions.
-        /// </summary>
-        /// <returns>An set of predicates that can be applied to a list of classes.</returns>
-        public Predicates And()
-        {
-            return new Predicates(_types, _sequence);
-        }
-
-        /// <summary>
-        /// Specifies that any subsequent predicates should be treated as part of an "or" condition.
-        /// </summary>
-        /// <returns>An set of predicates that can be applied to a list of classes.</returns>
-        public Predicates Or()
-        {
-            // Create a new group of functions - this has the effect of creating an "or" condition
-            _sequence.CreateGroup();
-            return new Predicates(_types, _sequence);
-        }
-
     }
 }

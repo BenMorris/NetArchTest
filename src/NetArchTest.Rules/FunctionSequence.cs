@@ -23,14 +23,6 @@ namespace NetArchTest.Rules
             _groups.Add(new List<IFunctionCall>());
         }
 
-        /// <summary>
-        /// Adds a function call to the current list.
-        /// </summary>
-        internal void AddFunctionCall<T>(FunctionDelegates.FunctionDelegate<T> method, T value, bool condition)
-        {
-            _groups.Last().Add(new FunctionCall(method, value, condition));
-        }
-        
         internal void Add(Func<IList<TypeDefinition>, IEnumerable<TypeDefinition>> method)
         {
             _groups.Last().Add(new FuncCall(method));

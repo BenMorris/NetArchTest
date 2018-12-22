@@ -1,4 +1,5 @@
 ﻿using NetArchTest.Rules.Matches;
+using static NetArchTest.Rules.Matches.Matchers;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -28,10 +29,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .HaveName("ClassA1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") & HaveName("ClassA1"))
+                .GetTypes();
 
             Assert.Single(result); // Only one type found
             Assert.Equal<Type>(typeof(ClassA1), result.First()); // The correct type found
@@ -42,10 +41,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .DoNotHaveName("ClassA1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") & !HaveName("ClassA1"))
+                .GetTypes();
 
             Assert.Equal(4, result.Count()); // three types found
             Assert.Contains<Type>(typeof(ClassA2), result);
@@ -59,10 +56,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .HaveNameStartingWith("ClassA").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                & HaveNameStartingWith("ClassA"))
+                .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
             Assert.Contains<Type>(typeof(ClassA1), result);
@@ -75,10 +71,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .DoNotHaveNameStartingWith("ClassA").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                    & !HaveNameStartingWith("ClassA"))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(ClassB1), result);
@@ -90,10 +85,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .HaveNameEndingWith("A1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") 
+                      & HaveNameEndingWith("A1"))
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ClassA1), result);
@@ -104,10 +98,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .DoNotHaveNameEndingWith("A1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                & !HaveNameEndingWith("A1"))
+                .GetTypes();
 
             Assert.Equal(4, result.Count()); // three types found
             Assert.Contains<Type>(typeof(ClassA2), result);
@@ -121,10 +114,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .HaveNameMatching(@"Class\w1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") 
+                    & HaveNameMatching(@"Class\w1"))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(ClassA1), result);
@@ -136,10 +128,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .DoNotHaveNameMatching(@"Class\w1").GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") &
+                      !HaveNameMatching(@"Class\w1")     )
+                .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
             Assert.Contains<Type>(typeof(ClassA2), result);
@@ -152,10 +143,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes.*")
-                .And()
-                .HaveCustomAttribute(typeof(ClassCustomAttribute)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                & HaveCustomAttribute(typeof(ClassCustomAttribute))).GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(AttributePresent), result);
@@ -166,10 +155,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes.*")
-                .And()
-                .DoNotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                    & !HaveCustomAttribute(typeof(ClassCustomAttribute)))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(NoAttributes), result);
@@ -181,10 +169,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance.*")
-                .And()
-                .Inherit(typeof(BaseClass)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Inheritance") 
+                    & Inherit(typeof(BaseClass)))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(DerivedClass), result);
@@ -196,10 +183,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Inheritance.*")
-                .And()
-                .DoNotInherit(typeof(BaseClass)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Inheritance")
+                    & !Inherit(typeof(BaseClass)))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(BaseClass), result);
@@ -211,10 +197,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces.*")
-                .And()
-                .ImplementInterface(typeof(IExample)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                    & ImplementInterface(typeof(IExample)))
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ImplementsExampleInterface), result);
@@ -225,14 +210,13 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Interfaces.*")
-                .And()
-                .DoNotImplementInterface(typeof(IExample)).GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                    & !ImplementInterface(typeof(IExample)))
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
-            Assert.Contains<Type>(typeof(IExample), result);
-            Assert.Contains<Type>(typeof(DoesNotImplementInterface), result);
+            Assert.Contains(typeof(IExample), result);
+            Assert.Contains(typeof(DoesNotImplementInterface), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they are abstract.")]
@@ -240,10 +224,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract.*")
-                .And()
-                .AreAbstract().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Abstract") &
+                      AreAbstract())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(AbstractClass), result);
@@ -254,10 +237,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Abstract.*")
-                .And()
-                .AreNotAbstract().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Abstract") &
+                    !AreAbstract())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ConcreteClass), result);
@@ -268,10 +250,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
-                .And()
-                .AreClasses().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                    & AreClasses())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ExampleClass), result);
@@ -282,10 +263,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
-                .And()
-                .AreNotClasses().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                    & !AreClasses())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(IExampleInterface), result);
@@ -296,10 +276,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
-                .And()
-                .AreGeneric().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Generic")
+                    & AreGeneric())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(GenericType<>), result);
@@ -310,13 +289,12 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Generic.*")
-                .And()
-                .AreNotGeneric().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Generic")
+                & !AreGeneric())
+                .GetTypes();
 
             Assert.Single(result); // One type found
-            Assert.Contains<Type>(typeof(NonGenericType), result);
+            Assert.Contains(typeof(NonGenericType), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they are interfaces.")]
@@ -324,10 +302,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
-                .And()
-                .AreInterfaces().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                & AreInterfaces())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(IExampleInterface), result);
@@ -338,10 +315,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Classes.*")
-                .And()
-                .AreNotInterfaces().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Classes")
+                & !AreInterfaces())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ExampleClass), result);
@@ -352,10 +328,9 @@ namespace NetArchTest.Rules.UnitTests
         {
                 var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested.*")
-                .And()
-                .AreNested().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Nested") 
+                      & AreNested())
+                .GetTypes();
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(NestedContainer.NestedClass), result);
@@ -366,15 +341,13 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Nested.*")
-                .And()
-                .AreNotNested().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Nested")
+                    & !AreNested())
+                .GetTypes();
 
             Assert.Equal(2, result.Count()); // Two types found
-            Assert.Contains<Type>(typeof(NotNested), result);
-            Assert.Contains<Type>(typeof(NestedContainer), result);
-
+            Assert.Contains(typeof(NotNested), result);
+            Assert.Contains(typeof(NestedContainer), result);
         }
 
         [Fact(DisplayName = "Types can be selected for being declared as public.")]
@@ -382,10 +355,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope.*")
-                .And()
-                .ArePublic().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope")
+                & ArePublic())
+                .GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(PublicClass), result);
@@ -396,10 +368,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Scope.*")
-                .And()
-                .AreNotPublic().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Scope") 
+                      & !ArePublic())
+                .GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(InternalClass), result);
@@ -410,10 +381,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Sealed.*")
-                .And()
-                .AreSealed().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Sealed")
+                    & AreSealed())
+                .GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(SealedClass), result);
@@ -424,10 +394,9 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Sealed.*")
-                .And()
-                .AreNotSealed().GetTypes();
+                .That(ResideInNamespace("NetArchTest.TestStructure.Sealed") &
+                      !AreSealed())
+                .GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(NotSealedClass), result);
@@ -438,8 +407,7 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1.*")
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -453,8 +421,7 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .FullNameMatches(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace1"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -468,10 +435,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .FullNameNotMatches(name => name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching") 
+                      & !ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -485,10 +450,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.*")
-                .And()
-                .FullNameNotMatches(name=> name.StartsWith("NetArchTest.TestStructure.NameMatching.Namespace2"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                & !ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2"))
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found
@@ -502,7 +465,7 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That().FullNameMatches(Globbing.New("NetArchTest.TestStructure.NameMatching.*"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.NameMatching"))
                 .GetTypes();
 
             // Should return all the types that are in three nested namespaces
@@ -519,10 +482,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation.*")
-                .And()
-                .HaveDependencyOn(Globbing.New("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                      & HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
                 .GetTypes();
 
             Assert.Single(result); // Only one type found
@@ -534,10 +495,8 @@ namespace NetArchTest.Rules.UnitTests
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
-                .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation.*")
-                .And()
-                .DoNotHaveDependencyOn(Globbing.New("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
+                .That(ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                    & !HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency"))
                 .GetTypes();
 
             Assert.Single(result); // Only one type found
