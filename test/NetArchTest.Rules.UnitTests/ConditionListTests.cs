@@ -25,7 +25,7 @@
                 .HaveNameEndingWith("2")
                 .GetTypes();
 
-            Assert.Equal(7, result.Count()); // five types found
+            Assert.Equal(5, result.Count()); // five types found
             Assert.Contains<Type>(typeof(ClassA1), result);
             Assert.Contains<Type>(typeof(ClassA2), result);
             Assert.Contains<Type>(typeof(ClassA3), result);

@@ -70,7 +70,7 @@
             }
 
             // Return all the types that appear in at least one of the result sets
-            return resultSets.Distinct().SelectMany(list => list.Select(def => def));
+            return resultSets.SelectMany(list => list.Select(def => def)).Distinct();
         }
 
 
