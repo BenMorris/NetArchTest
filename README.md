@@ -1,4 +1,4 @@
-# NetArchTest
+﻿# NetArchTest
 
 [![Build status](https://dev.azure.com/ben-morris-uk/Open-Source/_apis/build/status/NetArchTest-CI-Build)](https://dev.azure.com/ben-morris-uk/Open-Source/_build/latest?definitionId=2)
 
@@ -23,20 +23,23 @@ var result = Types.InCurrentDomain()
     .ResideInNamespace("NetArchTest.SampleLibrary.Presentation")
     .ShouldNot()
     .HaveDependencyOn("NetArchTest.SampleLibrary.Data")
-    .GetResult();
+    .GetResult()
+    .IsSuccessful;
 
 // Classes in the "data" namespace should implement IRepository
 result = Types.InCurrentDomain()
     .That().HaveDependencyOn("System.Data")
     .And().ResideInNamespace(("ArchTest"))
     .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
-    .GetResult();
+    .GetResult()
+    .IsSuccessful;
 
 // All the service classes should be sealed
 result = Types.InCurrentDomain()
     .That().ImplementInterface(typeof(IWidgetService))
     .Should().BeSealed()
-    .GetResult();
+    .GetResult()
+    .IsSuccessful;
 ```
 
 ## Getting started
@@ -69,9 +72,9 @@ Once the set of classes have been filtered you can apply a set of conditions usi
 ```
 types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed();
 ```
-Finally, you obtain a result from the rule by using an executor, i.e. use `GetTypes()` to return the types that match the rule or `GetResult()` to determine whether the rule has been met.
+Finally, you obtain a result from the rule by using an executor, i.e. use `GetTypes()` to return the types that match the rule or `GetResult()` to determine whether the rule has been met. Note that the result will also return a list of types that failed to meet the conditions.
 ```
-var isValid = types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed().GetResut()
+var isValid = types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed().GetResult().IsSuccessful;
 ```
 
 ## Further reading

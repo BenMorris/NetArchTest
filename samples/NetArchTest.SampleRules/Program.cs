@@ -17,7 +17,7 @@
                 .ResideInNamespace("NetArchTest.SampleLibrary.Presentation")
                 .ShouldNot()
                 .HaveDependencyOn("NetArchTest.SampleLibrary.Data")
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             //****************************************************
             // Controlling external dependencies
@@ -27,7 +27,7 @@
                 .That().HaveDependencyOn("System.Data")
                 .And().ResideInNamespace(("ArchTest"))
                 .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             //****************************************************
             // Miscellaneous application-specific rules
@@ -37,26 +37,26 @@
                 .That().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
                 .And().AreClasses()
                 .Should().ImplementInterface(typeof(IRepository<>))
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             // Classes that implement IRepository should have the suffix "Repository"
             result = Types.InCurrentDomain()
                 .That().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
                 .And().AreClasses()
                 .Should().HaveNameEndingWith("Repository")
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             // Classes that implement IRepository must reside in the Data namespace
             result = Types.InCurrentDomain()
                 .That().ImplementInterface(typeof(IRepository<>))
                 .Should().ResideInNamespace(("NetArchTest.SampleLibrary.Data"))
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             // All the service classes should be sealed
             result = Types.InCurrentDomain()
                 .That().ImplementInterface(typeof(IWidgetService))
                 .Should().BeSealed()
-                .GetResult();
+                .GetResult().IsSuccessful;
 
             //****************************************************
             // Generic implementation rules
@@ -66,7 +66,7 @@
                 .That().AreInterfaces()
                 .Should()
                 .HaveNameStartingWith("I")
-                .GetResult();
+                .GetResult().IsSuccessful;
         }
     }
 }
