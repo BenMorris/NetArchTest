@@ -77,5 +77,41 @@
             Assert.Contains<Type>(typeof(ClassA3), result);
             Assert.Contains<Type>(typeof(ClassB2), result);
         }
+
+        [Fact(DisplayName = "If a condition fails then a list of failing types should be returned.")]
+        public void GetResult_Failed_ReturnFailedTypes()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .Should()
+                .HaveNameStartingWith("ClassA")
+                .GetResult();
+
+            Assert.False(result.IsSuccessful);
+            Assert.Equal(2, result.FailingTypes.Count()); // two types found
+            Assert.Contains<Type>(typeof(ClassB1), result.FailingTypes);
+            Assert.Contains<Type>(typeof(ClassB2), result.FailingTypes);
+        }
+
+        [Fact(DisplayName = "If a condition succeeds then a list of failing types should be null.")]
+        public void GetResult_Success_ReturnNullFailedTypes()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .Should()
+                .HaveNameStartingWith("ClassA")
+                .Or()
+                .HaveNameEndingWith("1")
+                .Or()
+                .HaveNameEndingWith("2")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+            Assert.Null(result.FailingTypes);
+        }
     }
 }
