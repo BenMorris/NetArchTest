@@ -1,8 +1,8 @@
 ﻿namespace NetArchTest.Rules.UnitTests
 {
+    using System.Linq;
     using System.Reflection;
     using NetArchTest.TestStructure.CustomAttributes;
-    using NetArchTest.TestStructure.Dependencies;
     using NetArchTest.TestStructure.Inheritance;
     using NetArchTest.TestStructure.Interfaces;
     using NetArchTest.TestStructure.NameMatching.Namespace1;
@@ -20,7 +20,7 @@
                 .Should()
                 .HaveName("ClassB2").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a specific name.")]
@@ -33,7 +33,7 @@
                 .Should()
                 .NotHaveName("ClassB2").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected by the start of their name.")]
@@ -46,7 +46,7 @@
                 .Should()
                 .HaveNameStartingWith("Class").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if their name does not have a specific start.")]
@@ -59,7 +59,7 @@
                 .Should()
                 .NotHaveNameStartingWith("X").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected by the end of their name.")]
@@ -72,7 +72,7 @@
                 .Should()
                 .HaveNameEndingWith("B2").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if their name does not have a specific end.")]
@@ -85,7 +85,7 @@
                 .Should()
                 .NotHaveNameEndingWith("B2").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected by a regular expression.")]
@@ -98,7 +98,7 @@
                 .Should()
                 .HaveNameMatching(@"Class\w\d").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not conform to a regular expression.")]
@@ -111,7 +111,7 @@
                 .Should()
                 .NotHaveNameMatching(@"X\w").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected by a the presence of a custom attribute.")]
@@ -126,7 +126,7 @@
                 .Should()
                 .HaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected by the absence of a custom attribute.")]
@@ -141,7 +141,7 @@
                 .Should()
                 .NotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they inherit from a type.")]
@@ -156,7 +156,7 @@
                 .Should()
                 .Inherit(typeof(BaseClass)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not inherit from a type.")]
@@ -171,7 +171,7 @@
                 .Should()
                 .NotInherit(typeof(BaseClass)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they implement an interface.")]
@@ -186,7 +186,7 @@
                 .Should()
                 .ImplementInterface(typeof(IExample)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not implement an interface.")]
@@ -201,7 +201,7 @@
                 .Should()
                 .NotImplementInterface(typeof(IExample)).GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are abstract.")]
@@ -216,7 +216,7 @@
                 .Should()
                 .BeAbstract().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not abstract.")]
@@ -231,7 +231,7 @@
                 .Should()
                 .NotBeAbstract().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are classes.")]
@@ -246,7 +246,7 @@
                 .Should()
                 .BeClasses().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not classes.")]
@@ -261,7 +261,7 @@
                 .Should()
                 .NotBeClasses().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they have generic parameters.")]
@@ -276,7 +276,7 @@
                 .Should()
                 .BeGeneric().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have generic parameters.")]
@@ -291,7 +291,7 @@
                 .Should()
                 .NotBeGeneric().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are interfaces.")]
@@ -306,7 +306,7 @@
                 .Should()
                 .BeInterfaces().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not interfaces.")]
@@ -321,7 +321,7 @@
                 .Should()
                 .NotBeInterfaces().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are nested.")]
@@ -336,7 +336,7 @@
                 .Should()
                 .BeNested().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not nested.")]
@@ -351,7 +351,7 @@
                 .Should()
                 .NotBeNested().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected for being declared as public.")]
@@ -366,7 +366,7 @@
                 .Should()
                 .BePublic().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected for not being declared as public.")]
@@ -381,7 +381,7 @@
                 .Should()
                 .NotBePublic().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected for being declared as sealed.")]
@@ -396,7 +396,7 @@
                 .Should()
                 .BeSealed().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected for not being declared as sealed.")]
@@ -411,7 +411,7 @@
                 .Should()
                 .NotBeSealed().GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]
@@ -424,7 +424,7 @@
                 .Should()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not reside in a namespace.")]
@@ -437,7 +437,7 @@
                 .Should()
                 .NotResideInNamespace("NetArchTest.TestStructure.Wrong").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Selecting by namespace will return types in nested namespaces.")]
@@ -450,7 +450,7 @@
                 .Should()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching").GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they have a dependency on another type.")]
@@ -466,7 +466,7 @@
                 .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
                 .GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on another type.")]
@@ -482,7 +482,26 @@
                 .NotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
                 .GetResult();
 
-            Assert.True(result);
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types failing condition are reported when test fails.")]
+        public void MatchNotFound_ClassesReported()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace1")
+                .Should()
+                .HaveName("ClassA2")
+                .GetResult();
+
+            Assert.False(result.IsSuccessful);
+
+            var failingTypes = result.FailingTypes.ToList();
+            Assert.Equal(2, failingTypes.Count);
+            Assert.Equal("NetArchTest.TestStructure.NameMatching.Namespace1.ClassA1", failingTypes[0].ToString());
+            Assert.Equal("NetArchTest.TestStructure.NameMatching.Namespace1.ClassB1", failingTypes[1].ToString());
         }
     }
 }

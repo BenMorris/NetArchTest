@@ -33,19 +33,28 @@
         /// <summary>
         /// Returns an indication of whether all the selected types satisfy the conditions.
         /// </summary>
-        /// <returns>An indication of whether the conditions are true.</returns>
-        public bool GetResult()
+        /// <returns>An indication of whether the conditions are true, along with a list of types failing the check if they are not.</returns>
+        public TestResult GetResult()
         {
+            bool success;
             if (_should)
             {
                 // All the classes should meet the condition
-                return (_sequence.Execute(_types).Count() == _types.Count());
+                success = (_sequence.Execute(_types).Count() == _types.Count());
             }
             else
             {
                 // No classes should meet the condition
-                return (!_sequence.Execute(_types).Any());
+                success = (!_sequence.Execute(_types).Any());
             }
+
+            if (success)
+            {
+                return TestResult.Success();
+            }
+
+            // If we've failed, get a collection of failing types so these can be reported in a failing test.
+            return TestResult.Failure(_sequence.Execute(_types, selected: false).Select(t => t.ToType()));
         }
 
         /// <summary>

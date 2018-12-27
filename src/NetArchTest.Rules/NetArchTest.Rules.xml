@@ -27,7 +27,7 @@
             <summary>
             Returns an indication of whether all the selected types satisfy the conditions.
             </summary>
-            <returns>An indication of whether the conditions are true.</returns>
+            <returns>An indication of whether the conditions are true, along with a list of types failing the check if they are not.</returns>
         </member>
         <member name="M:NetArchTest.Rules.ConditionList.Count">
             <summary>
@@ -502,11 +502,11 @@
             Creates a new logical grouping of function calls.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.FunctionSequence.Execute(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">
+        <member name="M:NetArchTest.Rules.FunctionSequence.Execute(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Boolean)">
             <summary>
             Executes all the function calls that have been specified.
             </summary>
-            <returns>A list of types that are selected by the predicates.</returns>
+            <returns>A list of types that are selected by the predicates (or not selected if optional reversing flag is passed).</returns>
         </member>
         <member name="T:NetArchTest.Rules.FunctionSequence.FunctionCall">
             <summary>
@@ -821,6 +821,33 @@
             </summary>
             <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.TestResult">
+            <summary>
+            Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ConditionList"/>.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.TestResult.IsSuccessful">
+            <summary>
+            Flag indicating the success or failure of the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.TestResult.FailingTypes">
+            <summary>
+            Collection populated with a list of types that failed the test, if the test was a failure.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.TestResult.Success">
+            <summary>
+            Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a successful test.
+            </summary>
+            <returns>Instance of <see cref="T:NetArchTest.Rules.TestResult"/></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.TestResult.Failure(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a failed test.
+            </summary>
+            <returns>Instance of <see cref="T:NetArchTest.Rules.TestResult"/></returns>
         </member>
         <member name="T:NetArchTest.Rules.Types">
             <summary>
