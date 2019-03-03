@@ -237,7 +237,7 @@
         /// <summary>
         /// Finds matching dependencies for a set of generic parameters
         /// </summary>
-        private void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
+        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
         {
             foreach (var generic in parameters)
             {
