@@ -273,6 +273,20 @@
             <param name="name">The namespace to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.ResideInNamespaceMatching(System.String)">
+            <summary>
+            Selects types that reside in a namespace matching a regular expression.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotResideInNamespaceMatching(System.String)">
+            <summary>
+            Selects types that do not reside in a namespace matching a regular expression.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.String)">
             <summary>
             Selects types that have a dependency on a particular type.
@@ -475,6 +489,9 @@
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.ResideInNamespace">
             <summary> Function for finding types in a particular namespace. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.ResideInNamespaceMatching">
+            <summary> Function for matching a type name using a regular expression. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.HaveDependencyOn">
             <summary> Function for finding types that have a dependency on a specific type. </summary>
@@ -806,6 +823,20 @@
             Selects types that do not reside in a particular namespace.
             </summary>
             <param name="name">The namespace to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespaceMatching(System.String)">
+            <summary>
+            Selects types whose namespaces match a regular expression.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespaceMatching(System.String)">
+            <summary>
+            Selects types whose namespaces do not match a regular expression.
+            </summary>
+            <param name="pattern">The regular expression pattern to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.String)">

@@ -440,6 +440,34 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace that matches a regular expression.")]
+        public void ResideInNamespaceMatching_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(@"NetArchTest.TestStructure.NamespaceMatching")
+                .Should()
+                .ResideInNamespaceMatching(@"NetArchTest.TestStructure.NamespaceMatching.Namespace\w")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that matches a regular expression.")]
+        public void DoNotResideInNamespaceMatching_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NamespaceMatching.NamespaceA")
+                .Should()
+                .NotResideInNamespaceMatching(@"NetArchTest.TestStructure.NamespaceMatching.Namespace\d")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Selecting by namespace will return types in nested namespaces.")]
         public void ResideInNamespace_Nested_AllClassReturned()
         {
