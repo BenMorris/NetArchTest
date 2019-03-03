@@ -60,11 +60,11 @@
             var baseClass = type.BaseType?.Resolve();
             if (baseClass != null)
             {
-                foreach (var depdendency in results.SearchList)
+                foreach (var dependency in results.SearchList)
                 {
-                    if (baseClass.FullName.StartsWith(depdendency, StringComparison.InvariantCultureIgnoreCase))
+                    if (baseClass.FullName.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        results.AddToFound(type, depdendency);
+                        results.AddToFound(type, dependency);
                     }
                 }
             }
@@ -237,7 +237,7 @@
         /// <summary>
         /// Finds matching dependencies for a set of generic parameters
         /// </summary>
-        private void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
+        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
         {
             foreach (var generic in parameters)
             {
