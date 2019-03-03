@@ -60,11 +60,11 @@
             var baseClass = type.BaseType?.Resolve();
             if (baseClass != null)
             {
-                foreach (var depdendency in results.SearchList)
+                foreach (var dependency in results.SearchList)
                 {
-                    if (baseClass.FullName.StartsWith(depdendency, StringComparison.InvariantCultureIgnoreCase))
+                    if (baseClass.FullName.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        results.AddToFound(type, depdendency);
+                        results.AddToFound(type, dependency);
                     }
                 }
             }
