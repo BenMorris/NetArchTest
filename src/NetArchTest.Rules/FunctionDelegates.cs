@@ -234,6 +234,20 @@
             }
         };
 
+        /// <summary> Function for matching a type name using a regular expression. </summary>
+        internal static FunctionDelegate<string> ResideInNamespaceMatching = delegate (IEnumerable<TypeDefinition> input, string pattern, bool condition)
+        {
+            Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
+            if (condition)
+            {
+                return input.Where(c => r.Match(c.Namespace).Success);
+            }
+            else
+            {
+                return input.Where(c => !r.Match(c.Namespace).Success);
+            }
+        };
+
         /// <summary> Function for finding types that have a dependency on a specific type. </summary>
         internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOn = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {

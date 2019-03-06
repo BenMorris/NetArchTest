@@ -14,6 +14,8 @@
     using NetArchTest.TestStructure.NameMatching.Namespace1;
     using NetArchTest.TestStructure.NameMatching.Namespace2;
     using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
+    using NetArchTest.TestStructure.NamespaceMatching.Namespace1;
+    using NetArchTest.TestStructure.NamespaceMatching.NamespaceA;
     using NetArchTest.TestStructure.Nested;
     using NetArchTest.TestStructure.Scope;
     using NetArchTest.TestStructure.Sealed;
@@ -461,6 +463,34 @@
             Assert.Contains<Type>(typeof(ClassA1), result);
             Assert.Contains<Type>(typeof(ClassA2), result);
             Assert.Contains<Type>(typeof(ClassB1), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace that matches a regular expression.")]
+        public void ResideInNamespaceMatching_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceMatching(@"NetArchTest.TestStructure.NamespaceMatching.Namespace\d")
+                .GetTypes();
+
+            Assert.Single(result); // One type found
+            Assert.Contains<Type>(typeof(Match1), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that matches a regular expression.")]
+        public void DoNotResideInNamespaceMatching_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NamespaceMatching")
+                .And()
+                .DoNotResideInNamespaceMatching(@"NetArchTest.TestStructure.NamespaceMatching.Namespace\d")
+                .GetTypes();
+
+            Assert.Single(result); // One type found
+            Assert.Contains<Type>(typeof(MatchA), result);
         }
 
         [Fact(DisplayName = "Selecting by namespace will return types in nested namespaces.")]

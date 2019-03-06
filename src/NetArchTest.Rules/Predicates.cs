@@ -358,6 +358,28 @@
         }
 
         /// <summary>
+        /// Selects types whose namespaces match a regular expression.
+        /// </summary>
+        /// <param name="pattern">The regular expression pattern to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList ResideInNamespaceMatching(string pattern)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, pattern, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces do not match a regular expression.
+        /// </summary>
+        /// <param name="pattern">The regular expression pattern to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotResideInNamespaceMatching(string pattern)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, pattern, false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that have a dependency on a particular type.
         /// </summary>
         /// <param name="dependency">The dependency type to match against.</param>
