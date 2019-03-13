@@ -336,6 +336,26 @@
         }
 
         /// <summary>
+        /// Selects types according that are immutable.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreImmutable()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeImmutable, true, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types according that are mutable.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreMutable()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeImmutable, true, false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that reside in a particular namespace.
         /// </summary>
         /// <param name="name">The namespace to match against.</param>

@@ -19,6 +19,7 @@
     using NetArchTest.TestStructure.Nested;
     using NetArchTest.TestStructure.Scope;
     using NetArchTest.TestStructure.Sealed;
+    using NetArchTest.TestStructure.Mutability;
     using Xunit;
 
     public class PredicateTests
@@ -431,6 +432,36 @@
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(NotSealedClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected for being immutable.")]
+        public void AreImmutable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Mutability")
+                .And()
+                .AreImmutable().GetTypes();
+
+            Assert.Single(result); // One result
+            Assert.Contains<Type>(typeof(ImmutableClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected for being mutable.")]
+        public void AreMutable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Mutability")
+                .And()
+                .AreMutable().GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(PartiallyMutableClass1), result);
+            Assert.Contains<Type>(typeof(PartiallyMutableClass2), result);
+            Assert.Contains<Type>(typeof(MutableClass), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]

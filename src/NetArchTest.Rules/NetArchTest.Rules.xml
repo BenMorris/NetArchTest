@@ -259,6 +259,18 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeImmutable">
+            <summary>
+            Selects types according that are immutable.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeMutable">
+            <summary>
+            Selects types according that are mutable.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.ResideInNamespace(System.String)">
             <summary>
             Selects types that reside in a particular namespace.
@@ -485,6 +497,9 @@
             <summary> Function for finding public classes. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeSealed">
+            <summary> Function for finding sealed classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeImmutable">
             <summary> Function for finding sealed classes. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.ResideInNamespace">
@@ -808,6 +823,18 @@
         <member name="M:NetArchTest.Rules.Predicates.AreNotSealed">
             <summary>
             Selects types according that are not marked as sealed.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreImmutable">
+            <summary>
+            Selects types according that are immutable.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreMutable">
+            <summary>
+            Selects types according that are mutable.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
