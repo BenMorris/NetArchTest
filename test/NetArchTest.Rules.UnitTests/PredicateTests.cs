@@ -444,8 +444,10 @@
                 .And()
                 .AreImmutable().GetTypes();
 
-            Assert.Single(result); // One result
-            Assert.Contains<Type>(typeof(ImmutableClass), result);
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(ImmutableClass1), result);
+            Assert.Contains<Type>(typeof(ImmutableClass2), result);
+            Assert.Contains<Type>(typeof(ImmutableClass3), result);
         }
 
         [Fact(DisplayName = "Types can be selected for being mutable.")]

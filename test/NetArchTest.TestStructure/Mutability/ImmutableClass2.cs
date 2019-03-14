@@ -3,10 +3,10 @@ namespace NetArchTest.TestStructure.Mutability
     /// <summary>
     /// An example class that has has no mutable members.
     /// </summary>
-    public class ImmutableClass
+    public class ImmutableClass2
     {
-        public object Property {get;}
+        public object PrivateSetProperty {get; private set;}
 
-        public readonly object field;
+        public const object constField = null;
     }
 }

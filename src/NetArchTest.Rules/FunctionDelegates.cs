@@ -224,7 +224,14 @@
         /// <summary> Function for finding sealed classes. </summary>
         internal static FunctionDelegate<bool> BeImmutable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
-            throw new NotImplementedException();
+            if (condition)
+            {
+                return input.Where(c => c.IsImmutable());
+            }
+            else
+            {
+                return input.Where(c => !c.IsImmutable());
+            }
         };
 
         /// <summary> Function for finding types in a particular namespace. </summary>

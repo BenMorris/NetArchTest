@@ -422,7 +422,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Mutability")
                 .And()
-                .HaveName("ImmutableClass")
+                .HaveNameStartingWith("ImmutableClass")
                 .Should()
                 .BeImmutable().GetResult();
 
@@ -437,7 +437,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Mutability")
                 .And()
-                .DoNotHaveName("ImmutableClass")
+                .DoNotHaveNameStartingWith("ImmutableClass")
                 .Should()
                 .BeMutable().GetResult();
 
