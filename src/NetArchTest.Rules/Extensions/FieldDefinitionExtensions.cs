@@ -17,7 +17,7 @@ namespace NetArchTest.Rules.Extensions
         /// <returns>An indication of whether the field is readonly.</returns>
         public static bool IsReadonly(this FieldDefinition fieldDefinition)
         {
-            return !fieldDefinition.IsPublic || fieldDefinition.IsInitOnly || fieldDefinition.HasConstant;
+            return !fieldDefinition.IsPublic || fieldDefinition.IsInitOnly || fieldDefinition.HasConstant || fieldDefinition.IsCompilerControlled;
         }
     }
 }
