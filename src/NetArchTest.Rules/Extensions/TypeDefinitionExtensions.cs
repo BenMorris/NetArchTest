@@ -4,7 +4,6 @@
     using System.Linq;
     using System.Collections.Generic;
     using Mono.Cecil;
-    using System.Reflection;
 
     /// <summary>
     /// Extensions for the <see cref="TypeDefinition"/> class.
