@@ -21,6 +21,7 @@
     using NetArchTest.TestStructure.Sealed;
     using NetArchTest.TestStructure.Mutability;
     using Xunit;
+    using NetArchTest.TestStructure.Nullable;
 
     public class PredicateTests
     {
@@ -464,6 +465,35 @@
             Assert.Contains<Type>(typeof(PartiallyMutableClass1), result);
             Assert.Contains<Type>(typeof(PartiallyMutableClass2), result);
             Assert.Contains<Type>(typeof(MutableClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected for having only nullable memebers.")]
+        public void AreNullable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nullable")
+                .And()
+                .AreNullable().GetTypes();
+
+            Assert.Single(result); // One result
+            Assert.Contains<Type>(typeof(NullableClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected for having non-nullable memebers.")]
+        public void AreNonNullable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nullable")
+                .And()
+                .AreNonNullable().GetTypes();
+
+            Assert.Equal(2, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(NonNullableClass1), result);
+            Assert.Contains<Type>(typeof(NonNullableClass2), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]

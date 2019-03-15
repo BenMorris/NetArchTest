@@ -19,5 +19,15 @@ namespace NetArchTest.Rules.Extensions
         {
             return propertyDefinition.SetMethod == null || !propertyDefinition.SetMethod.IsPublic;
         }
+        
+        /// <summary>
+        /// Tests whether a property is nullable
+        /// </summary>
+        /// <param name="propertyDefinition">The property to test.</param>
+        /// <returns>An indication of whether the property is nullable.</returns>
+        public static bool IsNullable(this PropertyDefinition propertyDefinition)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

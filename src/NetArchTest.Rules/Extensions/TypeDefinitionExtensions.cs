@@ -66,5 +66,17 @@
             var fieldsAreReadonly = typeDefinition.Fields.All(f => f.IsReadonly());
             return propertiesAreReadonly && fieldsAreReadonly;
         }
+
+        /// <summary>
+        /// Tests whether a class is nullable, i.e. no fields or properties are simple value types
+        /// </summary>
+        /// <param name="typeDefinition">The class to test.</param>
+        /// <returns>An indication of whether the type is nullable</returns>
+        public static bool IsNullable(this TypeDefinition typeDefinition)
+        {
+            var propertiesAreNullable = typeDefinition.Properties.All(p => p.IsNullable());
+            var fieldsAreNullable = typeDefinition.Fields.All(f => f.IsNullable());
+            return propertiesAreNullable && fieldsAreNullable;
+        }
     }
 }

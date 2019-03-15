@@ -271,6 +271,18 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeNullable">
+            <summary>
+            Selects types according that are immutable.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeNonNullable">
+            <summary>
+            Selects types according that are mutable.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.ResideInNamespace(System.String)">
             <summary>
             Selects types that reside in a particular namespace.
@@ -419,6 +431,13 @@
             <param name="fieldDefinition">The field to test.</param>
             <returns>An indication of whether the field is readonly.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Extensions.FieldDefinitionExtensions.IsNullable(Mono.Cecil.FieldDefinition)">
+            <summary>
+            Tests whether a field is nullable
+            </summary>
+            <param name="fieldDefinition">The field to test.</param>
+            <returns>An indication of whether the field is readonly.</returns>
+        </member>
         <member name="T:NetArchTest.Rules.Extensions.PropertyDefinitionExtensions">
             <summary>
             Extensions for the <see cref="T:Mono.Cecil.PropertyDefinition"/> class.
@@ -427,6 +446,13 @@
         <member name="M:NetArchTest.Rules.Extensions.PropertyDefinitionExtensions.IsReadonly(Mono.Cecil.PropertyDefinition)">
             <summary>
             Tests whether a property is readonly
+            </summary>
+            <param name="propertyDefinition">The property to test.</param>
+            <returns>An indication of whether the property is readonly.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.PropertyDefinitionExtensions.IsNullable(Mono.Cecil.PropertyDefinition)">
+            <summary>
+            Tests whether a property is nullable
             </summary>
             <param name="propertyDefinition">The property to test.</param>
             <returns>An indication of whether the property is readonly.</returns>
@@ -464,6 +490,13 @@
             </summary>
             <param name="typeDefinition">The class to test.</param>
             <returns>An indication of whether the type is immutable</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.IsNullable(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Tests whether a class is nullable, i.e. no fields or properties are simple value types
+            </summary>
+            <param name="typeDefinition">The class to test.</param>
+            <returns>An indication of whether the type is nullable</returns>
         </member>
         <member name="T:NetArchTest.Rules.Extensions.TypeExtensions">
             <summary>
@@ -531,7 +564,10 @@
             <summary> Function for finding sealed classes. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeImmutable">
-            <summary> Function for finding sealed classes. </summary>
+            <summary> Function for finding immutable classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeNullable">
+            <summary> Function for finding nullable classes. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.ResideInNamespace">
             <summary> Function for finding types in a particular namespace. </summary>
@@ -859,13 +895,25 @@
         </member>
         <member name="M:NetArchTest.Rules.Predicates.AreImmutable">
             <summary>
-            Selects types according that are immutable.
+            Selects types that are immutable.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.AreMutable">
             <summary>
-            Selects types according that are mutable.
+            Selects types that are mutable.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNullable">
+            <summary>
+            Selects types that have only nullable members.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNonNullable">
+            <summary>
+            Selects types that have some non-nullable members.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
