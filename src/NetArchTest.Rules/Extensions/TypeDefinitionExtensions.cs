@@ -54,5 +54,17 @@
             var fullName = typeDefinition.FullName.Replace("/", "+");
             return Type.GetType(string.Concat(fullName, ", ", typeDefinition.Module.Assembly.FullName), true);
         }
+
+        /// <summary>
+        /// Tests whether a class is immutable, i.e. all public fields are readonly and properties have no set method
+        /// </summary>
+        /// <param name="typeDefinition">The class to test.</param>
+        /// <returns>An indication of whether the type is immutable</returns>
+        public static bool IsImmutable(this TypeDefinition typeDefinition)
+        {
+            var propertiesAreReadonly = typeDefinition.Properties.All(p => p.IsReadonly());
+            var fieldsAreReadonly = typeDefinition.Fields.All(f => f.IsReadonly());
+            return propertiesAreReadonly && fieldsAreReadonly;
+        }
     }
 }

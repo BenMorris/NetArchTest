@@ -335,6 +335,26 @@
         }
 
         /// <summary>
+        /// Selects types according that are immutable.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeImmutable()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeImmutable, true, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types according that are mutable.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeMutable()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeImmutable, true, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that reside in a particular namespace.
         /// </summary>
         /// <param name="name">The namespace to match against.</param>

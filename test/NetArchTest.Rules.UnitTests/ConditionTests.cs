@@ -414,6 +414,36 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected for being immutable.")]
+        public void AreImmutable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Mutability")
+                .And()
+                .HaveNameStartingWith("ImmutableClass")
+                .Should()
+                .BeImmutable().GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected for being mutable.")]
+        public void AreMutable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Mutability")
+                .And()
+                .DoNotHaveNameStartingWith("ImmutableClass")
+                .Should()
+                .BeMutable().GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]
         public void ResideInNamespace_MatchesFound_ClassSelected()
         {
@@ -482,7 +512,7 @@
         }
 
         [Fact(DisplayName = "Types can be selected if they have a dependency on another type.")]
-        public void HaveDepencency_MatchesFound_ClassSelected()
+        public void HaveDependency_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
@@ -498,7 +528,7 @@
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on another type.")]
-        public void NotHaveDepencency_MatchesFound_ClassSelected()
+        public void NotHaveDependency_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))

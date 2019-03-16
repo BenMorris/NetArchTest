@@ -221,6 +221,19 @@
             }
         };
 
+        /// <summary> Function for finding sealed classes. </summary>
+        internal static FunctionDelegate<bool> BeImmutable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(c => c.IsImmutable());
+            }
+            else
+            {
+                return input.Where(c => !c.IsImmutable());
+            }
+        };
+
         /// <summary> Function for finding types in a particular namespace. </summary>
         internal static FunctionDelegate<string> ResideInNamespace = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
         {
