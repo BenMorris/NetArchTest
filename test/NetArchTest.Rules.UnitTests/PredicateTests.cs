@@ -497,7 +497,7 @@
                 .And()
                 .ArePublic()
                 .And()
-                .HaveNonNullableMembers().GetTypes();
+                .HaveSomeNonNullableMembers().GetTypes();
 
             Assert.Equal(4, result.Count()); // Four types found
             Assert.Contains<Type>(typeof(NonNullableClass1), result);

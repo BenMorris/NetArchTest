@@ -510,13 +510,6 @@
             <param name="type">The type to convert.</param>
             <returns>The converted value.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Extensions.TypeExtensions.IsNullable(System.Type)">
-            <summary>
-            Tests whether a Type is a non-nullable value type
-            </summary>
-            <param name="type">The type to test.</param>
-            <returns>An indication of whether the type is a non-nullable value type</returns>
-        </member>
         <member name="M:NetArchTest.Rules.Extensions.TypeReferenceExtensions.IsNullable(Mono.Cecil.TypeReference)">
             <summary>
             Tests whether a Type is a non-nullable value type
@@ -925,7 +918,7 @@
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveNonNullableMembers">
+        <member name="M:NetArchTest.Rules.Predicates.HaveSomeNonNullableMembers">
             <summary>
             Selects types that have some non-nullable members.
             </summary>
