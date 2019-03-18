@@ -235,15 +235,15 @@
         };
 
         /// <summary> Function for finding nullable classes. </summary>
-        internal static FunctionDelegate<bool> BeNullable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        internal static FunctionDelegate<bool> HasNullableMembers = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
             if (condition)
             {
-                return input.Where(c => c.IsNullable());
+                return input.Where(c => c.HasNullableMembers());
             }
             else
             {
-                return input.Where(c => !c.IsNullable());
+                return input.Where(c => !c.HasNullableMembers());
             }
         };
 

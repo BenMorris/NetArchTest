@@ -27,7 +27,7 @@ namespace NetArchTest.Rules.Extensions
         /// <returns>An indication of whether the field is nullable.</returns>
         public static bool IsNullable(this FieldDefinition fieldDefinition)
         {
-            throw new NotImplementedException();
+            return fieldDefinition.FieldType.IsNullable();
         }
     }
 }

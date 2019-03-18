@@ -359,9 +359,9 @@
         /// Selects types that have only nullable members.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList AreNullable()
+        public PredicateList HaveOnlyNullableMembers()
         {
-            _sequence.AddFunctionCall(FunctionDelegates.BeNullable, true, true);
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, true);
             return new PredicateList(_types, _sequence);
         }
 
@@ -369,9 +369,9 @@
         /// Selects types that have some non-nullable members.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList AreNonNullable()
+        public PredicateList HaveNonNullableMembers()
         {
-            _sequence.AddFunctionCall(FunctionDelegates.BeNullable, true, false);
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, false);
             return new PredicateList(_types, _sequence);
         }
 

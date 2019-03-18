@@ -475,7 +475,11 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nullable")
                 .And()
-                .AreNullable().GetTypes();
+                .AreNotNested() // ignore nested helper types
+                .And()
+                .AreClasses()
+                .And()
+                .HaveOnlyNullableMembers().GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(NullableClass), result);
@@ -489,11 +493,17 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nullable")
                 .And()
-                .AreNonNullable().GetTypes();
+                .AreNotNested() // ignore nested helper types
+                .And()
+                .ArePublic()
+                .And()
+                .HaveNonNullableMembers().GetTypes();
 
-            Assert.Equal(2, result.Count()); // Three types found
+            Assert.Equal(4, result.Count()); // Four types found
             Assert.Contains<Type>(typeof(NonNullableClass1), result);
             Assert.Contains<Type>(typeof(NonNullableClass2), result);
+            Assert.Contains<Type>(typeof(NonNullableClass3), result);
+            Assert.Contains<Type>(typeof(NonNullableClass4), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]

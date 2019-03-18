@@ -27,7 +27,7 @@ namespace NetArchTest.Rules.Extensions
         /// <returns>An indication of whether the property is nullable.</returns>
         public static bool IsNullable(this PropertyDefinition propertyDefinition)
         {
-            throw new NotImplementedException();
+            return propertyDefinition.PropertyType.IsNullable();
         }
     }
 }

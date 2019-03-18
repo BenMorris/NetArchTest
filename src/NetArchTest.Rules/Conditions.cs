@@ -335,7 +335,7 @@
         }
 
         /// <summary>
-        /// Selects types according that are immutable.
+        /// Selects types that are immutable.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList BeImmutable()
@@ -345,7 +345,7 @@
         }
 
         /// <summary>
-        /// Selects types according that are mutable.
+        /// Selects types that are mutable.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList BeMutable()
@@ -355,22 +355,22 @@
         }
 
         /// <summary>
-        /// Selects types according that are immutable.
+        /// Selects types according to whether they have nullable members.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList BeNullable()
+        public ConditionList HaveOnlyNullableMembers()
         {
-            _sequence.AddFunctionCall(FunctionDelegates.BeNullable, true, true);
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, true);
             return new ConditionList(_types, _should, _sequence);
         }
 
         /// <summary>
-        /// Selects types according that are mutable.
+        /// Selects types according to whether they have nullable members.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList BeNonNullable()
+        public ConditionList HaveSomeNonNullableMembers()
         {
-            _sequence.AddFunctionCall(FunctionDelegates.BeNullable, true, false);
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, false);
             return new ConditionList(_types, _should, _sequence);
         }
 

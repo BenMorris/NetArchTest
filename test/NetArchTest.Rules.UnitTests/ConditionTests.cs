@@ -452,9 +452,11 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nullable")
                 .And()
+                .AreNotNested() // ignore nested helper types
+                .And()
                 .DoNotHaveNameStartingWith("NonNullableClass")
                 .Should()
-                .BeNullable().GetResult();
+                .HaveOnlyNullableMembers().GetResult();
             
             Assert.True(result.IsSuccessful);
         }
@@ -467,9 +469,11 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nullable")
                 .And()
+                .AreNotNested() // ignore nested helper types
+                .And()
                 .DoNotHaveNameStartingWith("NullableClass")
                 .Should()
-                .BeNonNullable().GetResult();
+                .HaveSomeNonNullableMembers().GetResult();
             
             Assert.True(result.IsSuccessful);
         }
