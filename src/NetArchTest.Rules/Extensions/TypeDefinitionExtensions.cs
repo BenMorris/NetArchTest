@@ -66,5 +66,17 @@
             var fieldsAreReadonly = typeDefinition.Fields.All(f => f.IsReadonly());
             return propertiesAreReadonly && fieldsAreReadonly;
         }
+
+        /// <summary>
+        /// Tests whether a Type has any memebers that are non-nullable value types
+        /// </summary>
+        /// <param name="typeDefinition">The class to test.</param>
+        /// <returns>An indication of whether the type has any memebers that are non-nullable value types</returns>
+        public static bool HasNullableMembers(this TypeDefinition typeDefinition)
+        {
+            var propertiesAreNullable = typeDefinition.Properties.All(p => p.IsNullable());
+            var fieldsAreNullable = typeDefinition.Fields.All(f => f.IsNullable());
+            return propertiesAreNullable && fieldsAreNullable;
+        }
     }
 }

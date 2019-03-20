@@ -444,6 +444,40 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected for having only nullable memebers.")]
+        public void AreNullable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nullable")
+                .And()
+                .AreNotNested() // ignore nested helper types
+                .And()
+                .DoNotHaveNameStartingWith("NonNullableClass")
+                .Should()
+                .HaveOnlyNullableMembers().GetResult();
+            
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected for having non-nullable memebers.")]
+        public void AreNonNullable_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nullable")
+                .And()
+                .AreNotNested() // ignore nested helper types
+                .And()
+                .DoNotHaveNameStartingWith("NullableClass")
+                .Should()
+                .HaveSomeNonNullableMembers().GetResult();
+            
+            Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected if they reside in a namespace.")]
         public void ResideInNamespace_MatchesFound_ClassSelected()
         {

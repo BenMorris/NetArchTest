@@ -19,5 +19,15 @@ namespace NetArchTest.Rules.Extensions
         {
             return !fieldDefinition.IsPublic || fieldDefinition.IsInitOnly || fieldDefinition.HasConstant || fieldDefinition.IsCompilerControlled;
         }
+        
+        /// <summary>
+        /// Tests whether a field is nullable
+        /// </summary>
+        /// <param name="fieldDefinition">The field to test.</param>
+        /// <returns>An indication of whether the field is nullable.</returns>
+        public static bool IsNullable(this FieldDefinition fieldDefinition)
+        {
+            return fieldDefinition.FieldType.IsNullable();
+        }
     }
 }

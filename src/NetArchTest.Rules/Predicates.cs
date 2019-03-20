@@ -336,7 +336,7 @@
         }
 
         /// <summary>
-        /// Selects types according that are immutable.
+        /// Selects types that are immutable.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList AreImmutable()
@@ -346,12 +346,32 @@
         }
 
         /// <summary>
-        /// Selects types according that are mutable.
+        /// Selects types that are mutable.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList AreMutable()
         {
             _sequence.AddFunctionCall(FunctionDelegates.BeImmutable, true, false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that have only nullable members.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList HaveOnlyNullableMembers()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that have some non-nullable members.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList HaveSomeNonNullableMembers()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, false);
             return new PredicateList(_types, _sequence);
         }
 

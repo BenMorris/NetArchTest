@@ -221,7 +221,7 @@
             }
         };
 
-        /// <summary> Function for finding sealed classes. </summary>
+        /// <summary> Function for finding immutable classes. </summary>
         internal static FunctionDelegate<bool> BeImmutable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
             if (condition)
@@ -231,6 +231,19 @@
             else
             {
                 return input.Where(c => !c.IsImmutable());
+            }
+        };
+
+        /// <summary> Function for finding nullable classes. </summary>
+        internal static FunctionDelegate<bool> HasNullableMembers = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(c => c.HasNullableMembers());
+            }
+            else
+            {
+                return input.Where(c => !c.HasNullableMembers());
             }
         };
 
