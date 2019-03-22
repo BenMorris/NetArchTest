@@ -8,6 +8,8 @@
     {
         protected readonly IWidgetService _service;
 
+        protected readonly string _field;
+
         public WidgetController(IWidgetService service)
         {
             _service = service;
@@ -18,5 +20,7 @@
             var widgets = await _service.GetWidgetsAsync();
             return (string.Join(", ", widgets.Select(w => w.Name)));
         }
+
+        public string AProperty { get; }
     }
 }

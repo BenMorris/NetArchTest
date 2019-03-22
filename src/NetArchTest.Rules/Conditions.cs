@@ -358,7 +358,7 @@
         /// Selects types according to whether they have nullable members.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList HaveOnlyNullableMembers()
+        public ConditionList OnlyHaveNullableMembers()
         {
             _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, true);
             return new ConditionList(_types, _should, _sequence);

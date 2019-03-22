@@ -271,7 +271,7 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Conditions.HaveOnlyNullableMembers">
+        <member name="M:NetArchTest.Rules.Conditions.OnlyHaveNullableMembers">
             <summary>
             Selects types according to whether they have nullable members.
             </summary>
@@ -912,7 +912,7 @@
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveOnlyNullableMembers">
+        <member name="M:NetArchTest.Rules.Predicates.OnlyHaveNullableMembers">
             <summary>
             Selects types that have only nullable members.
             </summary>

@@ -479,7 +479,7 @@
                 .And()
                 .AreClasses()
                 .And()
-                .HaveOnlyNullableMembers().GetTypes();
+                .OnlyHaveNullableMembers().GetTypes();
 
             Assert.Single(result); // One result
             Assert.Contains<Type>(typeof(NullableClass), result);

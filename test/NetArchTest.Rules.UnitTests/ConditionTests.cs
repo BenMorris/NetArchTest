@@ -456,7 +456,7 @@
                 .And()
                 .DoNotHaveNameStartingWith("NonNullableClass")
                 .Should()
-                .HaveOnlyNullableMembers().GetResult();
+                .OnlyHaveNullableMembers().GetResult();
             
             Assert.True(result.IsSuccessful);
         }

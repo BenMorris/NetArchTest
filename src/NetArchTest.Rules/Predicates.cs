@@ -359,7 +359,7 @@
         /// Selects types that have only nullable members.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList HaveOnlyNullableMembers()
+        public PredicateList OnlyHaveNullableMembers()
         {
             _sequence.AddFunctionCall(FunctionDelegates.HasNullableMembers, true, true);
             return new PredicateList(_types, _sequence);
