@@ -7,7 +7,6 @@ namespace NetArchTest.Rules.Extensions
 
     static internal class TypeReferenceExtensions
     {
-
         /// <summary>
         /// Tests whether a Type is a non-nullable value type
         /// </summary>

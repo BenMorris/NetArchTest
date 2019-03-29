@@ -23,6 +23,11 @@
         public IEnumerable<Type> FailingTypes { get; private set; }
 
         /// <summary>
+        /// The Rule associated with this TestResult
+        /// </summary>
+        internal Rule Rule { get; set; }
+
+        /// <summary>
         /// Creates a new instance of <see cref="TestResult"/> indicating a successful test.
         /// </summary>
         /// <returns>Instance of <see cref="TestResult"/></returns>
@@ -45,6 +50,24 @@
                 IsSuccessful = false,
                 FailingTypes = failingTypes
             };
+        }
+
+        /// <summary>
+        /// Assigns a <see cref="Rule"/> to this TestResult
+        /// </summary>
+        /// <param name="ruleName">The simple name of the rule <see cref="Rule.Name"/></param>
+        /// <param name="ruleDescription">The detailed name of the rule <see cref="Rule.Description"/></param>
+        /// <param name="ruleId">The optional Rule Id <see cref="Rule.Id"/></param>
+        /// <returns></returns>
+        public TestResult MarkForRule(string ruleName, string ruleDescription = "", int? ruleId = null)
+        {
+            Rule = new Rule
+            {
+                Name = ruleName,
+                Description = ruleDescription,
+                Id = ruleId
+            };
+            return this;
         }
     }
 }

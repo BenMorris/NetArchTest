@@ -639,6 +639,62 @@
             The Condition to apply to the call - i.e. "is" or "is not".
             </summary>
         </member>
+        <member name="T:NetArchTest.Rules.Policy">
+            <summary>
+            A simple aggregate of rules and results for overall reporting
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policy.Description">
+            <summary>
+            A detailed description of the policy
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policy.For(System.Func{NetArchTest.Rules.Types})">
+            <summary>
+            A lazy executed method to return the types for the evaluators
+            </summary>
+            <param name="typesLocator"><see cref="T:NetArchTest.Rules.Types"/>></param>
+            <returns></returns>
+        </member>
+        <member name="P:NetArchTest.Rules.Policy.Name">
+            <summary>
+            The simple name of the policy
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policy.HasVoilations">
+            <summary>
+            Does the policy have any rule violations
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policy.Define(System.String,System.String)">
+            <summary>
+            Defines a policy for use in the fluent syntax
+            </summary>
+            <param name="name"><see cref="P:NetArchTest.Rules.Policy.Name"/></param>
+            <param name="description"><see cref="P:NetArchTest.Rules.Policy.Description"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Policy.Add(System.Func{NetArchTest.Rules.Types,NetArchTest.Rules.TestResult})">
+            <summary>
+            Adds a Func that evaluates to a <see cref="T:NetArchTest.Rules.TestResult"/>. Note: Be sure to use mark the TestResult with a Rule using <see cref="M:NetArchTest.Rules.TestResult.MarkForRule(System.String,System.String,System.Nullable{System.Int32})"/>
+            </summary>
+            <param name="testResult">A result of an evaulation</param>
+            <returns><see cref="T:NetArchTest.Rules.Policy"/> for use in Fluent syntax</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Policy.ReportAsync(System.IO.TextWriter)">
+            <summary>
+            Outputs a friendly display of the policy execution results;
+            </summary>
+            <param name="output"><see cref="T:System.IO.TextWriter"/> for outputs</param>
+            <returns><see cref="T:System.Threading.Tasks.Task"/></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Policy.Report(System.IO.TextWriter)">
+            <summary>
+            A synchronous variant of <see cref="M:NetArchTest.Rules.Policy.ReportAsync(System.IO.TextWriter)"/>
+            </summary>
+            <param name="output"></param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:NetArchTest.Rules.Policy.Evaluate" -->
         <member name="T:NetArchTest.Rules.PredicateList">
             <summary>
             A set of predicates and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), TypeDefinitions()) applied to them.
@@ -966,6 +1022,26 @@
             <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="T:NetArchTest.Rules.Rule">
+            <summary>
+            Defines a rule for reporting a Test result
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Rule.Name">
+            <summary>
+            The simple name of the rule
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Rule.Description">
+            <summary>
+            A more detailed description of the rule
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Rule.Id">
+            <summary>
+            An optional rule id to correlate with a master system for metrics and KPI's
+            </summary>
+        </member>
         <member name="T:NetArchTest.Rules.TestResult">
             <summary>
             Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ConditionList"/>.
@@ -981,6 +1057,11 @@
             Collection populated with a list of types that failed the test, if the test was a failure.
             </summary>
         </member>
+        <member name="P:NetArchTest.Rules.TestResult.Rule">
+            <summary>
+            The Rule associated with this TestResult
+            </summary>
+        </member>
         <member name="M:NetArchTest.Rules.TestResult.Success">
             <summary>
             Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a successful test.
@@ -992,6 +1073,15 @@
             Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a failed test.
             </summary>
             <returns>Instance of <see cref="T:NetArchTest.Rules.TestResult"/></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.TestResult.MarkForRule(System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Assigns a <see cref="P:NetArchTest.Rules.TestResult.Rule"/> to this TestResult
+            </summary>
+            <param name="ruleName">The simple name of the rule <see cref="P:NetArchTest.Rules.Rule.Name"/></param>
+            <param name="ruleDescription">The detailed name of the rule <see cref="P:NetArchTest.Rules.Rule.Description"/></param>
+            <param name="ruleId">The optional Rule Id <see cref="P:NetArchTest.Rules.Rule.Id"/></param>
+            <returns></returns>
         </member>
         <member name="T:NetArchTest.Rules.Types">
             <summary>

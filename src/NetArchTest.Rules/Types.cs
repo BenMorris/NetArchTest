@@ -14,12 +14,19 @@
     /// </summary>
     public sealed class Types
     {
+        internal static Types StubTypes()
+        {
+            return new Types(new List<TypeDefinition>());
+        }
+
         /// <summary> The list of types represented by this instance. </summary>
         private readonly List<TypeDefinition> _types;
 
         /// <summary> The list of namespaces to exclude from the current domain. </summary>
         private static List<string> _exclusionList = new List<string>
         { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit" };
+
+        public string Description { get; internal set; }
 
         /// <summary>
         /// Prevents any external class initializing a new instance of the <see cref="Types"/> class.
@@ -81,12 +88,15 @@
                     string path = Uri.UnescapeDataString(uri.Path);
                     var assemblyDef = AssemblyDefinition.ReadAssembly(path);
 
-                    // Read all the types in the assembly 
+                    // Read all the types in the assembly
                     types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
                 }
             }
 
-            return new Types(types);
+            return new Types(types)
+            {
+                Description = $"In Assemblies : [{string.Join(",", assemblies.Select(a => a.FullName))}]"
+            };
         }
 
         /// <summary>
@@ -105,7 +115,7 @@
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = new List<TypeDefinition>();
 
-            foreach(var assembly in assemblies)
+            foreach (var assembly in assemblies)
             {
                 if (!assembly.IsDynamic)
                 {
@@ -114,7 +124,7 @@
                     string path = Uri.UnescapeDataString(uri.Path);
                     var assemblyDef = AssemblyDefinition.ReadAssembly(path);
 
-                    // Read all the types in the assembly 
+                    // Read all the types in the assembly
                     var matches = (assemblyDef.Modules
                         .SelectMany(t => t.Types)
                         .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
@@ -128,7 +138,10 @@
             }
 
             var list = Types.GetAllTypes(types);
-            return new Types(list);
+            return new Types(list)
+            {
+                Description = $"In namespace: [{name}]"
+            };
         }
 
         /// <summary>
@@ -153,9 +166,12 @@
             }
             var assemblyDef = AssemblyDefinition.ReadAssembly(path);
 
-            // Read all the types in the assembly 
+            // Read all the types in the assembly
             var list = Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
-            return new Types(list);
+            return new Types(list)
+            {
+                Description = $"From file: [{filename}]"
+            };
         }
 
         /// <summary>
@@ -178,7 +194,7 @@
 
                 foreach (var file in files)
                 {
-                    var assembly= AssemblyDefinition.ReadAssembly(file);
+                    var assembly = AssemblyDefinition.ReadAssembly(file);
 
                     if (!_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
                     {
@@ -192,7 +208,12 @@
             }
 
             var list = Types.GetAllTypes(types);
-            return new Types(list);
+            return new Types(list)
+            {
+                Description = $"From path: [{path}]"
+            }
+
+            ;
         }
 
         /// <summary>
@@ -203,7 +224,7 @@
         {
             var output = new List<TypeDefinition>();
             var check = new Queue<TypeDefinition>(types);
-            
+
             while (check.Count > 0)
             {
                 var type = check.Dequeue();
@@ -270,6 +291,5 @@
         {
             return new Conditions(_types, false);
         }
-
     }
 }
