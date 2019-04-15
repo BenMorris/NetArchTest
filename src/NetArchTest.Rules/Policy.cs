@@ -36,7 +36,11 @@ namespace NetArchTest.Rules
         }
 
         private List<Func<Types, TestResult>> TestResultFuncs = new List<Func<Types, TestResult>>();
-        private List<TestResult> TestResults = new List<TestResult>();
+
+        /// <summary>
+        /// The results from the checks executed in the policy.
+        /// </summary>
+        public List<TestResult> TestResults = new List<TestResult>();
 
         /// <summary>
         /// The simple name of the policy

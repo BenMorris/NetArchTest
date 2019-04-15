@@ -656,6 +656,11 @@
             <param name="typesLocator"><see cref="T:NetArchTest.Rules.Types"/>></param>
             <returns></returns>
         </member>
+        <member name="F:NetArchTest.Rules.Policy.TestResults">
+            <summary>
+            The results from the checks executed in the policy.
+            </summary>
+        </member>
         <member name="P:NetArchTest.Rules.Policy.Name">
             <summary>
             The simple name of the policy
