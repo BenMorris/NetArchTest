@@ -639,62 +639,154 @@
             The Condition to apply to the call - i.e. "is" or "is not".
             </summary>
         </member>
-        <member name="T:NetArchTest.Rules.Policy">
+        <member name="T:NetArchTest.Rules.Policies.Policy">
             <summary>
-            A simple aggregate of rules and results for overall reporting
+            An aggregate of rules and results that can be used for reporting.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Policy.Description">
+        <member name="F:NetArchTest.Rules.Policies.Policy._name">
+            <summary> The simple name of the policy. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Policies.Policy._description">
+            <summary> A detailed description of the policy. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.Policy.#ctor(System.String,System.String)">
             <summary>
-            A detailed description of the policy
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.Policy"/> class.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Policy.For(System.Func{NetArchTest.Rules.Types})">
+        <member name="M:NetArchTest.Rules.Policies.Policy.Define(System.String,System.String)">
             <summary>
-            A lazy executed method to return the types for the evaluators
-            </summary>
-            <param name="typesLocator"><see cref="T:NetArchTest.Rules.Types"/>></param>
-            <returns></returns>
-        </member>
-        <member name="P:NetArchTest.Rules.Policy.Name">
-            <summary>
-            The simple name of the policy
+            Defines a policy that aggregates a set of rules together for reporting.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Policy.HasVoilations">
+        <member name="M:NetArchTest.Rules.Policies.Policy.For(System.Func{NetArchTest.Rules.Types})">
             <summary>
-            Does the policy have any rule violations
+            Sets the types that the policy will apply to.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Policy.Define(System.String,System.String)">
+        <member name="T:NetArchTest.Rules.Policies.PolicyDefinition">
             <summary>
-            Defines a policy for use in the fluent syntax
+            An aggregate of rules and results that can be used for reporting.
             </summary>
-            <param name="name"><see cref="P:NetArchTest.Rules.Policy.Name"/></param>
-            <param name="description"><see cref="P:NetArchTest.Rules.Policy.Description"/></param>
-            <returns></returns>
         </member>
-        <member name="M:NetArchTest.Rules.Policy.Add(System.Func{NetArchTest.Rules.Types,NetArchTest.Rules.TestResult})">
+        <member name="F:NetArchTest.Rules.Policies.PolicyDefinition._typesLocator">
+            <summary> The function that defines the list of types to execute against each rule. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Policies.PolicyDefinition._tests">
+            <summary> The list of tests that have been added to the policy. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyDefinition.#ctor(System.Func{NetArchTest.Rules.Types},System.String,System.String)">
             <summary>
-            Adds a Func that evaluates to a <see cref="T:NetArchTest.Rules.TestResult"/>. Note: Be sure to use mark the TestResult with a Rule using <see cref="M:NetArchTest.Rules.TestResult.MarkForRule(System.String,System.String,System.Nullable{System.Int32})"/>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyDefinition"/> class.
             </summary>
-            <param name="testResult">A result of an evaulation</param>
-            <returns><see cref="T:NetArchTest.Rules.Policy"/> for use in Fluent syntax</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Policy.ReportAsync(System.IO.TextWriter)">
+        <member name="P:NetArchTest.Rules.Policies.PolicyDefinition.Name">
             <summary>
-            Outputs a friendly display of the policy execution results;
+            The simple name of the policy.
             </summary>
-            <param name="output"><see cref="T:System.IO.TextWriter"/> for outputs</param>
-            <returns><see cref="T:System.Threading.Tasks.Task"/></returns>
         </member>
-        <member name="M:NetArchTest.Rules.Policy.Report(System.IO.TextWriter)">
+        <member name="P:NetArchTest.Rules.Policies.PolicyDefinition.Description">
             <summary>
-            A synchronous variant of <see cref="M:NetArchTest.Rules.Policy.ReportAsync(System.IO.TextWriter)"/>
+            A detailed description of the policy.
             </summary>
-            <param name="output"></param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:NetArchTest.Rules.Policy.Evaluate" -->
+        <member name="M:NetArchTest.Rules.Policies.PolicyDefinition.Add(System.Func{NetArchTest.Rules.Types,NetArchTest.Rules.ConditionList},System.String,System.String)">
+            <summary>
+            Adds a rule to the policy that can optionally be marked with a name and description.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyDefinition.Add(System.Func{NetArchTest.Rules.Types,NetArchTest.Rules.ConditionList})">
+            <summary>
+            Adds a rule to the policy that can optionally be marked with a name and description.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyDefinition.Evaluate">
+            <summary>
+            Evaluates all the rules that have been added to the policy against the types defined for the policy.
+            </summary>
+            <returns>A list of results.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.Policies.PolicyResult">
+            <summary>
+            A single test result for a policy.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyResult.#ctor(NetArchTest.Rules.TestResult,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyResult"/> class.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResult.TestResult">
+            <summary>
+            Gets the result of the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResult.Name">
+            <summary>
+            Gets the simple name associated with the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResult.Description">
+            <summary>
+            Gets the detailed description associated with the test.
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.Policies.PolicyResults">
+            <summary>
+            A set of results for a policy that has been executed against a list of types.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyResults.#ctor(System.Collections.Generic.IEnumerable{NetArchTest.Rules.Policies.PolicyResult},System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyResults"/> class.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResults.HasVoilations">
+            <summary>
+            Gets whether or not the policy has any rule violations
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResults.Results">
+            <summary>
+            Gets the results of each rule that was added the policy.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResults.Name">
+            <summary>
+            Gets the simple name associated with the policy.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResults.Description">
+            <summary>
+            Gets the detailed description associated with the policy.
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.Policies.PolicyTest">
+            <summary>
+            A single test that has been added to a policy.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Policies.PolicyTest.#ctor(System.Func{NetArchTest.Rules.Types,NetArchTest.Rules.ConditionList},System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyTest"/> class.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyTest.Definition">
+            <summary>
+            The definition of the test expressed as a function.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyTest.Name">
+            <summary>
+            Gets the simple name associated with the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyTest.Description">
+            <summary>
+            Gets the detailed description associated with the test.
+            </summary>
+        </member>
         <member name="T:NetArchTest.Rules.PredicateList">
             <summary>
             A set of predicates and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), TypeDefinitions()) applied to them.
