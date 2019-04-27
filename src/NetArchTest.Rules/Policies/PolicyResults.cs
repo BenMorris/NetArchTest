@@ -25,7 +25,7 @@
         {
             get
             {
-                return Results.Any(r => !r.TestResult.IsSuccessful);
+                return Results.Any(r => !r.IsSuccessful);
             }
         }
 

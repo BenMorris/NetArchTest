@@ -42,5 +42,21 @@
 
             return new PolicyDefinition(types, _name, _description);
         }
+
+        /// <summary>
+        /// Sets the types that the policy will apply to.
+        /// </summary>
+        public PolicyDefinition For(Types types)
+        {
+            if (types == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var func = new Func<Types>(() => types);
+
+            return new PolicyDefinition(func, _name, _description);
+        }
+
     }
 }

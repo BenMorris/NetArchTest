@@ -665,6 +665,11 @@
             Sets the types that the policy will apply to.
             </summary>
         </member>
+        <member name="M:NetArchTest.Rules.Policies.Policy.For(NetArchTest.Rules.Types)">
+            <summary>
+            Sets the types that the policy will apply to.
+            </summary>
+        </member>
         <member name="T:NetArchTest.Rules.Policies.PolicyDefinition">
             <summary>
             An aggregate of rules and results that can be used for reporting.
@@ -717,9 +722,14 @@
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyResult"/> class.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Policies.PolicyResult.TestResult">
+        <member name="P:NetArchTest.Rules.Policies.PolicyResult.IsSuccessful">
             <summary>
-            Gets the result of the test.
+            Gets a flag indicating the success or failure of the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Policies.PolicyResult.FailingTypes">
+            <summary>
+            Gets a collection populated with a list of any types that failed the test.
             </summary>
         </member>
         <member name="P:NetArchTest.Rules.Policies.PolicyResult.Name">
@@ -1114,26 +1124,6 @@
             <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="T:NetArchTest.Rules.Rule">
-            <summary>
-            Defines a rule for reporting a Test result
-            </summary>
-        </member>
-        <member name="P:NetArchTest.Rules.Rule.Name">
-            <summary>
-            The simple name of the rule
-            </summary>
-        </member>
-        <member name="P:NetArchTest.Rules.Rule.Description">
-            <summary>
-            A more detailed description of the rule
-            </summary>
-        </member>
-        <member name="P:NetArchTest.Rules.Rule.Id">
-            <summary>
-            An optional rule id to correlate with a master system for metrics and KPI's
-            </summary>
-        </member>
         <member name="T:NetArchTest.Rules.TestResult">
             <summary>
             Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ConditionList"/>.
@@ -1141,17 +1131,12 @@
         </member>
         <member name="P:NetArchTest.Rules.TestResult.IsSuccessful">
             <summary>
-            Flag indicating the success or failure of the test.
+            Gets a flag indicating the success or failure of the test.
             </summary>
         </member>
         <member name="P:NetArchTest.Rules.TestResult.FailingTypes">
             <summary>
-            Collection populated with a list of types that failed the test, if the test was a failure.
-            </summary>
-        </member>
-        <member name="P:NetArchTest.Rules.TestResult.Rule">
-            <summary>
-            The Rule associated with this TestResult
+            Gets a collection populated with a list of any types that failed the test.
             </summary>
         </member>
         <member name="M:NetArchTest.Rules.TestResult.Success">
@@ -1165,15 +1150,6 @@
             Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a failed test.
             </summary>
             <returns>Instance of <see cref="T:NetArchTest.Rules.TestResult"/></returns>
-        </member>
-        <member name="M:NetArchTest.Rules.TestResult.MarkForRule(System.String,System.String,System.Nullable{System.Int32})">
-            <summary>
-            Assigns a <see cref="P:NetArchTest.Rules.TestResult.Rule"/> to this TestResult
-            </summary>
-            <param name="ruleName">The simple name of the rule <see cref="P:NetArchTest.Rules.Rule.Name"/></param>
-            <param name="ruleDescription">The detailed name of the rule <see cref="P:NetArchTest.Rules.Rule.Description"/></param>
-            <param name="ruleId">The optional Rule Id <see cref="P:NetArchTest.Rules.Rule.Id"/></param>
-            <returns></returns>
         </member>
         <member name="T:NetArchTest.Rules.Types">
             <summary>

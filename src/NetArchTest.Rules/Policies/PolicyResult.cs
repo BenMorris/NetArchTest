@@ -1,4 +1,7 @@
-﻿namespace NetArchTest.Rules.Policies
+﻿using System;
+using System.Collections.Generic;
+
+namespace NetArchTest.Rules.Policies
 {
     /// <summary>
     /// A single test result for a policy.
@@ -10,15 +13,21 @@
         /// </summary>
         internal PolicyResult(TestResult result, string name, string description)
         {
-            TestResult = result;
+            IsSuccessful = result.IsSuccessful;
+            FailingTypes = result.FailingTypes;
             Name = name;
             Description = description;
         }
 
         /// <summary>
-        /// Gets the result of the test.
+        /// Gets a flag indicating the success or failure of the test.
         /// </summary>
-        public TestResult TestResult { get; private set; }
+        public bool IsSuccessful { get; private set; }
+
+        /// <summary>
+        /// Gets a collection populated with a list of any types that failed the test.
+        /// </summary>
+        public IEnumerable<Type> FailingTypes { get; private set; }
 
         /// <summary>
         /// Gets the simple name associated with the test.
