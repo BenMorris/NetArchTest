@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.SampleRules
+﻿using System;
+
+namespace NetArchTest.SampleRules
 {
     internal class Program
     {
@@ -6,6 +8,7 @@
         {
             ExampleRules.Run();
             ExamplePolicies.Run();
+            Console.ReadKey();
         }
     }
 }

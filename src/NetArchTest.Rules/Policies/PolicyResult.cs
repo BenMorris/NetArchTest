@@ -32,11 +32,11 @@
         /// <summary>
         /// Gets the simple name associated with the test.
         /// </summary>
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the detailed description associated with the test.
         /// </summary>
-        internal string Description { get; private set; }
+        public string Description { get; private set; }
     }
 }
