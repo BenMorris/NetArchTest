@@ -13,12 +13,12 @@
         }
 
         /// <summary>
-        /// Flag indicating the success or failure of the test.
+        /// Gets a flag indicating the success or failure of the test.
         /// </summary>
         public bool IsSuccessful { get; private set; }
 
         /// <summary>
-        /// Collection populated with a list of types that failed the test, if the test was a failure.
+        /// Gets a collection populated with a list of any types that failed the test.
         /// </summary>
         public IEnumerable<Type> FailingTypes { get; private set; }
 

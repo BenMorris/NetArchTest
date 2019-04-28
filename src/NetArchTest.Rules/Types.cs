@@ -105,7 +105,7 @@
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = new List<TypeDefinition>();
 
-            foreach(var assembly in assemblies)
+            foreach (var assembly in assemblies)
             {
                 if (!assembly.IsDynamic)
                 {
@@ -178,7 +178,7 @@
 
                 foreach (var file in files)
                 {
-                    var assembly= AssemblyDefinition.ReadAssembly(file);
+                    var assembly = AssemblyDefinition.ReadAssembly(file);
 
                     if (!_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
                     {
@@ -203,7 +203,7 @@
         {
             var output = new List<TypeDefinition>();
             var check = new Queue<TypeDefinition>(types);
-            
+
             while (check.Count > 0)
             {
                 var type = check.Dequeue();
