@@ -11,7 +11,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="PolicyResults"/> class.
         /// </summary>
-        internal PolicyResults(IEnumerable<PolicyResult> results, string name, string description)
+        internal PolicyResults(IReadOnlyList<PolicyResult> results, string name, string description)
         {
             Results = results;
             Name = name;
@@ -32,7 +32,7 @@
         /// <summary>
         /// Gets the results of each rule that was added the policy.
         /// </summary>
-        public IEnumerable<PolicyResult> Results { get; private set; }
+        public IReadOnlyList<PolicyResult> Results { get; private set; }
 
         /// <summary>
         /// Gets the simple name associated with the policy.

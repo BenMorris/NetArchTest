@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NetArchTest.Rules.Policies
+﻿namespace NetArchTest.Rules.Policies
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A single test result for a policy.
     /// </summary>

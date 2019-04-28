@@ -69,8 +69,8 @@
             // Execute all the tests
             var results = _tests.Select(t => new PolicyResult(t.Definition(types).GetResult(), t.Name, t.Description));
 
-            // Return the results
-            return new PolicyResults(results, Name, Description);
+            // Return the results (forcing evaluation)
+            return new PolicyResults(results.ToList(), Name, Description);
         }
     }
 }

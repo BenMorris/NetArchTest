@@ -747,7 +747,7 @@
             A set of results for a policy that has been executed against a list of types.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Policies.PolicyResults.#ctor(System.Collections.Generic.IEnumerable{NetArchTest.Rules.Policies.PolicyResult},System.String,System.String)">
+        <member name="M:NetArchTest.Rules.Policies.PolicyResults.#ctor(System.Collections.Generic.IReadOnlyList{NetArchTest.Rules.Policies.PolicyResult},System.String,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyResults"/> class.
             </summary>
