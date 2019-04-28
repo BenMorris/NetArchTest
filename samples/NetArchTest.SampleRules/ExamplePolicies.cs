@@ -1,5 +1,9 @@
 ﻿namespace NetArchTest.SampleRules
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
     using NetArchTest.Rules;
     using NetArchTest.Rules.Policies;
     using NetArchTest.SampleLibrary.Data;
@@ -56,7 +60,7 @@
                     "Generic implementation rules", "Interface names should start with an 'I'"
                 );
 
-            var results = architecturePolicy.Evaluate();
+            Report(architecturePolicy.Evaluate(), Console.Out);
 
             var bogusPolicy = Policy.Define("Bogus Policy", "This policy demonstrates a failing policy")
                 .For(Types.InCurrentDomain)
@@ -65,10 +69,49 @@
                     .AreInterfaces()
                     .Should()
                     .NotHaveNameStartingWith("I"),
-                    "Crazy rules", "Interfaces should not start with an 'I'"
+                    "Crazy rule", "Interfaces should not start with an 'I'"
                 );
 
-            var bogusResults = bogusPolicy.Evaluate();
+            Report(bogusPolicy.Evaluate(), Console.Out);
         }
+
+        /// <summary>
+        /// Outputs a friendly display of the policy execution results;
+        /// </summary>
+        /// <param name="output"><see cref="TextWriter"/> for outputs</param>
+        /// <returns><see cref="Task"/></returns>
+        public static async Task ReportAsync(PolicyResults results, TextWriter output)
+        {
+            if (results.HasVoilations)
+            {
+                await output.WriteLineAsync($"Policy violations found for: {results.Name}");
+
+                foreach (var rule in results.Results)
+                {
+                    if (!rule.IsSuccessful)
+                    {
+                        await output.WriteLineAsync("-----------------------------------------------------------");
+                        await output.WriteLineAsync($"Rule failed: {rule.Name}");
+
+                        foreach (var type in rule.FailingTypes)
+                        {
+                            await output.WriteLineAsync($"\t {type.FullName}");
+                        }
+                    }
+                }
+
+                await output.WriteLineAsync("-----------------------------------------------------------");
+            }
+            else
+            {
+                await output.WriteLineAsync($"No policy violations found for: {results.Name}");
+            }
+        }
+
+        /// <summary>
+        /// A synchronous variant of <see cref="ReportAsync(TextWriter)"/>
+        /// </summary>
+        /// <param name="output"></param>
+        public static void Report(PolicyResults results, TextWriter output) => ReportAsync(results, output).GetAwaiter().GetResult();
     }
 }
