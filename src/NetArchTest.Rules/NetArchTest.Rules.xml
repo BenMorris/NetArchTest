@@ -1174,18 +1174,20 @@
             </summary>
             <returns>A list of types that can have predicates and conditions applied to it.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Types.InAssembly(System.Reflection.Assembly)">
+        <member name="M:NetArchTest.Rules.Types.InAssembly(System.Reflection.Assembly,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Creates a list of types based on a particular assembly.
             </summary>
             <param name="assembly">The assembly to base the list on.</param>
+            <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
             <returns>A list of types that can have predicates and conditions applied to it.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Types.InAssemblies(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+        <member name="M:NetArchTest.Rules.Types.InAssemblies(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Creates a list of types based on a list of assemblies.
             </summary>
             <param name="assemblies">The assemblies to base the list on.</param>
+            <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
             <returns>A list of types that can have predicates and conditions applied to it.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Types.InNamespace(System.String)">

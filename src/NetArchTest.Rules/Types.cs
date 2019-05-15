@@ -52,23 +52,25 @@
         /// Creates a list of types based on a particular assembly.
         /// </summary>
         /// <param name="assembly">The assembly to base the list on.</param>
+        /// <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
-        public static Types InAssembly(Assembly assembly)
+        public static Types InAssembly(Assembly assembly, IEnumerable<string> searchDirectories = null)
         {
             if (assembly == null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return Types.InAssemblies(new List<Assembly> { assembly });
+            return Types.InAssemblies(new List<Assembly> { assembly }, searchDirectories);
         }
 
         /// <summary>
         /// Creates a list of types based on a list of assemblies.
         /// </summary>
         /// <param name="assemblies">The assemblies to base the list on.</param>
+        /// <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
-        public static Types InAssemblies(IEnumerable<Assembly> assemblies)
+        public static Types InAssemblies(IEnumerable<Assembly> assemblies, IEnumerable<string> searchDirectories = null)
         {
             var types = new List<TypeDefinition>();
 
@@ -79,7 +81,22 @@
                     // Load the assembly using Mono.Cecil.
                     UriBuilder uri = new UriBuilder(assembly.CodeBase);
                     string path = Uri.UnescapeDataString(uri.Path);
-                    var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+
+                    AssemblyDefinition assemblyDef = null;
+                    if (searchDirectories?.Any() ?? false)
+                    {
+                        var defaultAssemblyResolver = new DefaultAssemblyResolver();
+                        foreach (var searchDirectory in searchDirectories)
+                        {
+                            defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
+                        }
+
+                        assemblyDef = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
+                    }
+                    else
+                    { 
+                        assemblyDef = AssemblyDefinition.ReadAssembly(path);
+                    }
 
                     // Read all the types in the assembly 
                     types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
