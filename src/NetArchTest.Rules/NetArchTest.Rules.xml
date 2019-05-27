@@ -752,7 +752,7 @@
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Policies.PolicyResults"/> class.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Policies.PolicyResults.HasVoilations">
+        <member name="P:NetArchTest.Rules.Policies.PolicyResults.HasViolations">
             <summary>
             Gets whether or not the policy has any rule violations
             </summary>

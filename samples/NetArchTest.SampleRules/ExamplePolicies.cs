@@ -82,7 +82,7 @@
         /// <returns><see cref="Task"/></returns>
         public static async Task ReportAsync(PolicyResults results, TextWriter output)
         {
-            if (results.HasVoilations)
+            if (results.HasViolations)
             {
                 await output.WriteLineAsync($"Policy violations found for: {results.Name}");
 
