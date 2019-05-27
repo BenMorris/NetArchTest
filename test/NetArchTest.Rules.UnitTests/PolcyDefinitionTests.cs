@@ -35,7 +35,7 @@
 
             // Assert
             // This rule should fail and the result be available in the collection
-            Assert.True(result.HasVoilations);
+            Assert.True(result.HasViolations);
             Assert.False(result.Results.First().IsSuccessful);
             Assert.Single(result.Results.First().FailingTypes);
             Assert.Equal(typeof(ClassB2).FullName, result.Results.First().FailingTypes.First().FullName);
@@ -64,7 +64,7 @@
 
             // Assert
             // Both rules have been evaluated
-            Assert.False(result.HasVoilations);
+            Assert.False(result.HasViolations);
             Assert.True(result.Results.First().IsSuccessful);
             Assert.True(result.Results.Last().IsSuccessful);
         }
@@ -94,9 +94,9 @@
 
             // Assert
             // The policy has been evaluated to give different results
-            Assert.False(resultSucceed.HasVoilations);
+            Assert.False(resultSucceed.HasViolations);
             Assert.Single(resultSucceed.Results);
-            Assert.True(resultFail.HasVoilations);
+            Assert.True(resultFail.HasViolations);
             Assert.Equal(2, resultFail.Results.Count());
         }
 
@@ -136,7 +136,7 @@
             var result = policy.Evaluate();
 
             // Assert
-            Assert.False(result.HasVoilations);
+            Assert.False(result.HasViolations);
             Assert.Empty(result.Results);
         }
 

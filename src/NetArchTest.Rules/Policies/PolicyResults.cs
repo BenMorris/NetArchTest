@@ -21,7 +21,7 @@
         /// <summary>
         /// Gets whether or not the policy has any rule violations
         /// </summary>
-        public bool HasVoilations
+        public bool HasViolations
         {
             get
             {
