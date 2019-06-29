@@ -95,6 +95,25 @@
             Assert.Contains<Type>(typeof(ClassB2), result.FailingTypes);
         }
 
+        [Fact(DisplayName = "If a condition fails using ShouldNot logic then a list of failing types should be returned.")]
+        public void GetResult_FailedShouldNot_ReturnFailedTypes()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .ShouldNot()
+                .HaveNameStartingWith("ClassA")
+                .GetResult();
+
+            Assert.False(result.IsSuccessful);
+            Assert.Equal(3, result.FailingTypes.Count()); // three types found
+            Assert.Contains<Type>(typeof(ClassA1), result.FailingTypes);
+            Assert.Contains<Type>(typeof(ClassA2), result.FailingTypes);
+            Assert.Contains<Type>(typeof(ClassA3), result.FailingTypes);
+        }
+
+
         [Fact(DisplayName = "If a condition succeeds then a list of failing types should be null.")]
         public void GetResult_Success_ReturnNullFailedTypes()
         {
