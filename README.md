@@ -79,14 +79,10 @@ var isValid = types.That().ResideInNamespace(“MyProject.Data”).Should().BeSe
 
 ### Grouping rules into Policies
 
-In some organizations and systems, there is a need to audit and track certain rules to different types of policies. This can be useful when the checking done by a different group than the developers writing the code. 
-
-Rules can be aggregated into named policies that will provide aggregated metadata about the tests. 
-
-This is done the the fluent interface on `Policy`. Once created, you can chain any number of `Rule`s, e.g.
+Rules can be grouped into policies using the fluent interface exposed by the `Policy` class, e.g. 
 
 ```csharp
-var architecturePolicy = Policy.Define("Passing Policy", "This policy demonstrated a valid passing policy with reasonable rules")
+var architecturePolicy = Policy.Define("Example Policy", "This is an example policy")
                 .For(Types.InCurrentDomain)
                 .Add(t =>
                    t.That()
@@ -105,42 +101,7 @@ var architecturePolicy = Policy.Define("Passing Policy", "This policy demonstrat
                 );
 
 ```
-In this case, the `.Add(...)` Func allows you to build a rule fluently and label it with a rule name and description. The func will pass in a `Type` argument that is lazily evaluated and configured in the `.For` method. 
-
-> Types are lazily evaluated to allow the AppDomain to be fully loaded for all the types referenced in the different rules be loaded before inspecting the Types
-
-Once you are done building your policy, you can execute the tests by calling the `Evaluate()` method. The evaluation will return a `PolicyResults`. You can quickly check if any of the rules failed by evaluating the `HasVoilations` property.
-
-
-> Once a policy has been evaluated, additional rules cannot be added to it
-
-You can easily iterate over the `PolicyResult` collection and build reports in any variety of outputs that can contribute to a build server metric page, a PowerBI report or simply to fail a build by returning a non-zero output. 
-
-```csharp
-// Pretty print the results to the console:
-if (results.HasVoilations)
-            {
-                await output.WriteLineAsync($"Policy violations found for: {results.Name}");
-                foreach (var rule in results.Results)
-                {
-                    if (!rule.IsSuccessful)
-                    {
-                        await output.WriteLineAsync("-----------------------------------------------------------");
-                        await output.WriteLineAsync($"Rule failed: {rule.Name}");
-                        foreach (var type in rule.FailingTypes)
-                        {
-                            await output.WriteLineAsync($"\t {type.FullName}");
-                        }
-                    }
-                }
-                await output.WriteLineAsync("-----------------------------------------------------------");
-            }
-            else
-            {
-                await output.WriteLineAsync($"No policy violations found for: {results.Name}");
-            }
-```
-
+The rules are loaded lazily and executed when the `Evaluate()` method is called. This method returns a `PolicyResults` instance that can be passed to a reporting mechanism. The [ExamplePolicies](https://github.com/BenMorris/NetArchTest/blob/master/samples/NetArchTest.SampleRules/ExamplePolicies.cs) class in the samples demonstrates how to do this.
 
 ## Further reading
 
