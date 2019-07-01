@@ -91,15 +91,18 @@
                             defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
                         }
 
-                        assemblyDef = AssemblyDefinition.ReadAssembly(path, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
+                        assemblyDef = ReadAssemblyDefinition(path, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
                     }
                     else
                     { 
-                        assemblyDef = AssemblyDefinition.ReadAssembly(path);
+                        assemblyDef = ReadAssemblyDefinition(path);
                     }
 
                     // Read all the types in the assembly 
-                    types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
+                    if (assemblyDef != null)
+                    {
+                        types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
+                    }
                 }
             }
 
@@ -129,17 +132,20 @@
                     // Load the assembly using Mono.Cecil.
                     UriBuilder uri = new UriBuilder(assembly.CodeBase);
                     string path = Uri.UnescapeDataString(uri.Path);
-                    var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+                    var assemblyDef = ReadAssemblyDefinition(path);
 
-                    // Read all the types in the assembly 
-                    var matches = (assemblyDef.Modules
-                        .SelectMany(t => t.Types)
-                        .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
-                        .ToList();
-
-                    if (matches.Count > 0)
+                    if (assemblyDef != null)
                     {
-                        types.AddRange(matches);
+                        // Read all the types in the assembly 
+                        var matches = (assemblyDef.Modules
+                            .SelectMany(t => t.Types)
+                            .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
+                            .ToList();
+
+                        if (matches.Count > 0)
+                        {
+                            types.AddRange(matches);
+                        }
                     }
                 }
             }
@@ -168,11 +174,19 @@
             {
                 throw new FileNotFoundException($"Could not find the assembly file {path}.");
             }
-            var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+            var assemblyDef = ReadAssemblyDefinition(path);
 
-            // Read all the types in the assembly 
-            var list = Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
-            return new Types(list);
+            if (assemblyDef != null)
+            {
+                // Read all the types in the assembly 
+                var list = Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
+                return new Types(list);
+            }
+            else
+            {
+                // Return an empty list
+                return new Types(new List<TypeDefinition>());
+            }
         }
 
         /// <summary>
@@ -195,9 +209,9 @@
 
                 foreach (var file in files)
                 {
-                    var assembly = AssemblyDefinition.ReadAssembly(file);
+                    var assembly = ReadAssemblyDefinition(file);
 
-                    if (!_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
+                    if (assembly != null && !_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
                     {
                         types.AddRange(assembly.Modules.SelectMany(t => t.Types));
                     }
@@ -288,5 +302,29 @@
             return new Conditions(_types, false);
         }
 
+        /// <summary>
+        /// Reads the assembly, ignoring a BadImageFormatException
+        /// </summary>
+        /// <param name="path">The path to the exception</param>
+        /// <param name="parameters">A set of optional parameters - normally used to specify custom assembly resolvers. </param>
+        /// <returns>The assembly definition for the path (if it exists).</returns>
+        private static AssemblyDefinition ReadAssemblyDefinition(string path, ReaderParameters parameters = null)
+        {
+            try
+            {
+                if (parameters == null)
+                {
+                    return AssemblyDefinition.ReadAssembly(path);
+                }
+                else
+                {
+                    return AssemblyDefinition.ReadAssembly(path, parameters);
+                }
+            }
+            catch (BadImageFormatException)
+            {
+                return null;
+            }
+        }
     }
 }
