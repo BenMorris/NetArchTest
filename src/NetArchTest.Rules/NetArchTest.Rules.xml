@@ -1248,5 +1248,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:NetArchTest.Rules.Types.ReadAssemblyDefinition(System.String,Mono.Cecil.ReaderParameters)">
+            <summary>
+            Reads the assembly, ignoring a BadImageFormatException
+            </summary>
+            <param name="path">The path to the exception</param>
+            <param name="parameters">A set of optional parameters - normally used to specify custom assembly resolvers. </param>
+            <returns>The assembly definition for the path (if it exists).</returns>
+        </member>
     </members>
 </doc>
