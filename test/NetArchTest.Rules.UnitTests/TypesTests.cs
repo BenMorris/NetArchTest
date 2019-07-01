@@ -78,5 +78,15 @@
             Assert.Equal(expected, result.Count());
             Assert.All(result, r => r.FullName.StartsWith("NetArchTest.TestStructure"));
         }
+
+        [Fact(DisplayName = "When loading a type a BadImageFormatException will be caught and an empty list will be returned.")]
+        public void FromFile_BadImage_CaughtAndEmptyListReturned()
+        {
+            // Act
+            var result = Types.FromFile("NetArchTest.TestStructure.pdb").GetTypes();
+
+            // Assert
+            Assert.Empty(result);
+        }
     }
 }
