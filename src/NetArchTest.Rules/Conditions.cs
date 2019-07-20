@@ -425,8 +425,27 @@
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList HaveDependencyOn(string dependency)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, true);
-            return new ConditionList(_types, _should, _sequence);
+            return HaveDependencyOn(dependency, true);
+        }
+
+        /// <summary>
+        /// Selects types that have a dependency on any of the particular types.
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveDependencyOnAny(string[] dependencies)
+        {
+            return HaveDependencyOnMultiple(dependencies, c => c.Or(), true);
+        }
+
+        /// <summary>
+        /// Selects types that have a dependency on all of the particular types.
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveDependencyOnAll(string[] dependencies)
+        {
+            return HaveDependencyOnMultiple(dependencies, c => c.And(), true);
         }
 
         /// <summary>
@@ -436,7 +455,47 @@
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList NotHaveDependencyOn(string dependency)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, false);
+            return HaveDependencyOn(dependency, false);
+        }
+        /// <summary>
+        /// Selects types that do not have a dependency on any of the particular types.
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHaveDependencyOnAny(string[] dependencies)
+        {
+            return HaveDependencyOnMultiple(dependencies, c => c.Or(), false);
+        }
+
+        /// <summary>
+        /// Selects types that do not have a dependency on all of the particular types.
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHaveDependencyOnAll(string[] dependencies)
+        {
+            return HaveDependencyOnMultiple(dependencies, c => c.And(), false);
+        }
+
+        /// <summary>
+        /// Selects types that have a dependency on the particular types combined with the defined condition.
+        /// </summary>
+        private ConditionList HaveDependencyOnMultiple(string[] dependencies, Func<ConditionList, Conditions> conditionFunc, bool condition)
+        {
+            ConditionList conditionList = new ConditionList(_types, _should, _sequence);
+            foreach (string dependency in dependencies)
+            {
+                conditionList = conditionFunc(conditionList).HaveDependencyOn(dependency, condition);
+            }
+            return conditionList;
+        }
+
+        /// <summary>
+        /// Selects types that have a dependency on a particular type considering the condition.
+        /// </summary>
+        private ConditionList HaveDependencyOn(string dependency, bool condition)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOn, new List<string> { dependency }, condition);
             return new ConditionList(_types, _should, _sequence);
         }
     }
