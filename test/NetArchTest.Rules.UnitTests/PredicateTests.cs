@@ -592,7 +592,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
                 .And()
-                .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency")
                 .GetTypes();
 
             Assert.Single(result); // Only one type found
@@ -607,7 +607,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
                 .And()
-                .DoNotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.ExampleDependency")
+                .DoNotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency")
                 .GetTypes();
 
             Assert.Single(result); // Only one type found

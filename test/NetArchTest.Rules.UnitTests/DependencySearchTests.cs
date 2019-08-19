@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using NetArchTest.Rules.Dependencies;
-    using NetArchTest.TestStructure.Dependencies;
+    using NetArchTest.TestStructure.Dependencies.Examples;
     using NetArchTest.TestStructure.Dependencies.Search;
     using Xunit;
 
@@ -105,17 +105,21 @@
                 .That().HaveName(input.Name).GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).FullName });
+            var resultClass = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).FullName });
+            var resultNamespace = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).Namespace});
 
             // Assert
             if (expectToFind)
             {
-                Assert.Single(result); // Only one dependency found
-                Assert.Equal(result.First().FullName, result.First().FullName); // The correct dependency found
+                Assert.Single(resultClass); // Only one dependency found
+                Assert.Equal(resultClass.First().FullName, resultClass.First().FullName); // The correct dependency found
+                Assert.Single(resultNamespace); // Only one dependency found
+                Assert.Equal(resultNamespace.First().FullName, resultClass.First().FullName); // The correct dependency found
             }
             else
             {
-                Assert.Equal(0, result.Count); // No dependencies found
+                Assert.Equal(0, resultClass.Count); // No dependencies found
+                Assert.Equal(0, resultNamespace.Count); // No dependencies found
             }
         }
     }
