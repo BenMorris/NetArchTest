@@ -587,7 +587,7 @@
                 .And()
                 .HaveNameStartingWith("HasDependency")
                 .Should()
-                .HaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.ExampleDependency", "NetArchTest.TestStructure.Dependencies.AnotherExampleDependency" })
+                .HaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
@@ -635,7 +635,7 @@
                 .And()
                 .HaveNameStartingWith("NoDependency")
                 .Should()
-                .NotHaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.ExampleDependency", "NetArchTest.TestStructure.Dependencies.AnotherExampleDependency" })
+                .NotHaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
