@@ -1,6 +1,6 @@
 ﻿namespace NetArchTest.TestStructure.Dependencies.Search
 {
-    using NetArchTest.TestStructure.Dependencies;
+    using NetArchTest.TestStructure.Dependencies.Examples;
     using System.Collections.Generic;
 
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿namespace NetArchTest.TestStructure.Dependencies.Search
 {
-    using NetArchTest.TestStructure.Dependencies;
+    using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
     /// Example class that includes an indirect reference to a dependency in an different class.    
