@@ -11,12 +11,12 @@
     internal class DependencySearch
     {
         /// <summary>
-        /// Finds types that have dependencies on a given list of type definitions.
+        /// Finds types that have a depenbdency on any item in a given list of dependencies.
         /// </summary>
         /// <param name="input">The set of type definitions to search.</param>
         /// <param name="dependencies">The set of dependencies to look for.</param>
         /// <returns>A list of dependencies found in the input classes.</returns>
-        internal IReadOnlyList<TypeDefinition> FindTypesWithDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        internal IReadOnlyList<TypeDefinition> FindTypesWithAnyDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
             // Set up the search definition
             var results = new SearchDefinition(dependencies);
@@ -33,6 +33,58 @@
             {
                 // NB: Nested classes won't be picked up here
                 var match = input.FirstOrDefault(d => d.FullName.Equals(found, StringComparison.InvariantCultureIgnoreCase));
+                if (match != null)
+                {
+                    output.Add(match);
+                }
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Finds types that have a dependency on every items in a given list of dependencies.
+        /// </summary>
+        /// <param name="input">The set of type definitions to search.</param>
+        /// <param name="dependencies">The set of dependencies to look for.</param>
+        /// <returns>A list of dependencies found in the input classes.</returns>
+        internal IReadOnlyList<TypeDefinition> FindTypesWithAllDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        {
+            var output = new List<TypeDefinition>();
+            var found = new List<string>();
+            var start = true;
+
+            foreach (var dependency in dependencies)
+            {
+                if (start || found.Count > 0)
+                {
+                    // Set up the search definition
+                    var results = new SearchDefinition(new string[] { dependency });
+
+                    // Check each type in turn
+                    foreach (var type in input)
+                    {
+                        CheckType(type, ref results);
+                    }
+
+                    if (start)
+                    {
+                        // Kick off the list of types that we have found
+                        found = results.TypesFound.ToList();
+                        start = false;
+                    }
+                    else
+                    {
+                        // Only select items that appear in both lists
+                        found = found.Where(r => results.TypesFound.Contains(r)).ToList();
+                    }
+                }
+            }
+
+            foreach (var typeFound in found)
+            {
+                // NB: Nested classes won't be picked up here
+                var match = input.FirstOrDefault(d => d.FullName.Equals(typeFound, StringComparison.InvariantCultureIgnoreCase));
                 if (match != null)
                 {
                     output.Add(match);

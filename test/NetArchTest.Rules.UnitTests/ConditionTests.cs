@@ -3,6 +3,8 @@
     using System.Linq;
     using System.Reflection;
     using NetArchTest.TestStructure.CustomAttributes;
+    using NetArchTest.TestStructure.Dependencies.Examples;
+    using NetArchTest.TestStructure.Dependencies.Implementation;
     using NetArchTest.TestStructure.Inheritance;
     using NetArchTest.TestStructure.Interfaces;
     using NetArchTest.TestStructure.NameMatching.Namespace1;
@@ -545,49 +547,49 @@
             Assert.True(result.IsSuccessful);
         }
 
-        [Fact(DisplayName = "Types can be selected if they have a dependency on another type.")]
+        [Fact(DisplayName = "Types can be selected if they have a dependency on a specific item.")]
         public void HaveDependency_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
-                .HaveNameStartingWith("HasDependency")
+                .HaveNameStartingWith("HasDepend")
                 .Should()
-                .HaveDependencyOn("NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency")
+                .HaveDependencyOn(typeof(ExampleDependency).FullName)
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
         }
 
-        [Fact(DisplayName = "Types can be selected if they have a dependency on any other type.")]
+        [Fact(DisplayName = "Types can be selected if they have a dependency on any item in a list.")]
         public void HaveDependencyOnAny_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
-                .HaveNameStartingWith("HasDependency")
+                .HaveNameStartingWith("Has")
                 .Should()
-                .HaveDependencyOnAny(new[] { "NetArchTest.TestStructure.Dependencies.ExampleDependency" })
+                .HaveDependencyOnAny(new[] { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
         }
 
-        [Fact(DisplayName = "Types can be selected if they have a dependency on all another types.")]
+        [Fact(DisplayName = "Types can be selected if they have a dependency on all the items in a list.")]
         public void HaveDependencyOnAll_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
-                .HaveNameStartingWith("HasDependency")
+                .HaveNameStartingWith("HasDependencies")
                 .Should()
-                .HaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" })
+                .HaveDependencyOnAll(new[] { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
@@ -599,43 +601,43 @@
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
                 .HaveNameStartingWith("NoDependency")
                 .Should()
-                .NotHaveDependencyOn("NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency")
+                .NotHaveDependencyOn(typeof(ExampleDependency).FullName)
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
         }
 
-        [Fact(DisplayName = "Types can be selected if they do not have a dependency on any other type.")]
+        [Fact(DisplayName = "Types can be selected if they do not have a dependency on any item in a list.")]
         public void NotHaveDependencyOnAny_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
                 .HaveNameStartingWith("NoDependency")
                 .Should()
-                .NotHaveDependencyOnAny(new[] { "NetArchTest.TestStructure.Dependencies.ExampleDependency" })
+                .NotHaveDependencyOnAny(new[] { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
         }
 
-        [Fact(DisplayName = "Types can be selected if they do not have a dependency on all other types.")]
+        [Fact(DisplayName = "Types can be selected if they do not have a dependency on all the items in a list.")]
         public void NotHaveDependencyOnAll_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
-                .ResideInNamespace("NetArchTest.TestStructure.Dependencies.Implementation")
+                .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
                 .HaveNameStartingWith("NoDependency")
                 .Should()
-                .NotHaveDependencyOnAll(new[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" })
+                .NotHaveDependencyOnAll(new[] { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);

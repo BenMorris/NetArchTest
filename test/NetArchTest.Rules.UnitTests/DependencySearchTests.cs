@@ -6,6 +6,7 @@
     using System.Reflection;
     using NetArchTest.Rules.Dependencies;
     using NetArchTest.TestStructure.Dependencies.Examples;
+    using NetArchTest.TestStructure.Dependencies.Implementation;
     using NetArchTest.TestStructure.Dependencies.Search;
     using Xunit;
 
@@ -96,6 +97,51 @@
             this.RunDependencyTest(typeof(PublicProperty));
         }
 
+        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list.")]
+        public void FindTypesWithAnyDependencies_PublicProperty_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName });
+
+            // Assert
+            Assert.Equal(3, result.Count); // Three types found
+            Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct types returned...
+            Assert.Equal(typeof(HasAnotherDependency).FullName, result.Skip(1).First().FullName); 
+            Assert.Equal(typeof(HasDependency).FullName, result.Last().FullName); 
+        }
+
+        [Fact(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list.")]
+        public void FindTypesWithAllDependencies_PublicProperty_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName });
+
+            // Assert
+            Assert.Single(result); // One type found
+            Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct type returned
+        }
+
+        /// <summary>
+        /// Run a generic test against a target type to ensure that a single dependency is picked up by the search.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="expectToFind"></param>
         private void RunDependencyTest(Type input, bool expectToFind = true)
         {
             // Arrange
@@ -105,8 +151,9 @@
                 .That().HaveName(input.Name).GetTypeDefinitions();
 
             // Act
-            var resultClass = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).FullName });
-            var resultNamespace = search.FindTypesWithDependencies(subject, new List<string> { typeof(ExampleDependency).Namespace});
+            // Search against the type name and its namespace - this demonstrates that namespace based searches also work
+            var resultClass = search.FindTypesWithAnyDependencies(subject, new List<string> { typeof(ExampleDependency).FullName });
+            var resultNamespace = search.FindTypesWithAnyDependencies(subject, new List<string> { typeof(ExampleDependency).Namespace});
 
             // Assert
             if (expectToFind)
