@@ -318,12 +318,50 @@
             <param name="dependency">The dependency to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOnAny(System.String[])">
+            <summary>
+            Selects types that have a dependency on any of the particular types.
+            </summary>
+            <param name="dependencies">The dependencies to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOnAll(System.String[])">
+            <summary>
+            Selects types that have a dependency on all of the particular types.
+            </summary>
+            <param name="dependencies">The dependencies to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOn(System.String)">
             <summary>
             Selects types that do not have a dependency on a particular type.
             </summary>
             <param name="dependency">The dependency type to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOnAny(System.String[])">
+            <summary>
+            Selects types that do not have a dependency on any of the particular types.
+            </summary>
+            <param name="dependencies">The dependencies to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveDependencyOnAll(System.String[])">
+            <summary>
+            Selects types that do not have a dependency on all of the particular types.
+            </summary>
+            <param name="dependencies">The dependencies to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOnMultiple(System.String[],System.Func{NetArchTest.Rules.ConditionList,NetArchTest.Rules.Conditions},System.Boolean)">
+            <summary>
+            Selects types that have a dependency on the particular types combined with the defined condition.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOn(System.String,System.Boolean)">
+            <summary>
+            Selects types that have a dependency on a particular type considering the condition.
+            </summary>
         </member>
         <member name="T:NetArchTest.Rules.Dependencies.DependencySearch">
             <summary>
