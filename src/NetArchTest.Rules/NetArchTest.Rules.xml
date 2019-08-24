@@ -229,9 +229,33 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeNestedPublic">
+            <summary>
+            Selects types that are nested and public.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeNestedPrivate">
+            <summary>
+            Selects types that are nested and private.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.NotBeNested">
             <summary>
             Selects types that are not nested.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeNestedPublic">
+            <summary>
+            Selects types that are not nested and public.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeNestedPrivate">
+            <summary>
+            Selects types that are not nested and private.
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>

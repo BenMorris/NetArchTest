@@ -285,12 +285,52 @@
         }
 
         /// <summary>
+        /// Selects types that are nested and public.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeNestedPublic()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPublic, true, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are nested and private.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeNestedPrivate()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPrivate, true, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that are not nested.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList NotBeNested()
         {
             _sequence.AddFunctionCall(FunctionDelegates.BeNested, true, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not nested and public.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotBeNestedPublic()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPublic, true, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not nested and private.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotBeNestedPrivate()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPrivate, true, false);
             return new ConditionList(_types, _should, _sequence);
         }
 
