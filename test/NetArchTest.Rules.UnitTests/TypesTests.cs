@@ -30,11 +30,18 @@
             Assert.DoesNotContain(result, t => t.FullName.StartsWith("Mono.Cecil"));
         }
 
-        [Fact(DisplayName = "Nested types should be included in the current domain.")]
-        public void InCurrentDomain_NestedTypesPresent_Returned()
+        [Fact(DisplayName = "Nested public types should be included in the current domain.")]
+        public void InCurrentDomain_NestedPublicTypesPresent_Returned()
         {
             var result = Types.InCurrentDomain().GetTypeDefinitions();
-            Assert.Contains(result, t => t.FullName.StartsWith("NetArchTest.TestStructure.Nested.NestedContainer/NestedClas"));
+            Assert.Contains(result, t => t.FullName.StartsWith("NetArchTest.TestStructure.Nested.NestedPublic/NestedPublicClass"));
+        }
+
+        [Fact(DisplayName = "Nested private types should be included in the current domain.")]
+        public void InCurrentDomain_NestedPrivateTypesPresent_Returned()
+        {
+            var result = Types.InCurrentDomain().GetTypeDefinitions();
+            Assert.Contains(result, t => t.FullName.StartsWith("NetArchTest.TestStructure.Nested.NestedPrivate/NestedPrivateClass"));
         }
 
         [Fact(DisplayName = "A types collection can be created from a namespace.")]

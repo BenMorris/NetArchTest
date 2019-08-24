@@ -8,7 +8,9 @@
     using NetArchTest.TestStructure.Inheritance;
     using NetArchTest.TestStructure.Interfaces;
     using NetArchTest.TestStructure.NameMatching.Namespace1;
+    using NetArchTest.TestStructure.Nested;
     using Xunit;
+    using static NetArchTest.TestStructure.Nested.NestedPublic;
 
     public class ConditionTests
     {
@@ -334,7 +336,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nested")
                 .And()
-                .HaveName("NestedClass")
+                .HaveName(typeof(NestedPublicClass).Name)
                 .Should()
                 .BeNested().GetResult();
 
@@ -349,7 +351,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Nested")
                 .And()
-                .DoNotHaveName("NestedClass")
+                .HaveName(typeof(NotNested).Name)
                 .Should()
                 .NotBeNested().GetResult();
 

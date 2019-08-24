@@ -1,8 +1,8 @@
 ﻿namespace NetArchTest.TestStructure.Nested
 {
-    public class NestedContainer
+    public class NestedPublic
     {
-        public class NestedClass
+        public class NestedPublicClass
         {
         }
     }

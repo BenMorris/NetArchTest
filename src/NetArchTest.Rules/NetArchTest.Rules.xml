@@ -600,6 +600,12 @@
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeNested">
             <summary> Function for finding nested classes. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeNestedPublic">
+            <summary> Function for finding nested public classes. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeNestedPrivate">
+            <summary> Function for finding nested private classes. </summary>
+        </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.BePublic">
             <summary> Function for finding public classes. </summary>
         </member>
@@ -1061,11 +1067,37 @@
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNestedPublic">
+            <summary>
+            Selects types that are nested and declared as public.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNestedPrivate">
+            <summary>
+            Selects types that are nested and declared as private.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.AreNotNested">
             <summary>
             Selects types that are not nested.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotNestedPublic">
+            <summary>
+            Selects types that are not nested and declared as public.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+            <remarks>NB: This method will return non-nested types and nested types that are declared as private.</remarks>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotNestedPrivate">
+            <summary>
+            Selects types that are not nested and declared as private.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+            <remarks>NB: This method will return non-nested types and nested types that are declared as public.</remarks>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.ArePublic">
             <summary>

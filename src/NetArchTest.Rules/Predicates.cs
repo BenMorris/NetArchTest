@@ -280,6 +280,26 @@
         }
 
         /// <summary>
+        /// Selects types that are nested and declared as public.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreNestedPublic()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPublic, true, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are nested and declared as private.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreNestedPrivate()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPrivate, true, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that are not nested.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
@@ -288,6 +308,29 @@
             _sequence.AddFunctionCall(FunctionDelegates.BeNested, true, false);
             return new PredicateList(_types, _sequence);
         }
+
+        /// <summary>
+        /// Selects types that are not nested and declared as public.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        /// <remarks>NB: This method will return non-nested types and nested types that are declared as private.</remarks>
+        public PredicateList AreNotNestedPublic()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPublic, true, false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not nested and declared as private.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        /// <remarks>NB: This method will return non-nested types and nested types that are declared as public.</remarks>
+        public PredicateList AreNotNestedPrivate()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeNestedPrivate, true, false);
+            return new PredicateList(_types, _sequence);
+        }
+
 
         /// <summary>
         /// Selects types that have public scope.

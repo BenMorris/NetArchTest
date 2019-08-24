@@ -195,6 +195,33 @@
             }
         };
 
+        /// <summary> Function for finding nested public classes. </summary>
+        internal static FunctionDelegate<bool> BeNestedPublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(c => c.IsNestedPublic);
+            }
+            else
+            {
+                return input.Where(c => !c.IsNestedPublic);
+            }
+        };
+
+        /// <summary> Function for finding nested private classes. </summary>
+        internal static FunctionDelegate<bool> BeNestedPrivate = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(c => c.IsNestedPrivate);
+            }
+            else
+            {
+                return input.Where(c => !c.IsNestedPrivate);
+            }
+        };
+
+
         /// <summary> Function for finding public classes. </summary>
         internal static FunctionDelegate<bool> BePublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {

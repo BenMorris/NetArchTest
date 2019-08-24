@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using NetArchTest.TestStructure.Interfaces;
     using NetArchTest.TestStructure.NameMatching.Namespace1;
     using NetArchTest.TestStructure.NameMatching.Namespace2;
     using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
@@ -78,6 +79,33 @@
             Assert.Contains<Type>(typeof(ClassB2), result);
         }
 
+        [Fact(DisplayName = "An ShouldNot() statement will inverse the subsequent conditions")]
+        public void ShouldNot_FollowingConditions_Inversed()
+        {
+            // First example - single condition
+            var predicates = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Interfaces")
+                .And()
+                .HaveNameStartingWith("Implements");
+
+            var result1 = predicates.Should().ImplementInterface(typeof(IExample)).GetResult();
+            var result1Not = predicates.ShouldNot().NotImplementInterface(typeof(IExample)).GetResult();
+
+            // Third example - two conditions with an or() statement
+            predicates = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(" NetArchTest.TestStructure.NameMatching.Namespace1");
+
+            var result2 = predicates.Should().HaveNameStartingWith("ClassA").Or().HaveNameStartingWith("ClassB").GetResult();
+            var result2Not = predicates.ShouldNot().NotHaveNameStartingWith("ClassA").Or().NotHaveNameStartingWith("ClassB").GetResult();
+
+            Assert.Equal(result1.IsSuccessful, result1Not.IsSuccessful);
+            Assert.Equal(result2.IsSuccessful, result2Not.IsSuccessful);
+        }
+
         [Fact(DisplayName = "If a condition fails then a list of failing types should be returned.")]
         public void GetResult_Failed_ReturnFailedTypes()
         {
@@ -112,7 +140,6 @@
             Assert.Contains<Type>(typeof(ClassA2), result.FailingTypes);
             Assert.Contains<Type>(typeof(ClassA3), result.FailingTypes);
         }
-
 
         [Fact(DisplayName = "If a condition succeeds then a list of failing types should be null.")]
         public void GetResult_Success_ReturnNullFailedTypes()

@@ -360,8 +360,37 @@
                 .And()
                 .AreNested().GetTypes();
 
-            Assert.Single(result); // One type found
-            Assert.Contains<Type>(typeof(NestedContainer.NestedClass), result);
+            Assert.Equal(2, result.Count()); // Two types found
+            Assert.Equal("NestedPrivateClass", result.First().Name);
+            Assert.Equal("NestedPublicClass", result.Last().Name);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are nested and public.")]
+        public void AreNestedPublic_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+            .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+            .That()
+            .ResideInNamespace("NetArchTest.TestStructure.Nested")
+            .And()
+            .AreNestedPublic().GetTypes();
+
+            Assert.Single(result); // One types found
+            Assert.Equal("NestedPublicClass", result.First().Name);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are nested and private.")]
+        public void AreNestedPrivate_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+            .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+            .That()
+            .ResideInNamespace("NetArchTest.TestStructure.Nested")
+            .And()
+            .AreNestedPrivate().GetTypes();
+
+            Assert.Single(result); // One types found
+            Assert.Equal("NestedPrivateClass", result.First().Name);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not nested.")]
@@ -374,10 +403,40 @@
                 .And()
                 .AreNotNested().GetTypes();
 
-            Assert.Equal(2, result.Count()); // Two types found
-            Assert.Contains<Type>(typeof(NotNested), result);
-            Assert.Contains<Type>(typeof(NestedContainer), result);
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Equal("NestedPrivate", result.First().Name);
+            Assert.Equal("NestedPublic", result.Skip(1).First().Name);
+            Assert.Equal("NotNested", result.Last().Name);
+        }
 
+        [Fact(DisplayName = "Types can be selected if they are not nested and public.")]
+        public void AreNotNestedPublic_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nested")
+                .And()
+                .AreNotNestedPublic().GetTypes();
+
+            Assert.Equal(4, result.Count()); // Four types found
+            var match = result.Any(r => r.Name == "NestedPublicClass");
+            Assert.False(match);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are not nested and private.")]
+        public void AreNotNestedPrivate_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Nested")
+                .And()
+                .AreNotNestedPrivate().GetTypes();
+
+            Assert.Equal(4, result.Count()); // Four types found
+            var match = result.Any(r => r.Name == "NestedPrivateClass");
+            Assert.False(match);
         }
 
         [Fact(DisplayName = "Types can be selected for being declared as public.")]
