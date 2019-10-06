@@ -44,7 +44,7 @@ result = Types.InCurrentDomain()
 
 ## Getting started
 
-The main rules library is available as a package on NuGet: NetArchTest.Rules.
+The main rules library is available as a package on NuGet: [NetArchTest.Rules](https://www.nuget.org/packages/NetArchTest.Rules/).
 
 It is a .Net Standard 2.0 library that is compatible with .Net Framework 4.6.1 or better and .Net Core 2.0 or better.
 
