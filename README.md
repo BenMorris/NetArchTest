@@ -48,12 +48,6 @@ The main rules library is available as a package on NuGet: [NetArchTest.Rules](h
 
 It is a .Net Standard 2.0 library that is compatible with .Net Framework 4.6.1 or better and .Net Core 2.0 or better.
 
-The solution contains projects in three directories:
-
- - *src*: The main Rules library that is available as a package on NuGet. The main dependency is Mono.Cecil.
- - *test*: A set of unit tests for the rules based on XUnit.
- - *samples*: A couple of sample projects that demonstrate some of the possible usage scenarios.
-
 ### Writing rules
 
 The fluent API should direct you in building up a rule based on a combination of predicates, conditions and conjunctions. 
@@ -104,6 +98,14 @@ var architecturePolicy = Policy.Define("Example Policy", "This is an example pol
 The rules are loaded lazily and executed when the `Evaluate()` method is called. This method returns a `PolicyResults` instance that can be passed to a reporting mechanism.
 
 The [ExamplePolicies](https://github.com/BenMorris/NetArchTest/blob/master/samples/NetArchTest.SampleRules/ExamplePolicies.cs) class in the samples demonstrates how to do this.
+
+## Source code
+
+The solution contains projects in three directories:
+
+ - *src*: The main Rules library that is available as a package on NuGet. The main dependency is Mono.Cecil.
+ - *test*: A set of unit tests for the rules based on XUnit.
+ - *samples*: A couple of sample projects that demonstrate some of the possible usage scenarios.
 
 ## Further reading
 
