@@ -101,6 +101,8 @@ The [ExamplePolicies](https://github.com/BenMorris/NetArchTest/blob/master/sampl
 
 ## Source code
 
+> I welcome contributions. Please refer to the [contributing guidelines](CONTRIBUTING.md).
+
 The solution contains projects in three directories:
 
  - *src*: The main Rules library that is available as a package on NuGet. The main dependency is Mono.Cecil.
