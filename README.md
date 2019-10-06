@@ -58,7 +58,7 @@ The solution contains projects in three directories:
 
 The fluent API should direct you in building up a rule based on a combination of predicates, conditions and conjunctions. 
 
-The starting point for any rule is the statuc `Types` class, where you load a set of types from a path, Assembly or namespace.
+The starting point for any rule is the static `Types` class, where you load a set of types from a path, assembly or namespace.
 
 ```csharp
 var types = Types.FromAssembly(typeof(MyClass));
@@ -101,7 +101,9 @@ var architecturePolicy = Policy.Define("Example Policy", "This is an example pol
                 );
 
 ```
-The rules are loaded lazily and executed when the `Evaluate()` method is called. This method returns a `PolicyResults` instance that can be passed to a reporting mechanism. The [ExamplePolicies](https://github.com/BenMorris/NetArchTest/blob/master/samples/NetArchTest.SampleRules/ExamplePolicies.cs) class in the samples demonstrates how to do this.
+The rules are loaded lazily and executed when the `Evaluate()` method is called. This method returns a `PolicyResults` instance that can be passed to a reporting mechanism.
+
+The [ExamplePolicies](https://github.com/BenMorris/NetArchTest/blob/master/samples/NetArchTest.SampleRules/ExamplePolicies.cs) class in the samples demonstrates how to do this.
 
 ## Further reading
 
