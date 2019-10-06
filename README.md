@@ -16,7 +16,7 @@ The project is inspired by [ArchUnit](https://www.archunit.org/), a java-based l
 
 ## Examples
 
-```
+```csharp
 // Classes in the presentation should not directly reference repositories
 var result = Types.InCurrentDomain()
     .That()
@@ -60,20 +60,20 @@ The fluent API should direct you in building up a rule based on a combination of
 
 The starting point for any rule is the statuc `Types` class, where you load a set of types from a path, Assembly or namespace.
 
-```
+```csharp
 var types = Types.FromAssembly(typeof(MyClass));
 var types = Types.InCurrentDomain();
 ```
 Once you have selected the types you can filter them using one or more predicates. These can be chained together using `And()` or `Or()` conjunctions:
-```
+```csharp
 types.That().ResideInNamespace(“MyProject.Data”);
 ```
 Once the set of classes have been filtered you can apply a set of conditions using the `Should()` or `ShouldNot()` methods, e.g.
-```
+```csharp
 types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed();
 ```
 Finally, you obtain a result from the rule by using an executor, i.e. use `GetTypes()` to return the types that match the rule or `GetResult()` to determine whether the rule has been met. Note that the result will also return a list of types that failed to meet the conditions.
-```
+```csharp
 var isValid = types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed().GetResult().IsSuccessful;
 ```
 
