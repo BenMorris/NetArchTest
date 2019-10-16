@@ -193,8 +193,9 @@
         /// Creates a list of all the types found on a particular path.
         /// </summary>
         /// <param name="path">The relative path to load types from.</param>
+        /// <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
-        public static Types FromPath(string path)
+        public static Types FromPath(string path, IEnumerable<string> searchDirectories = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -206,10 +207,21 @@
             if (Directory.Exists(path))
             {
                 var files = Directory.GetFiles(path, "*.dll");
+                var readerParams = new ReaderParameters();
+
+                if (searchDirectories?.Any() ?? false)
+                {
+                    var defaultAssemblyResolver = new DefaultAssemblyResolver();
+                    foreach (var searchDirectory in searchDirectories)
+                    {
+                        defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
+                    }
+                    readerParams.AssemblyResolver = defaultAssemblyResolver;
+                }
 
                 foreach (var file in files)
                 {
-                    var assembly = ReadAssemblyDefinition(file);
+                    var assembly = ReadAssemblyDefinition(file, readerParams);
 
                     if (assembly != null && !_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
                     {
@@ -225,6 +237,7 @@
             var list = Types.GetAllTypes(types);
             return new Types(list);
         }
+
 
         /// <summary>
         /// Recursively fetch all the nested types in a collection of types.
