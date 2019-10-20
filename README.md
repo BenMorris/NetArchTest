@@ -55,8 +55,7 @@ The fluent API should direct you in building up a rule based on a combination of
 The starting point for any rule is the static `Types` class, where you load a set of types from a path, assembly or namespace.
 
 ```csharp
-var types = Types.FromAssembly(typeof(MyClass));
-var types = Types.InCurrentDomain();
+var types = Types.InAssembly(typeof(MyClass).Assembly);
 ```
 Once you have selected the types you can filter them using one or more predicates. These can be chained together using `And()` or `Or()` conjunctions:
 ```csharp
