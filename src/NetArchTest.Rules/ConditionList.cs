@@ -54,7 +54,8 @@
             }
 
             // If we've failed, get a collection of failing types so these can be reported in a failing test.
-            return TestResult.Failure(_sequence.Execute(_types, selected: !_should).Select(t => t.ToType()));
+            var failedTypes = _sequence.Execute(_types, selected: !_should).ToList();
+            return TestResult.Failure(failedTypes);
         }
 
         /// <summary>

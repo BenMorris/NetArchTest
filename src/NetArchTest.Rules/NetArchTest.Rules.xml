@@ -1252,6 +1252,9 @@
             Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ConditionList"/>.
             </summary>
         </member>
+        <member name="F:NetArchTest.Rules.TestResult._failingTypes">
+            <summary> The list of types that failed the test. </summary>
+        </member>
         <member name="P:NetArchTest.Rules.TestResult.IsSuccessful">
             <summary>
             Gets a flag indicating the success or failure of the test.
@@ -1259,8 +1262,19 @@
         </member>
         <member name="P:NetArchTest.Rules.TestResult.FailingTypes">
             <summary>
-            Gets a collection populated with a list of any types that failed the test.
+            Gets a list of the types that failed the test.
             </summary>
+            <remarks>
+            This method loads all the types and may throw dependency loading errors if the test project does not have a direct dependency on the type being loaded.
+            </remarks>
+        </member>
+        <member name="P:NetArchTest.Rules.TestResult.FailingTypeNames">
+            <summary>
+            Gets a list of the type nmames that failed the test.
+            </summary>
+            <remarks>
+            This is a "safer" way of getting a list of failed types as it does not load the types when enumerating the list. This can lead to dependency loading errors.
+            </remarks>
         </member>
         <member name="M:NetArchTest.Rules.TestResult.Success">
             <summary>
@@ -1268,7 +1282,7 @@
             </summary>
             <returns>Instance of <see cref="T:NetArchTest.Rules.TestResult"/></returns>
         </member>
-        <member name="M:NetArchTest.Rules.TestResult.Failure(System.Collections.Generic.IEnumerable{System.Type})">
+        <member name="M:NetArchTest.Rules.TestResult.Failure(System.Collections.Generic.IReadOnlyList{Mono.Cecil.TypeDefinition})">
             <summary>
             Creates a new instance of <see cref="T:NetArchTest.Rules.TestResult"/> indicating a failed test.
             </summary>
@@ -1328,11 +1342,12 @@
             <returns>A list of types that can have predicates and conditions applied to it.</returns>
             <remarks>Assumes that the module is in the same directory as the executing assembly.</remarks>
         </member>
-        <member name="M:NetArchTest.Rules.Types.FromPath(System.String)">
+        <member name="M:NetArchTest.Rules.Types.FromPath(System.String,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Creates a list of all the types found on a particular path.
             </summary>
             <param name="path">The relative path to load types from.</param>
+            <param name="searchDirectories">An optional list of search directories to allow resolution of referenced assemblies.</param>
             <returns>A list of types that can have predicates and conditions applied to it.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Types.GetAllTypes(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition})">

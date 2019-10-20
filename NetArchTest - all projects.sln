@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArchTest.Rules", "src\NetArchTest.Rules\NetArchTest.Rules.csproj", "{2FDD6DBD-F203-4EC9-9F9B-6771713CC353}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.Rules", "src\NetArchTest.Rules\NetArchTest.Rules.csproj", "{2FDD6DBD-F203-4EC9-9F9B-6771713CC353}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{13D8126E-E351-4956-AA64-2BAF6F8B2613}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{660FEA1B-C886-4B72-AD70-1D7DD248CD76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArchTest.Rules.UnitTests", "test\NetArchTest.Rules.UnitTests\NetArchTest.Rules.UnitTests.csproj", "{D56F6954-7CCA-41D6-BA81-850F0C81FE3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.Rules.UnitTests", "test\NetArchTest.Rules.UnitTests\NetArchTest.Rules.UnitTests.csproj", "{D56F6954-7CCA-41D6-BA81-850F0C81FE3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArchTest.TestStructure", "test\NetArchTest.TestStructure\NetArchTest.TestStructure.csproj", "{D91C182D-DC97-4F9B-AFFE-8C7A62501DA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.TestStructure", "test\NetArchTest.TestStructure\NetArchTest.TestStructure.csproj", "{D91C182D-DC97-4F9B-AFFE-8C7A62501DA6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{460F2EC0-8774-4A26-835C-2FFFCAEEE1FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArchTest.SampleRules", "samples\NetArchTest.SampleRules\NetArchTest.SampleRules.csproj", "{4C5B170E-CAA1-421E-9FA5-9C2D6BEDB27C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.SampleRules", "samples\NetArchTest.SampleRules\NetArchTest.SampleRules.csproj", "{4C5B170E-CAA1-421E-9FA5-9C2D6BEDB27C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetArchTest.SampleLibrary", "samples\NetArchTest.SampleLibrary\NetArchTest.SampleLibrary.csproj", "{7123A8AE-678D-4D14-82E5-EB5607ABDC4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.SampleLibrary", "samples\NetArchTest.SampleLibrary\NetArchTest.SampleLibrary.csproj", "{7123A8AE-678D-4D14-82E5-EB5607ABDC4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
