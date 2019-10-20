@@ -61,7 +61,7 @@ The fluent API should direct you in building up a rule based on a combination of
 The starting point for any rule is the statuc `Types` class, where you load a set of types from a path, Assembly or namespace.
 
 ```
-var types = Types.FromAssembly(typeof(MyClass));
+var types = Types.InAssembly(typeof(MyClass).Assembly);
 var types = Types.InCurrentDomain();
 ```
 Once you have selected the types you can filter them using one or more predicates. These can be chained together using `And()` or `Or()` conjunctions:
