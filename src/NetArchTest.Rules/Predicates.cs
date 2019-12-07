@@ -478,7 +478,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public PredicateList HaveDependencyOnAny(string[] dependencies)
+        public PredicateList HaveDependencyOnAny(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, dependencies, true);
             return new PredicateList(_types, _sequence);
@@ -489,7 +489,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public PredicateList HaveDependencyOnAll(string[] dependencies)
+        public PredicateList HaveDependencyOnAll(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, true);
             return new PredicateList(_types, _sequence);
@@ -511,7 +511,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public PredicateList DoNotHaveDependencyOnAny(string[] dependencies)
+        public PredicateList DoNotHaveDependencyOnAny(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, dependencies, false);
             return new PredicateList(_types, _sequence);
@@ -522,7 +522,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public PredicateList DoNotHaveDependencyOnAll(string[] dependencies)
+        public PredicateList DoNotHaveDependencyOnAll(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, false);
             return new PredicateList(_types, _sequence);
