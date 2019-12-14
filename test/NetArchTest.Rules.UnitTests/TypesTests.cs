@@ -4,6 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using NetArchTest.TestStructure.NameMatching.Namespace1;
     using NetArchTest.TestStructure.NameMatching.Namespace2;
     using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
@@ -94,6 +95,17 @@
 
             // Assert
             Assert.Empty(result);
+        }
+
+        [Fact(DisplayName = "Any compiler generated classes will be ignored in a types list.")]
+        public void InNamespace_CompilerGeneratedClasses_NotReturned()
+        {
+            // Act
+            var result = Types.InNamespace("NetArchTest.TestStructure.Dependencies.Search").GetTypes();
+
+            // Assert
+            var generated = result.Any(r => r.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName));
+            Assert.False(generated);
         }
     }
 }
