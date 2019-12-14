@@ -258,8 +258,8 @@
 
                     foreach (var nested in type.NestedTypes)
                     {
-                        // Ignore compiler-generated async classes
-                        if (!nested.Interfaces.Any(i => i.InterfaceType.FullName.Equals(typeof(IAsyncStateMachine).FullName)))
+                        // Ignore all compiler-generated nested classes
+                        if (!nested.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName))
                         {
                             check.Enqueue(nested);
                         }
