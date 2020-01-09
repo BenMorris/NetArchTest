@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
-  
+
     /// <summary>
     /// Finds dependencies within a given set of types.
     /// </summary>
@@ -112,12 +112,10 @@
             var baseClass = type.BaseType?.Resolve();
             if (baseClass != null)
             {
-                foreach (var dependency in results.SearchList)
+                foreach (var dependency in results.GetAllMatchingDependencies(baseClass.FullName))
                 {
-                    if (baseClass.FullName.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        results.AddToFound(type, dependency);
-                    }
+
+                    results.AddToFound(type, dependency);
                 }
             }
 
@@ -160,7 +158,7 @@
                 CheckGenericParameters(type, method.ReturnType.GenericParameters, ref results);
             }
 
-            if (results.SearchList.Any(m => method.ReturnType.FullName.StartsWith(m)))
+            if (results.GetAllMatchingDependencies(method.ReturnType.FullName).Any())
             {
                 results.AddToFound(type, method.ReturnType.FullName);
             }
@@ -191,7 +189,7 @@
                     }
 
                     // Check the property type
-                    if (results.SearchList.Any(m => property.PropertyType.FullName.StartsWith(m)))
+                    if (results.GetAllMatchingDependencies(property.PropertyType.FullName).Any())
                     {
                         results.AddToFound(type, property.PropertyType.FullName);
                     }
@@ -214,7 +212,7 @@
                         CheckGenericParameters(type, field.FieldType.GenericParameters, ref results);
                     }
 
-                    if (results.SearchList.Any(m => field.FieldType.FullName.StartsWith(m)))
+                    if (results.GetAllMatchingDependencies(field.FieldType.FullName).Any())
                     {
                         results.AddToFound(type, field.FieldType.FullName);
                     }
@@ -263,7 +261,7 @@
                             CheckGenericParameters(type, variable.VariableType.GenericParameters, ref results);
                         }
 
-                        if (results.SearchList.Any(m => variable.VariableType.FullName.StartsWith(m)))
+                        if (results.GetAllMatchingDependencies(variable.VariableType.FullName).Any())
                         {
                             results.AddToFound(type, variable.VariableType.FullName);
                         }
@@ -276,7 +274,7 @@
                     if (instruction.Operand != null)
                     {
                         var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<' });
-                        var matches = results.SearchList.Where(m => operands.Any(o => o.StartsWith(m))).ToArray();
+                        var matches = results.GetAllDependenciesMatchingAnyOf(operands);
                         foreach (var item in matches)
                         {
                             results.AddToFound(type, item);
@@ -293,7 +291,7 @@
         {
             foreach (var generic in parameters)
             {
-                if (results.SearchList.Any(m => generic.FullName.StartsWith(m)))
+                if (results.GetAllMatchingDependencies(generic.FullName).Any())
                 {
                     results.AddToFound(type, generic.FullName);
                 }

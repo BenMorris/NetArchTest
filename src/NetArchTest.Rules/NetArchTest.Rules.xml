@@ -444,15 +444,27 @@
         <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._checked">
             <summary> The list of types that has been checked by the search. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._searchList">
+            <summary> The list of dependencies being searched for. </summary>
+        </member>
         <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.#ctor(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Dependencies.SearchDefinition"/> class.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.SearchList">
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.GetAllMatchingDependencies(System.String)">
             <summary>
-            Gets the list of dependencies being searched for.
+            Returns all dependencies matching given type full name.
             </summary>
+            <param name="typeFullName"> Type full name for a dependency to match. </param>
+            <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.GetAllDependenciesMatchingAnyOf(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all dependencies matching any of given type full names.
+            </summary>
+            <param name="typesFullNames"> Set of type full names for a dependency to match any of them. </param>
+            <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
         </member>
         <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.DependenciesFound">
             <summary>

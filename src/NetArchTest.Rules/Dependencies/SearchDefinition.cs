@@ -15,6 +15,9 @@
         /// <summary> The list of types that has been checked by the search. </summary>
         private readonly HashSet<string> _checked;
 
+        /// <summary> The list of dependencies being searched for. </summary>
+        private readonly IEnumerable<string> _searchList;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchDefinition"/> class.
         /// </summary>
@@ -22,13 +25,28 @@
         {
             _found = new Dictionary<string, HashSet<string>>();
             _checked = new HashSet<string>();
-            SearchList = dependencies;
+            _searchList = dependencies;
         }
 
         /// <summary>
-        /// Gets the list of dependencies being searched for.
+        /// Returns all dependencies matching given type full name.
         /// </summary>
-        internal IEnumerable<string> SearchList { get; }
+        /// <param name="typeFullName"> Type full name for a dependency to match. </param>
+        /// <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
+        internal IEnumerable<string> GetAllMatchingDependencies(string typeFullName)
+        {
+            return _searchList.Where(d => typeFullName.StartsWith(d));
+        }
+
+        /// <summary>
+        /// Returns all dependencies matching any of given type full names.
+        /// </summary>
+        /// <param name="typesFullNames"> Set of type full names for a dependency to match any of them. </param>
+        /// <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
+        internal IEnumerable<string> GetAllDependenciesMatchingAnyOf(IEnumerable<string> typesFullNames)
+        {
+            return _searchList.Where(d => typesFullNames.Any(t => t.StartsWith(d)));
+        }
 
         /// <summary>
         /// Gets the list of dependency names that have been found.
