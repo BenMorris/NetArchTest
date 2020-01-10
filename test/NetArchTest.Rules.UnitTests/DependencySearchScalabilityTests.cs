@@ -87,7 +87,7 @@ namespace NetArchTest.Rules.UnitTests
             var runner = new Runner(iterationCount: 9, repeatCount: 2);
 
             // Warm up
-            await runner.Run(() => FindTypesWithAllDependencies(_inputTypesSmallSet, _dependenciesToSearchSmallSet));
+            await runner.Run(() => FindTypesWithAllDependencies(_inputTypesLargeSet, _dependenciesToSearchLargeSet));
 
             // Act, measure the time spent on small set
             var ellapsed0 = await runner.Run(() => FindTypesWithAllDependencies(_inputTypesSmallSet, _dependenciesToSearchSmallSet));
@@ -135,7 +135,7 @@ namespace NetArchTest.Rules.UnitTests
             var runner = new Runner(iterationCount: 9, repeatCount: 2);
 
             // Warm up
-            await runner.Run(() => FindTypesWithAnyDependencies(_inputTypesSmallSet, toSearchSmallSet));
+            await runner.Run(() => FindTypesWithAnyDependencies(_inputTypesLargeSet, toSearchLargeSet));
 
             // Act, measure the time spent on small set
             var ellapsed0 = await runner.Run(() => FindTypesWithAnyDependencies(_inputTypesSmallSet, toSearchSmallSet));

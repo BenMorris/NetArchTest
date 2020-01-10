@@ -50,43 +50,25 @@
         /// <returns>A list of dependencies found in the input classes.</returns>
         internal IReadOnlyList<TypeDefinition> FindTypesWithAllDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
-            var output = new List<TypeDefinition>();
-            var found = new List<string>();
-            var start = true;
+            // Set up the search definition
+            var results = new SearchDefinition(dependencies);
 
-            foreach (var dependency in dependencies)
+            // Check each type in turn
+            foreach (var type in input)
             {
-                if (start || found.Count > 0)
-                {
-                    // Set up the search definition
-                    var results = new SearchDefinition(new string[] { dependency });
-
-                    // Check each type in turn
-                    foreach (var type in input)
-                    {
-                        CheckType(type, ref results);
-                    }
-
-                    if (start)
-                    {
-                        // Kick off the list of types that we have found
-                        found = results.TypesFound.ToList();
-                        start = false;
-                    }
-                    else
-                    {
-                        // Only select items that appear in both lists
-                        found = found.Where(r => results.TypesFound.Contains(r)).ToList();
-                    }
-                }
+                CheckType(type, ref results);
             }
 
-            foreach (var typeFound in found)
+            var output = new List<TypeDefinition>();
+
+            foreach (var typeFound in results.TypesFound)
             {
                 // NB: Nested classes won't be picked up here
                 var match = input.FirstOrDefault(d => d.FullName.Equals(typeFound, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null)
+                if (match != null &&
+                    results.GetAllDependenciesMatchingAnyOf(results.GetDependenciesFoundForType(typeFound)).Count() == results.UniqueDependenciesCount)
                 {
+                    // Check found 
                     output.Add(match);
                 }
             }

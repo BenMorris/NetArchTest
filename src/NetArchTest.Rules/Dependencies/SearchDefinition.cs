@@ -1,5 +1,6 @@
 ﻿namespace NetArchTest.Rules.Dependencies
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
@@ -16,7 +17,7 @@
         private readonly HashSet<string> _checked;
 
         /// <summary> The list of dependencies being searched for. </summary>
-        private readonly IEnumerable<string> _searchList;
+        private readonly NamespaceTree _searchTree;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchDefinition"/> class.
@@ -25,8 +26,11 @@
         {
             _found = new Dictionary<string, HashSet<string>>();
             _checked = new HashSet<string>();
-            _searchList = dependencies;
+            _searchTree = new NamespaceTree(dependencies);
         }
+
+        ///<summary> Count of unique dependencies in the set to search in. </summary>
+        internal int UniqueDependenciesCount => _searchTree.TerminatedNodesCount;
 
         /// <summary>
         /// Returns all dependencies matching given type full name.
@@ -35,7 +39,7 @@
         /// <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
         internal IEnumerable<string> GetAllMatchingDependencies(string typeFullName)
         {
-            return _searchList.Where(d => typeFullName.StartsWith(d));
+            return _searchTree.GetAllMatchingNames(typeFullName);
         }
 
         /// <summary>
@@ -45,7 +49,14 @@
         /// <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
         internal IEnumerable<string> GetAllDependenciesMatchingAnyOf(IEnumerable<string> typesFullNames)
         {
-            return _searchList.Where(d => typesFullNames.Any(t => t.StartsWith(d)));
+            var matches = new HashSet<string>();
+
+            foreach (var match in typesFullNames.SelectMany(x => _searchTree.GetAllMatchingNames(x)))
+            {
+                matches.Add(match);
+            }
+
+            return matches;
         }
 
         /// <summary>
@@ -68,6 +79,16 @@
             {
                 return _found.Keys.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Gets the list of dependencies found for given type.
+        /// </summary>
+        /// <param name="typeFullName">Full name of the type.</param>
+        /// <returns>The list of dependencies found for given type.</returns>
+        internal IReadOnlyList<string> GetDependenciesFoundForType(string typeFullName)
+        {
+            return _found[typeFullName].ToList();
         }
 
         /// <summary>
