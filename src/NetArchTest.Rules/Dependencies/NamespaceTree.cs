@@ -1,8 +1,10 @@
-﻿namespace NetArchTest.Rules.Dependencies
+﻿// Copyright (c) 2020 Siemens AG.
+// Licensed under the MIT License. See LICENSE file in the project root for details
+
+namespace NetArchTest.Rules.Dependencies
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
 
     /// <summary>
