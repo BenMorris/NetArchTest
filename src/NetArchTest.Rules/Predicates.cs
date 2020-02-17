@@ -496,6 +496,39 @@
         }
 
         /// <summary>
+        /// Selects types whose namespaces start with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotResideInNamespaceStartingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^{name}", false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces end with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotResideInNamespaceEndingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"{name}$", false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces contain a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotResideInNamespaceContaining(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^.*{name}.*$", false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that have a dependency on a particular type.
         /// </summary>
         /// <param name="dependency">The dependency type to match against. This can be a namespace or a specific type.</param>

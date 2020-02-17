@@ -626,6 +626,58 @@
             Assert.Contains<Type>(typeof(MatchA), result);
         }
 
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that start with name part.")]
+        public void DoNotResideInNamespaceStartingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(ClassA1), result);
+            Assert.Contains<Type>(typeof(ClassA2), result);
+            Assert.Contains<Type>(typeof(ClassB1), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that end with name part.")]
+        public void DoNotResideInNamespaceEndingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespaceEndingWith(".Namespace3")
+                .GetTypes();
+
+            Assert.Equal(4, result.Count()); // Four types found
+            Assert.Contains<Type>(typeof(ClassA1), result);
+            Assert.Contains<Type>(typeof(ClassA2), result);
+            Assert.Contains<Type>(typeof(ClassB1), result);
+            Assert.Contains<Type>(typeof(ClassA3), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that contains name part.")]
+        public void DoNotResideInNamespaceContaiings_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespaceContaining("Namespace2")
+                .GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(ClassA1), result);
+            Assert.Contains<Type>(typeof(ClassA2), result);
+            Assert.Contains<Type>(typeof(ClassB1), result);
+        }
+
         [Fact(DisplayName = "Types can be selected if they reside in a namespace that starts with a name part.")]
         public void ResideInNamespaceStartingWith_ClassSelected()
         {
