@@ -452,6 +452,39 @@
         }
 
         /// <summary>
+        /// Selects types whose namespaces start with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList ResideInNamespaceStartingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^{name}", true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces end with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList ResideInNamespaceEndingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"{name}$", true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces contain a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList ResideInNamespaceContaining(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^.*{name}.*$", true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types whose namespaces do not match a regular expression.
         /// </summary>
         /// <param name="pattern">The regular expression pattern to match against.</param>
