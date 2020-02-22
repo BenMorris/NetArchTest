@@ -59,7 +59,7 @@
                 // Invoke the functions iteratively - functions within a group are treated as "and" statements
                 foreach (var func in group)
                 {
-                    var funcResults = func.FunctionDelegate.DynamicInvoke(results, func.Value, selected ? func.Condition : !func.Condition) as IEnumerable<TypeDefinition>;
+                    var funcResults = func.FunctionDelegate.DynamicInvoke(results, func.Value, func.Condition) as IEnumerable<TypeDefinition>;
                     results = funcResults.ToList();
                 }
 
@@ -69,8 +69,18 @@
                 }
             }
 
-            // Return all the types that appear in at least one of the result sets
-            return resultSets.SelectMany(list => list.Select(def => def)).Distinct();
+            if (selected)
+            {
+                // Return all the types that appear in at least one of the result sets
+                return resultSets.SelectMany(list => list.Select(def => def)).Distinct();
+            }
+            else
+            {
+                // Return all the types that *do not* appear in at least one of the result sets
+                var selectedTypes = resultSets.SelectMany(list => list.Select(def => def)).Distinct().Select(t => t.FullName);
+                var notSelected = input.Where(t => !selectedTypes.Contains(t.FullName));
+                return notSelected;
+            }
         }
 
 
