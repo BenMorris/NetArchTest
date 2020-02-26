@@ -275,7 +275,7 @@
                 {
                     if (instruction.Operand != null)
                     {
-                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<' });
+                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<', ',', '>' });
                         var matches = results.SearchList.Where(m => operands.Any(o => o.StartsWith(m))).ToArray();
                         foreach (var item in matches)
                         {
