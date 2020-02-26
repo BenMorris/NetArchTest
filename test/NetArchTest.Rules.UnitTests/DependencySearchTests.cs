@@ -24,6 +24,12 @@
             this.RunDependencyTest(typeof(GenericPrameter));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a generic argument.")]
+        public void DependencySearch_GenericArgument_Found()
+        {
+            this.RunDependencyTest(typeof(GenericMethodInvocationWithManyTypeArguments));
+        }
+
         [Fact(DisplayName = "Does not find a dependency in an indirect reference.")]
         public void DependencySearch_IndirectReference_NotFound()
         {
