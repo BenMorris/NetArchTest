@@ -43,6 +43,12 @@
             this.RunDependencyTest(typeof(MethodReturnType));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
+        public void DependencySearch_MethodParameter_Found()
+        {
+            this.RunDependencyTest(typeof(MethodParameter));
+        }
+
         [Fact(DisplayName = "Finds a dependency in a nested private class.")]
         public void DependencySearch_NestedPrivateClass_Found()
         {

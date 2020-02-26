@@ -171,6 +171,11 @@
                 CheckGenericParameters(type, method.GenericParameters, ref results);
             }
 
+            if (method.HasParameters)
+            {
+                CheckParameters(type, method.Parameters, ref results);
+            }
+
             // Check the contents of the method body
             CheckMethodBody(type, method, ref results);
         }
@@ -296,6 +301,18 @@
                 if (results.SearchList.Any(m => generic.FullName.StartsWith(m)))
                 {
                     results.AddToFound(type, generic.FullName);
+                }
+            }
+        }
+
+        private void CheckParameters(TypeDefinition type, IEnumerable<ParameterDefinition> parameters, ref SearchDefinition results)
+        {
+            foreach (var parameter in parameters)
+            {
+                string fullName = parameter.ParameterType?.FullName ?? String.Empty;
+                if (results.SearchList.Any(m => fullName.StartsWith(m)))
+                {
+                    results.AddToFound(type, fullName);
                 }
             }
         }
