@@ -151,6 +151,11 @@
                 CheckGenericParameters(type, method.GenericParameters, ref results);
             }
 
+            if (method.HasParameters)
+            {
+                CheckParameters(type, method.Parameters, ref results);
+            }
+
             // Check the contents of the method body
             CheckMethodBody(type, method, ref results);
         }
@@ -255,7 +260,7 @@
                 {
                     if (instruction.Operand != null)
                     {
-                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<' });
+                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<', ',', '>' });
                         var matches = results.GetAllDependenciesMatchingAnyOf(operands);
                         foreach (var item in matches)
                         {
@@ -276,6 +281,18 @@
                 if (results.GetAllMatchingDependencies(generic.FullName).Any())
                 {
                     results.AddToFound(type, generic.FullName);
+                }
+            }
+        }
+
+        private void CheckParameters(TypeDefinition type, IEnumerable<ParameterDefinition> parameters, ref SearchDefinition results)
+        {
+            foreach (var parameter in parameters)
+            {
+                string fullName = parameter.ParameterType?.FullName ?? String.Empty;
+                if (results.GetAllMatchingDependencies(fullName).Any())
+                {
+                    results.AddToFound(type, fullName);
                 }
             }
         }

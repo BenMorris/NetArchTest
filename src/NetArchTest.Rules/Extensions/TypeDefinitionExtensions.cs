@@ -51,7 +51,12 @@
         public static Type ToType(this TypeDefinition typeDefinition)
         {
             // Nested types have a forward slash that should be replaced with "+"
-            var fullName = typeDefinition.FullName.Replace("/", "+");
+            // C++ template instantiations contain comma separator for template arguments,
+            // getting address operators and pointer type designations which should be prefixed by backslash
+            var fullName = typeDefinition.FullName.Replace("/", "+")
+                .Replace(",", "\\,")
+                .Replace("&", "\\&")
+                .Replace("*", "\\*");
             return Type.GetType(string.Concat(fullName, ", ", typeDefinition.Module.Assembly.FullName), true);
         }
 

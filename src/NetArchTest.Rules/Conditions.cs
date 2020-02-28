@@ -474,7 +474,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList HaveDependencyOnAny(string[] dependencies)
+        public ConditionList HaveDependencyOnAny(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, dependencies, true);
             return new ConditionList(_types, _should, _sequence);
@@ -485,7 +485,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList HaveDependencyOnAll(string[] dependencies)
+        public ConditionList HaveDependencyOnAll(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, true);
             return new ConditionList(_types, _should, _sequence);
@@ -506,7 +506,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList NotHaveDependencyOnAny(string[] dependencies)
+        public ConditionList NotHaveDependencyOnAny(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, dependencies, false);
             return new ConditionList(_types, _should, _sequence);
@@ -517,7 +517,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList NotHaveDependencyOnAll(string[] dependencies)
+        public ConditionList NotHaveDependencyOnAll(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, false);
             return new ConditionList(_types, _should, _sequence);

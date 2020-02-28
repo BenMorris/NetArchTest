@@ -25,6 +25,12 @@
             this.RunDependencyTest(typeof(GenericPrameter));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a generic argument.")]
+        public void DependencySearch_GenericArgument_Found()
+        {
+            this.RunDependencyTest(typeof(GenericMethodInvocationWithManyTypeArguments));
+        }
+
         [Fact(DisplayName = "Does not find a dependency in an indirect reference.")]
         public void DependencySearch_IndirectReference_NotFound()
         {
@@ -42,6 +48,12 @@
         public void DependencySearch_MethodReturnType_Found()
         {
             this.RunDependencyTest(typeof(MethodReturnType));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
+        public void DependencySearch_MethodParameter_Found()
+        {
+            this.RunDependencyTest(typeof(MethodParameter));
         }
 
         [Fact(DisplayName = "Finds a dependency in a nested private class.")]
