@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
-  
+
     /// <summary>
     /// Finds dependencies within a given set of types.
     /// </summary>
@@ -50,43 +50,25 @@
         /// <returns>A list of dependencies found in the input classes.</returns>
         internal IReadOnlyList<TypeDefinition> FindTypesWithAllDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
-            var output = new List<TypeDefinition>();
-            var found = new List<string>();
-            var start = true;
+            // Set up the search definition
+            var results = new SearchDefinition(dependencies);
 
-            foreach (var dependency in dependencies)
+            // Check each type in turn
+            foreach (var type in input)
             {
-                if (start || found.Count > 0)
-                {
-                    // Set up the search definition
-                    var results = new SearchDefinition(new string[] { dependency });
-
-                    // Check each type in turn
-                    foreach (var type in input)
-                    {
-                        CheckType(type, ref results);
-                    }
-
-                    if (start)
-                    {
-                        // Kick off the list of types that we have found
-                        found = results.TypesFound.ToList();
-                        start = false;
-                    }
-                    else
-                    {
-                        // Only select items that appear in both lists
-                        found = found.Where(r => results.TypesFound.Contains(r)).ToList();
-                    }
-                }
+                CheckType(type, ref results);
             }
 
-            foreach (var typeFound in found)
+            var output = new List<TypeDefinition>();
+
+            foreach (var typeFound in results.TypesFound)
             {
                 // NB: Nested classes won't be picked up here
                 var match = input.FirstOrDefault(d => d.FullName.Equals(typeFound, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null)
+                if (match != null &&
+                    results.GetAllDependenciesMatchingAnyOf(results.GetDependenciesFoundForType(typeFound)).Count() == results.UniqueDependenciesCount)
                 {
+                    // Check found 
                     output.Add(match);
                 }
             }
@@ -112,12 +94,10 @@
             var baseClass = type.BaseType?.Resolve();
             if (baseClass != null)
             {
-                foreach (var dependency in results.SearchList)
+                foreach (var dependency in results.GetAllMatchingDependencies(baseClass.FullName))
                 {
-                    if (baseClass.FullName.StartsWith(dependency, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        results.AddToFound(type, dependency);
-                    }
+
+                    results.AddToFound(type, dependency);
                 }
             }
 
@@ -160,7 +140,7 @@
                 CheckGenericParameters(type, method.ReturnType.GenericParameters, ref results);
             }
 
-            if (results.SearchList.Any(m => method.ReturnType.FullName.StartsWith(m)))
+            if (results.GetAllMatchingDependencies(method.ReturnType.FullName).Any())
             {
                 results.AddToFound(type, method.ReturnType.FullName);
             }
@@ -196,7 +176,7 @@
                     }
 
                     // Check the property type
-                    if (results.SearchList.Any(m => property.PropertyType.FullName.StartsWith(m)))
+                    if (results.GetAllMatchingDependencies(property.PropertyType.FullName).Any())
                     {
                         results.AddToFound(type, property.PropertyType.FullName);
                     }
@@ -219,7 +199,7 @@
                         CheckGenericParameters(type, field.FieldType.GenericParameters, ref results);
                     }
 
-                    if (results.SearchList.Any(m => field.FieldType.FullName.StartsWith(m)))
+                    if (results.GetAllMatchingDependencies(field.FieldType.FullName).Any())
                     {
                         results.AddToFound(type, field.FieldType.FullName);
                     }
@@ -268,7 +248,7 @@
                             CheckGenericParameters(type, variable.VariableType.GenericParameters, ref results);
                         }
 
-                        if (results.SearchList.Any(m => variable.VariableType.FullName.StartsWith(m)))
+                        if (results.GetAllMatchingDependencies(variable.VariableType.FullName).Any())
                         {
                             results.AddToFound(type, variable.VariableType.FullName);
                         }
@@ -281,7 +261,7 @@
                     if (instruction.Operand != null)
                     {
                         var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<', ',', '>' });
-                        var matches = results.SearchList.Where(m => operands.Any(o => o.StartsWith(m))).ToArray();
+                        var matches = results.GetAllDependenciesMatchingAnyOf(operands);
                         foreach (var item in matches)
                         {
                             results.AddToFound(type, item);
@@ -298,7 +278,7 @@
         {
             foreach (var generic in parameters)
             {
-                if (results.SearchList.Any(m => generic.FullName.StartsWith(m)))
+                if (results.GetAllMatchingDependencies(generic.FullName).Any())
                 {
                     results.AddToFound(type, generic.FullName);
                 }
@@ -310,7 +290,7 @@
             foreach (var parameter in parameters)
             {
                 string fullName = parameter.ParameterType?.FullName ?? String.Empty;
-                if (results.SearchList.Any(m => fullName.StartsWith(m)))
+                if (results.GetAllMatchingDependencies(fullName).Any())
                 {
                     results.AddToFound(type, fullName);
                 }

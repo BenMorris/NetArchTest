@@ -1,5 +1,6 @@
 ﻿namespace NetArchTest.Rules.Dependencies
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
@@ -15,6 +16,9 @@
         /// <summary> The list of types that has been checked by the search. </summary>
         private readonly HashSet<string> _checked;
 
+        /// <summary> The list of dependencies being searched for. </summary>
+        private readonly NamespaceTree _searchTree;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchDefinition"/> class.
         /// </summary>
@@ -22,13 +26,38 @@
         {
             _found = new Dictionary<string, HashSet<string>>();
             _checked = new HashSet<string>();
-            SearchList = dependencies;
+            _searchTree = new NamespaceTree(dependencies);
+        }
+
+        ///<summary> Count of unique dependencies in the set to search in. </summary>
+        internal int UniqueDependenciesCount => _searchTree.TerminatedNodesCount;
+
+        /// <summary>
+        /// Returns all dependencies matching given type full name.
+        /// </summary>
+        /// <param name="typeFullName"> Type full name for a dependency to match. </param>
+        /// <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
+        internal IEnumerable<string> GetAllMatchingDependencies(string typeFullName)
+        {
+            return _searchTree.GetAllMatchingNames(typeFullName);
         }
 
         /// <summary>
-        /// Gets the list of dependencies being searched for.
+        /// Returns all dependencies matching any of given type full names.
         /// </summary>
-        internal IEnumerable<string> SearchList { get; }
+        /// <param name="typesFullNames"> Set of type full names for a dependency to match any of them. </param>
+        /// <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
+        internal IEnumerable<string> GetAllDependenciesMatchingAnyOf(IEnumerable<string> typesFullNames)
+        {
+            var matches = new HashSet<string>();
+
+            foreach (var match in typesFullNames.SelectMany(x => _searchTree.GetAllMatchingNames(x)))
+            {
+                matches.Add(match);
+            }
+
+            return matches;
+        }
 
         /// <summary>
         /// Gets the list of dependency names that have been found.
@@ -50,6 +79,16 @@
             {
                 return _found.Keys.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Gets the list of dependencies found for given type.
+        /// </summary>
+        /// <param name="typeFullName">Full name of the type.</param>
+        /// <returns>The list of dependencies found for given type.</returns>
+        internal IReadOnlyList<string> GetDependenciesFoundForType(string typeFullName)
+        {
+            return _found[typeFullName].ToList();
         }
 
         /// <summary>

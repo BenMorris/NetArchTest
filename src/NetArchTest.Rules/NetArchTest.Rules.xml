@@ -433,6 +433,95 @@
             Finds matching dependencies for a set of generic parameters
             </summary>
         </member>
+        <member name="T:NetArchTest.Rules.Dependencies.NamespaceTree">
+            <summary>
+            Holds tree structure of full names; child nodes of each parent are indexed for optimal time of search.
+            </summary>
+            <example>
+            The sequence {"System.Linq", "System.Object", "System", "System.Collections.Generic", "NetArchTest.TestStructure.Dependencies.Examples"}
+            produces the tree
+            ""
+            |- "NetArchTest"
+            |  |- "TestStructure"
+            |     |- "Dependencies"
+            |        |- "Examples" (terminated)
+            |
+            |- "System" (terminated)
+               |- "Collections"
+               |  |- "Generic" (terminated)
+               |
+               |- "Linq" (terminated)
+               |- "Object" (terminated)
+            </example>
+            <remarks>
+            In the example above the flag "terminated" means that marked name is presented in the sequence the tree is built for.
+            Despite of the fact that the namespace "System" takes over its descendants "Linq", "Object" and "Collections.Generic"
+            all of them are presented in the tree. For dependency search it provides the same results as original implementation
+            based on the String.StartsWith(...) does.
+            </remarks>
+        </member>
+        <member name="T:NetArchTest.Rules.Dependencies.NamespaceTree.Node">
+            <summary>
+            Represents a node in the namespace tree.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.NamespaceTree.Node.Nodes">
+            <summary> Maps child namespace to its root node. </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.NamespaceTree.Node.IsTerminated">
+            <summary> Returs node's "terminated" flag. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.Node.GetOrAddNode(System.String)">
+            <summary>
+            Adds new child node with given name or returns existing one.
+            </summary>
+            <param name="name">Name of child node.</param>
+            <returns>Child node with given name.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.Node.TryGetNode(System.String,NetArchTest.Rules.Dependencies.NamespaceTree.Node@)">
+            <summary>
+            Checks whether child node with given name exists and returns it.
+            </summary>
+            <param name="name">Name of child node of interest.</param>
+            <param name="node">Child node with given name, if it exists; otherwise, null.</param>
+            <returns>True, if child node with given name exists; otherwise, false.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.Node.Terminate">
+            <summary>
+            Terminates the node.
+            </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.Dependencies.NamespaceTree._root">
+            <summary> Holds the root for the namespace tree. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initially fills the tree with given names.
+            </summary>
+            <param name="fullNames">Sequence of full names.</param>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.Add(System.String)">
+            <summary>
+            Splits full name into subnamespaces and adds corresponding nodes to the tree.
+            </summary>
+            <param name="fullName">Can be empty, but not null.</param>
+        </member>
+        <member name="P:NetArchTest.Rules.Dependencies.NamespaceTree.TerminatedNodesCount">
+            <summary> Count of terminated nodes in the tree. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.NamespaceTree.GetAllMatchingNames(System.String)">
+            <summary>
+            Retrieves the sequence of all matching names for given full name.
+            A name matches some full name, if its node is terminated and whole path from tree root to that node
+            builds the chain of namespaces in the full name.
+            </summary>
+            <param name="fullName">Full name to search matching names for.</param>
+            <returns>Sequence of all matching names.</returns>
+            <example>
+            If the tree contains "System.Collections" and "System.Collections.IList", both are returned
+            for the full name "System.Collections.IList".
+            </example>
+        </member>
         <member name="T:NetArchTest.Rules.Dependencies.SearchDefinition">
             <summary>
             Manages the parameters and results for a dependency search.
@@ -444,15 +533,30 @@
         <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._checked">
             <summary> The list of types that has been checked by the search. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._searchTree">
+            <summary> The list of dependencies being searched for. </summary>
+        </member>
         <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.#ctor(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Dependencies.SearchDefinition"/> class.
             </summary>
         </member>
-        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.SearchList">
+        <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.UniqueDependenciesCount">
+            <summary> Count of unique dependencies in the set to search in. </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.GetAllMatchingDependencies(System.String)">
             <summary>
-            Gets the list of dependencies being searched for.
+            Returns all dependencies matching given type full name.
             </summary>
+            <param name="typeFullName"> Type full name for a dependency to match. </param>
+            <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.GetAllDependenciesMatchingAnyOf(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns all dependencies matching any of given type full names.
+            </summary>
+            <param name="typesFullNames"> Set of type full names for a dependency to match any of them. </param>
+            <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
         </member>
         <member name="P:NetArchTest.Rules.Dependencies.SearchDefinition.DependenciesFound">
             <summary>
@@ -463,6 +567,13 @@
             <summary>
             Gets the list of types that have dependencies.
             </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.GetDependenciesFoundForType(System.String)">
+            <summary>
+            Gets the list of dependencies found for given type.
+            </summary>
+            <param name="typeFullName">Full name of the type.</param>
+            <returns>The list of dependencies found for given type.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.IsChecked(Mono.Cecil.TypeDefinition)">
             <summary>
