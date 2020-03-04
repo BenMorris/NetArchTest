@@ -23,7 +23,7 @@
         [Fact(DisplayName = "Finds a dependency in a generic parameter.")]
         public void DependencySearch_GenericParameter_Found()
         {
-            this.RunDependencyTest(typeof(GenericPrameter));
+            this.RunDependencyTest(typeof(GenericParameter));
         }
 
         [Fact(DisplayName = "Finds a dependency in a generic argument.")]
@@ -113,7 +113,7 @@
 
         [Theory(DisplayName = "Does not find a dependency that only partially matches actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -134,7 +134,7 @@
 
         [Theory(DisplayName = "Does not find a dependency from the namespace matching partially to the namespace of actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -155,7 +155,7 @@
 
         [Theory(DisplayName = "Does not find a dependency that differs only in case from actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
         [InlineData(typeof(NestedPrivateClass))]
