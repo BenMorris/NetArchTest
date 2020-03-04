@@ -9,6 +9,7 @@
     using NetArchTest.TestStructure.Dependencies.Examples;
     using NetArchTest.TestStructure.Dependencies.Implementation;
     using NetArchTest.TestStructure.Dependencies.Search;
+    using NetArchTest.TestStructure.FalsePositives.NamespaceMatch;
     using Xunit;
 
     public class DependencySearchTests
@@ -22,7 +23,7 @@
         [Fact(DisplayName = "Finds a dependency in a generic parameter.")]
         public void DependencySearch_GenericParameter_Found()
         {
-            this.RunDependencyTest(typeof(GenericPrameter));
+            this.RunDependencyTest(typeof(GenericParameter));
         }
 
         [Fact(DisplayName = "Finds a dependency in a generic argument.")]
@@ -112,7 +113,7 @@
 
         [Theory(DisplayName = "Does not find a dependency that only partially matches actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -133,7 +134,7 @@
 
         [Theory(DisplayName = "Does not find a dependency from the namespace matching partially to the namespace of actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -154,7 +155,7 @@
 
         [Theory(DisplayName = "Does not find a dependency that differs only in case from actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericPrameter))]
+        [InlineData(typeof(GenericParameter))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
         [InlineData(typeof(NestedPrivateClass))]
@@ -170,6 +171,46 @@
         {
             this.RunDependencyTest(input, dependencyToSearch: typeof(ExampleDEPENDENCY),
                                    expectToFindClass: false, expectToFindNamespace: true);
+        }
+
+        [Fact(DisplayName = "A dependency search will not return false positives for pattern matched classes.")]
+        public void FindTypesWithAllDependencies_PatternMatchedClasses_NotReturned()
+        {
+            // In this example, searching for a dependency on "PatternMatch" should not return "PatternMatchTwo"
+
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .HaveName("ClassMatchingExample")
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(PatternMatch).FullName });
+
+            // Assert: Before PR#36 this would have returned PatternMatchToo in the results
+            Assert.Empty(result); // No results returned
+        }
+
+        [Fact(DisplayName = "A dependency search will not return false positives for pattern matched namespaces.")]
+        public void FindTypesWithAllDependencies_PatternMatchedNamespaces_NotReturned()
+        {
+            // In this example, searching for a dependency on "NamespaceMatch" should not return classes in "NamespaceMatchToo"
+
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .HaveName("NamespaceMatchingExample")
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(PatternMatch).Namespace });
+
+            // Assert: Before PR#36 this would have returned classes in NamespaceMatchToo in the results
+            Assert.Empty(result); // No results returned
         }
 
         [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list.")]
