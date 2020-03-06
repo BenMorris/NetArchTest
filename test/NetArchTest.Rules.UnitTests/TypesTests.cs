@@ -80,11 +80,10 @@
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // Act
-            var result = Types.FromPath(dir).GetTypes();
+            var result = Types.FromPath(dir).That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
 
             // Assert
             Assert.Equal(expected, result.Count());
-            Assert.All(result, r => r.FullName.StartsWith("NetArchTest.TestStructure"));
         }
 
         [Fact(DisplayName = "When loading a type a BadImageFormatException will be caught and an empty list will be returned.")]
