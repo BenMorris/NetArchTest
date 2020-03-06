@@ -459,6 +459,72 @@
         }
 
         /// <summary>
+        /// Selects types whose namespaces start with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList ResideInNamespaceStartingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^{name}", true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces start with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList NotResideInNamespaceStartingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^{name}", false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces end with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList ResideInNamespaceEndingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"{name}$", true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces end with a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList NotResideInNamespaceEndingWith(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"{name}$", false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces contain a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList ResideInNamespaceContaining(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^.*{name}.*$", true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose namespaces contain a particular name part.
+        /// </summary>
+        /// <param name="name">The namespace part to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public ConditionList NotResideInNamespaceContaining(string name)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.ResideInNamespaceMatching, $"^.*{name}.*$", false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that have a dependency on a particular type.
         /// </summary>
         /// <param name="dependency">The dependency to match against. This can be a namespace or a specific type.</param>
