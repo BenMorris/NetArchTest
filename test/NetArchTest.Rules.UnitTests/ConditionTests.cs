@@ -584,7 +584,7 @@
         }
 
         [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that matches a regular expression.")]
-        public void DoNotResideInNamespaceMatching_MatchesFound_ClassSelected()
+        public void NotResideInNamespaceMatching_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
@@ -592,6 +592,92 @@
                 .ResideInNamespace("NetArchTest.TestStructure.NamespaceMatching.NamespaceA")
                 .Should()
                 .NotResideInNamespaceMatching(@"NetArchTest.TestStructure.NamespaceMatching.Namespace\d")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace that starts with a name part.")]
+        public void ResideInNamespaceStartingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveNameStartingWith("ClassA")
+                .Should()
+                .ResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that start with name part.")]
+        public void NotResideInNamespaceStartingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .HaveNameEndingWith("1")
+                .Should()
+                .NotResideInNamespaceStartingWith("NetArchTest.TestStructure.NameMatching.Namespace2")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace that ends with a name part.")]
+        public void ResideInNamespaceEndingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveName("ClassA1")
+                .Should()
+                .ResideInNamespaceEndingWith(".NameMatching.Namespace1")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that end with name part.")]
+        public void NotResideInNamespaceEndingWith_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveNameStartingWith("ClassA")
+                .Should()
+                .NotResideInNamespaceEndingWith(".Namespace3")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they reside in a namespace that contains a name part.")]
+        public void ResideInNamespaceContaining_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveNameStartingWith("ClassA")
+                .Should()
+                .ResideInNamespaceContaining(".NameMatching.")
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that contains name part.")]
+        public void NotResideInNamespaceContaining_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveNameStartingWith("ClassA")
+                .Should()
+                .NotResideInNamespaceContaining("Namespace3")
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
