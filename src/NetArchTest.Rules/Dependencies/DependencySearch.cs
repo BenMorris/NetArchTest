@@ -11,7 +11,7 @@
     internal class DependencySearch
     {
         /// <summary>
-        /// Finds types that have a depenbdency on any item in a given list of dependencies.
+        /// Finds types that have a dependency on any item in a given list of dependencies.
         /// </summary>
         /// <param name="input">The set of type definitions to search.</param>
         /// <param name="dependencies">The set of dependencies to look for.</param>
@@ -122,7 +122,7 @@
                 this.CheckType(nested, ref results);
             }
 
-            // Check each method 
+            // Check each method
             foreach (var method in type.Methods)
             {
                 this.CheckMethod(type, method, ref results);
@@ -236,7 +236,7 @@
             {
                 foreach (var variable in method.Body.Variables)
                 {
-                    // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator. 
+                    // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator.
                     if (variable.VariableType.IsNested)
                     {
                         CheckType(variable.VariableType.Resolve(), ref results);

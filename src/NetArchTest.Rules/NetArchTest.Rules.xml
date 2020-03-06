@@ -384,7 +384,7 @@
         </member>
         <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesWithAnyDependencies(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Finds types that have a depenbdency on any item in a given list of dependencies.
+            Finds types that have a dependency on any item in a given list of dependencies.
             </summary>
             <param name="input">The set of type definitions to search.</param>
             <param name="dependencies">The set of dependencies to look for.</param>
@@ -1309,11 +1309,53 @@
             <param name="pattern">The regular expression pattern to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespaceStartingWith(System.String)">
+            <summary>
+            Selects types whose namespaces start with a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespaceEndingWith(System.String)">
+            <summary>
+            Selects types whose namespaces end with a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.ResideInNamespaceContaining(System.String)">
+            <summary>
+            Selects types whose namespaces contain a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespaceMatching(System.String)">
             <summary>
             Selects types whose namespaces do not match a regular expression.
             </summary>
             <param name="pattern">The regular expression pattern to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespaceStartingWith(System.String)">
+            <summary>
+            Selects types whose namespaces start with a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespaceEndingWith(System.String)">
+            <summary>
+            Selects types whose namespaces end with a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotResideInNamespaceContaining(System.String)">
+            <summary>
+            Selects types whose namespaces contain a particular name part.
+            </summary>
+            <param name="name">The namespace part to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOn(System.String)">
