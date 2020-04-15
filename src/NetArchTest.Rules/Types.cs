@@ -8,6 +8,7 @@
     using System.Runtime.CompilerServices;
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
+    using NetArchTest.Rules.Dependencies;
 
     /// <summary>
     /// Creates a list of types that can have predicates and conditions applied to it.
@@ -18,8 +19,10 @@
         private readonly List<TypeDefinition> _types;
 
         /// <summary> The list of namespaces to exclude from the current domain. </summary>
-        private static List<string> _exclusionList = new List<string>
+        private static readonly List<string> _exclusionList = new List<string>
         { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit" };
+
+        private static readonly NamespaceTree _exclusionTree = new NamespaceTree(_exclusionList);
 
         /// <summary>
         /// Prevents any external class initializing a new instance of the <see cref="Types"/> class.
@@ -39,7 +42,7 @@
             var currentDomain = new List<Assembly>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
+                if (!_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())                   
                 {
                     currentDomain.Add(assembly);
                 }
@@ -222,8 +225,8 @@
                 foreach (var file in files)
                 {
                     var assembly = ReadAssemblyDefinition(file, readerParams);
-
-                    if (assembly != null && !_exclusionList.Any(e => assembly.FullName.StartsWith(e)))
+                 
+                    if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
                     {
                         types.AddRange(assembly.Modules.SelectMany(t => t.Types));
                     }
@@ -251,8 +254,8 @@
             while (check.Count > 0)
             {
                 var type = check.Dequeue();
-
-                if (!_exclusionList.Any(e => type.FullName.StartsWith(e, StringComparison.InvariantCultureIgnoreCase)))
+                
+                if (!_exclusionTree.GetAllMatchingNames(type.FullName).Any())
                 {
                     output.Add(type);
 

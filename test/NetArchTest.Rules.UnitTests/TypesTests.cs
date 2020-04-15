@@ -17,9 +17,16 @@
         {
             var result = Types.InCurrentDomain().GetTypeDefinitions();
 
-            Assert.DoesNotContain(result, t => t.FullName.StartsWith("System"));
-            Assert.DoesNotContain(result, t => t.FullName.StartsWith("Microsoft"));
-            Assert.DoesNotContain(result, t => t.FullName.StartsWith("netstandard"));
+            Assert.DoesNotContain(result, t => t.FullName.StartsWith("System.") || t.FullName.Equals("System"));
+            Assert.DoesNotContain(result, t => t.FullName.StartsWith("Microsoft.") || t.FullName.Equals("Microsoft"));
+            Assert.DoesNotContain(result, t => t.FullName.StartsWith("netstandard.") | t.FullName.Equals("netstandard"));
+        }
+        [Fact(DisplayName = "Types that reside in namespace that has \"System\" prefix but is not system namespace should be included in the current domain. ")]
+        public void InCurrentDomain_SystemTypesExcluded2()
+        {          
+            var result = Types.InCurrentDomain().GetTypeDefinitions();
+
+            Assert.Contains(result, t => t.FullName == typeof(SystemAsNamespacePrefix.ExampleClass).FullName);           
         }
 
         [Fact(DisplayName = "NetArchTest types should be excluded from the current domain.")]
@@ -65,7 +72,7 @@
             var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
 
             // Act
-            var result = Types.FromFile("NetArchTest.TestStructure.dll").GetTypes();
+            var result = Types.FromFile("NetArchTest.TestStructure.dll").That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
 
             // Assert
             Assert.Equal(expected, result.Count());
