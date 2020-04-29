@@ -20,14 +20,34 @@
         {
             if (parent != null)
             {
-                return child.MetadataToken
-                    != parent.MetadataToken
-                    && child.EnumerateBaseClasses().Any(b => b.MetadataToken == parent.MetadataToken);
+                return !child.IsSameTypeAs(parent)
+                       && child.EnumerateBaseClasses().Any(b => b.IsSameTypeAs(parent));
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tests whether two type definitions are from the same assembly.
+        /// The comparison is based on the full assembly names.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns>An indication of whether the both types are from the same assembly.</returns>
+        public static bool IsFromSameAssemblyAs(this TypeDefinition a, TypeDefinition b)
+        {
+            return a.Module.Assembly.ToString() == b.Module.Assembly.ToString();
+        }
+
+        /// <summary>
+        /// Tests whether the provided types are the same type.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns>An indication of whether the types are the same.</returns>
+        public static bool IsSameTypeAs(this TypeDefinition a, TypeDefinition b)
+        {
+            return a.IsFromSameAssemblyAs(b) && a.MetadataToken == b.MetadataToken;
         }
 
         /// <summary>
