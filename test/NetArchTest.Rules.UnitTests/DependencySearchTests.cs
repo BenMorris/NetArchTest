@@ -51,6 +51,12 @@
             this.RunDependencyTest(typeof(MethodReturnType));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a public method's generic return type.")]
+        public void DependencySearch_MethodReturnTypeGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(MethodReturnTypeGeneric));
+        }
+
         [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
         public void DependencySearch_MethodParameter_Found()
         {
