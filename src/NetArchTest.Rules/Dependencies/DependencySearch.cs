@@ -269,7 +269,7 @@
                 {
                     if (instruction.Operand != null)
                     {
-                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<', ',', '>' });
+                        var operands = ExtractTypeNames(instruction.Operand.ToString());
                         var matches = results.GetAllDependenciesMatchingAnyOf(operands);
                         foreach (var item in matches)
                         {
@@ -298,12 +298,17 @@
         {
             foreach (var parameter in parameters)
             {
-                string fullName = parameter.ParameterType?.FullName ?? String.Empty;
-                if (results.GetAllMatchingDependencies(fullName).Any())
+                var typeNames = ExtractTypeNames(parameter.ParameterType.FullName);
+                if (results.GetAllDependenciesMatchingAnyOf(typeNames).Any())
                 {
-                    results.AddToFound(type, fullName);
+                    results.AddToFound(type, parameter.ParameterType.FullName);
                 }
             }
+        }
+
+        private IEnumerable<string> ExtractTypeNames(string fullName)
+        {
+            return fullName.Split(new char[] { ' ', '<', ',', '>' }).Where(x => !String.IsNullOrWhiteSpace(x));
         }
     }
 }
