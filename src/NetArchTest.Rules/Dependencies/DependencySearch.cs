@@ -283,13 +283,15 @@
         /// <summary>
         /// Finds matching dependencies for a set of generic parameters
         /// </summary>
-        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
+        private void CheckGenericParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
         {
             foreach (var generic in parameters)
             {
-                if (results.GetAllMatchingDependencies(generic.FullName).Any())
+                var types = ExtractTypeNames(generic.FullName);
+                var matches = results.GetAllDependenciesMatchingAnyOf(types);
+                foreach (var item in matches)
                 {
-                    results.AddToFound(type, generic.FullName);
+                    results.AddToFound(type, item);
                 }
             }
         }
