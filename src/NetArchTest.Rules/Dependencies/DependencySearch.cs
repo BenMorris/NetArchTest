@@ -140,6 +140,15 @@
                 CheckGenericParameters(type, method.ReturnType.GenericParameters, ref results);
             }
 
+            if (method.ReturnType.IsGenericInstance)
+            {
+                var returnTypeAsGenericInstance = method.ReturnType as GenericInstanceType;
+                if (returnTypeAsGenericInstance.HasGenericArguments)
+                {
+                    CheckGenericParameters(type, returnTypeAsGenericInstance.GenericArguments, ref results);
+                }
+            }
+
             if (results.GetAllMatchingDependencies(method.ReturnType.FullName).Any())
             {
                 results.AddToFound(type, method.ReturnType.FullName);
@@ -274,7 +283,7 @@
         /// <summary>
         /// Finds matching dependencies for a set of generic parameters
         /// </summary>
-        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
+        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
         {
             foreach (var generic in parameters)
             {
