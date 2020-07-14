@@ -51,10 +51,27 @@
             this.RunDependencyTest(typeof(MethodReturnType));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a public method's generic return type.")]
+        public void DependencySearch_MethodReturnTypeGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(MethodReturnTypeGeneric));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public method's generic return type that contains another generic.")]
+        public void DependencySearch_MethodReturnTypeNestedGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(MethodReturnTypeNestedGeneric));
+        }
+
         [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
         public void DependencySearch_MethodParameter_Found()
         {
             this.RunDependencyTest(typeof(MethodParameter));
+        }
+        [Fact(DisplayName = "Finds a dependency in a public method's generic parameter.")]
+        public void DependencySearch_MethodParameterGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(MethodParameterGeneric));
         }
 
         [Fact(DisplayName = "Finds a dependency in a nested private class.")]

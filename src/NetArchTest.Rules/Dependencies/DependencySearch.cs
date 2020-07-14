@@ -107,7 +107,7 @@
             // Check the generic parameters for the type
             if (type.HasGenericParameters)
             {
-                CheckGenericParameters(type, type.GenericParameters, ref results);
+                CheckParameters(type, type.GenericParameters, ref results);
             }
 
             // Check the fields
@@ -137,7 +137,16 @@
             // Check the return type
             if (method.ReturnType.ContainsGenericParameter)
             {
-                CheckGenericParameters(type, method.ReturnType.GenericParameters, ref results);
+                CheckParameters(type, method.ReturnType.GenericParameters, ref results);
+            }
+
+            if (method.ReturnType.IsGenericInstance)
+            {
+                var returnTypeAsGenericInstance = method.ReturnType as GenericInstanceType;
+                if (returnTypeAsGenericInstance.HasGenericArguments)
+                {
+                    CheckParameters(type, returnTypeAsGenericInstance.GenericArguments, ref results);
+                }
             }
 
             if (results.GetAllMatchingDependencies(method.ReturnType.FullName).Any())
@@ -148,12 +157,12 @@
             // Check for any generic parameters
             if (method.ContainsGenericParameter)
             {
-                CheckGenericParameters(type, method.GenericParameters, ref results);
+                CheckParameters(type, method.GenericParameters, ref results);
             }
 
             if (method.HasParameters)
             {
-                CheckParameters(type, method.Parameters, ref results);
+                CheckParameters(type, method.Parameters.Select(x => x.ParameterType), ref results);
             }
 
             // Check the contents of the method body
@@ -172,7 +181,7 @@
                     // The property could be a generic property
                     if (property.ContainsGenericParameter)
                     {
-                        CheckGenericParameters(type, property.PropertyType.GenericParameters, ref results);
+                        CheckParameters(type, property.PropertyType.GenericParameters, ref results);
                     }
 
                     // Check the property type
@@ -196,7 +205,7 @@
                     // The field could be a generic property
                     if (field.ContainsGenericParameter)
                     {
-                        CheckGenericParameters(type, field.FieldType.GenericParameters, ref results);
+                        CheckParameters(type, field.FieldType.GenericParameters, ref results);
                     }
 
                     if (results.GetAllMatchingDependencies(field.FieldType.FullName).Any())
@@ -245,7 +254,7 @@
                     {
                         if (variable.VariableType.ContainsGenericParameter)
                         {
-                            CheckGenericParameters(type, variable.VariableType.GenericParameters, ref results);
+                            CheckParameters(type, variable.VariableType.GenericParameters, ref results);
                         }
 
                         if (results.GetAllMatchingDependencies(variable.VariableType.FullName).Any())
@@ -260,7 +269,7 @@
                 {
                     if (instruction.Operand != null)
                     {
-                        var operands = instruction.Operand.ToString().Split(new char[] { ' ', '<', ',', '>' });
+                        var operands = ExtractTypeNames(instruction.Operand.ToString());
                         var matches = results.GetAllDependenciesMatchingAnyOf(operands);
                         foreach (var item in matches)
                         {
@@ -272,29 +281,46 @@
         }
 
         /// <summary>
-        /// Finds matching dependencies for a set of generic parameters
+        /// Finds matching dependencies for a set of generic or not parameters
         /// </summary>
-        private static void CheckGenericParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
+        private void CheckParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
         {
-            foreach (var generic in parameters)
+            foreach (var parameter in parameters)
             {
-                if (results.GetAllMatchingDependencies(generic.FullName).Any())
+                if (IsTypeGeneric(parameter.FullName))
                 {
-                    results.AddToFound(type, generic.FullName);
+                    var types = ExtractTypeNames(parameter.FullName);
+                    var matches = results.GetAllDependenciesMatchingAnyOf(types);
+                    foreach (var item in matches)
+                    {
+                        results.AddToFound(type, item);
+                    }
+                }
+                else
+                {
+                    if (results.GetAllMatchingDependencies(parameter.FullName).Any())
+                    {
+                        results.AddToFound(type, parameter.FullName);
+                    }
                 }
             }
         }
 
-        private void CheckParameters(TypeDefinition type, IEnumerable<ParameterDefinition> parameters, ref SearchDefinition results)
+        static readonly char[] GenericSepartors = new char[] { ' ', '<', ',', '>' };
+        private IEnumerable<string> ExtractTypeNames(string fullName)
         {
-            foreach (var parameter in parameters)
+            return fullName.Split(GenericSepartors).Where(x => !String.IsNullOrWhiteSpace(x));
+        }
+        private bool IsTypeGeneric(string fullName)
+        {
+            foreach(char separtor in GenericSepartors)
             {
-                string fullName = parameter.ParameterType?.FullName ?? String.Empty;
-                if (results.GetAllMatchingDependencies(fullName).Any())
+                if (fullName.Contains(separtor))
                 {
-                    results.AddToFound(type, fullName);
+                    return true;
                 }
             }
+            return false;
         }
     }
 }
