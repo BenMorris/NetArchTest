@@ -83,5 +83,17 @@
             var fieldsAreNullable = typeDefinition.Fields.All(f => f.IsNullable());
             return propertiesAreNullable && fieldsAreNullable;
         }
+
+        /// <summary>
+        /// Returns namespace of the given type, if the type is nested, namespace of containing type is returned instead
+        /// </summary>        
+        public static string GetNamespace(this TypeDefinition typeDefinition)
+        {
+            if ((typeDefinition.IsNestedPrivate) || (typeDefinition.IsNestedPublic))
+            {
+                return typeDefinition.DeclaringType.Namespace;
+            }
+            return typeDefinition.Namespace;
+        }
     }
 }

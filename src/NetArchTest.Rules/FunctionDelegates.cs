@@ -293,11 +293,11 @@
             Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
             if (condition)
             {
-                return input.Where(c => r.Match(c.Namespace).Success);
+                return input.Where(c => r.Match(c.GetNamespace()).Success);
             }
             else
             {
-                return input.Where(c => !r.Match(c.Namespace).Success);
+                return input.Where(c => !r.Match(c.GetNamespace()).Success);
             }
         };
 
