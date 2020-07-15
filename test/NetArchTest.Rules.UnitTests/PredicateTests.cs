@@ -700,6 +700,19 @@
             Assert.Contains<Type>(typeof(ClassA1), result);
         }
 
+        [Fact(DisplayName = "Types (nested) can be selected if they reside in a namespace that contains a name part.")]
+        public void ResideInNamespaceContaining_NestedClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceContaining("Nested")
+                .GetTypes();
+
+            Assert.Equal(5, result.Count()); // Five types found
+            Assert.Contains<Type>(typeof(NestedPublic.NestedPublicClass), result);
+        }
+
         [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that contains name part.")]
         public void DoNotResideInNamespaceContaiings_ClassSelected()
         {
