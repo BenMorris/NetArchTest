@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetArchTest.Rules", "src\NetArchTest.Rules\NetArchTest.Rules.csproj", "{2FDD6DBD-F203-4EC9-9F9B-6771713CC353}"
 EndProject
