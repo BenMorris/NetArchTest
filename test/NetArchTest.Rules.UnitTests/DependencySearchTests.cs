@@ -14,10 +14,58 @@
 
     public class DependencySearchTests
     {
+        [Fact(DisplayName = "Finds a dependency in an exception filter.")]
+        public void DependencySearch_TryCatchExceptionFilter_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(ExceptionDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in attribute that decorates class.")]
+        public void DependencySearch_AttributeOnClass_Found()
+        {
+            this.RunDependencyTest(typeof(AttributeOnClass), typeof(AttributeDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in attribute that decorates field.")]
+        public void DependencySearch_AttributeOnField_Found()
+        {
+            this.RunDependencyTest(typeof(AttributeOnField), typeof(AttributeDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a using statement.")]
+        public void DependencySearch_UsingStatement_Found()
+        { 
+            this.RunDependencyTest(typeof(UsingStatement), typeof(DisposableDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a default interface method body.")]
+        public void DependencySearch_DefaultInterfaceMethod_Found()
+        {
+            this.RunDependencyTest(typeof(DefaultInterfaceMethod));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a switch pattern matching.")]
+        public void DependencySearch_SwitchPatternMatching_Found()
+        {
+            this.RunDependencyTest(typeof(SwitchPatternMatching));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a static local function body.")]
+        public void DependencySearch_StaticLocalFunctions_Found()
+        {
+            this.RunDependencyTest(typeof(StaticLocalFunction));
+        }
+
         [Fact(DisplayName = "Finds a dependency in an async method.")]
         public void DependencySearch_AsyncMethod_Found()
         {
             this.RunDependencyTest(typeof(AsyncMethod));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a generic constraint.")]
+        public void DependencySearch_GenericConstraint_Found()
+        {
+            this.RunDependencyTest(typeof(GenericConstraint<>));
         }
 
         [Fact(DisplayName = "Finds a dependency in a generic parameter.")]
@@ -44,6 +92,11 @@
         {
             this.RunDependencyTest(typeof(Inherited));
         }
+        [Fact(DisplayName = "Finds a dependency that a interface inherits from.")]
+        public void DependencySearch_InheritedInterface_Found()
+        {
+            this.RunDependencyTest(typeof(InheritedInterface), typeof(InterfaceDependecy), true, true);
+        }
 
         [Fact(DisplayName = "Finds a dependency in a public method's return type.")]
         public void DependencySearch_MethodReturnType_Found()
@@ -61,6 +114,12 @@
         public void DependencySearch_MethodReturnTypeNestedGeneric_Found()
         {
             this.RunDependencyTest(typeof(MethodReturnTypeNestedGeneric));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public method's tuple return type.")]
+        public void DependencySearch_MethodReturnTypeTuple_Found()
+        {
+            this.RunDependencyTest(typeof(MethodReturnTypeTuple));
         }
 
         [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
