@@ -135,16 +135,30 @@
         </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveCustomAttribute(System.Type)">
             <summary>
-            Selects types that implement a specific custom attribute.
+            Selects types are decorated with a specific custom attribut.
             </summary>
             <param name="attribute">The attribute to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Conditions.NotHaveCustomAttribute(System.Type)">
             <summary>
-            Selects types that do not implement a specific custom attribute.
+            Selects types that are not decorated with a specific custom attribute.
             </summary>
             <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveCustomAttributeOrInherit(System.Type)">
+            <summary>
+            Selects types that are decorated with a specific custom attribute or derived one.
+            </summary>
+            <param name="attribute">The base attribute to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveCustomAttributeOrInherit(System.Type)">
+            <summary>
+            Selects types are not decorated with a specific custom attribute or derived one.
+            </summary>
+            <param name="attribute">The base attribute to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Conditions.Inherit(System.Type)">
@@ -757,7 +771,7 @@
             <summary> Function for finding classes with a particular custom attribute. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.HaveCustomAttributeOrInherit">
-            <summary> Function for finding classes with a particular custom attribute. </summary>
+            <summary> Function for finding classes decorated with a particular custom attribute or derived one</summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.Inherits">
             <summary> Function for finding classes that inherit from a particular type. </summary>

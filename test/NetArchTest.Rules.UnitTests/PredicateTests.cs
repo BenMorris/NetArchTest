@@ -181,7 +181,7 @@
             Assert.Contains<Type>(typeof(InheritClassCustomAttribute), result);
         }
 
-        [Fact(DisplayName = "Types can be selected by the presence of an inherit custom attribute.")]
+        [Fact(DisplayName = "Types can be selected by the presence of an inherited custom attribute.")]
         public void HaveInheritCustomAttribute_MatchesFound_ClassesSelected()
         {
             var result = Types
@@ -196,7 +196,7 @@
             Assert.Contains<Type>(typeof(InheritAttributePresent), result);
         }
 
-        [Fact(DisplayName = "Types can be selected by the absence of an inherit custom attribute.")]
+        [Fact(DisplayName = "Types can be selected by the absence of an inherited custom attribute.")]
         public void DoNotHaveInheritCustomAttribute_MatchesFound_ClassesSelected()
         {
             var result = Types
