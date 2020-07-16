@@ -19,6 +19,21 @@
         /// <summary> The base delegate type used by every function. </summary>
         internal delegate IEnumerable<TypeDefinition> FunctionDelegate<T>(IEnumerable<TypeDefinition> input, T arg, bool condition);
 
+
+        /// <summary> Function for finding a specific type name. </summary>
+        internal static FunctionDelegate<Func<TypeDefinition, bool>> CustomUserPredicate = delegate (IEnumerable<TypeDefinition> input, Func<TypeDefinition, bool> predicate, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(predicate);
+            }
+            else
+            {
+                return input.Where(x => !predicate(x));
+            }
+        };
+
+
         /// <summary> Function for finding a specific type name. </summary>
         internal static FunctionDelegate<string> HaveName = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
         {

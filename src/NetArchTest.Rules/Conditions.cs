@@ -39,6 +39,29 @@
             _sequence = calls;
         }
 
+
+
+        /// <summary>
+        /// Selects types that fulfil user-defined custom predicate.
+        /// </summary>
+        /// <param name="predicate">The custom predicate to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList Have(Func<TypeDefinition, bool> predicate)
+        {
+            return Be(predicate);
+        }
+
+        /// <summary>
+        /// Selects types that fulfil user-defined custom predicate.
+        /// </summary>
+        /// <param name="predicate">The custom predicate to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList Be(Func<TypeDefinition, bool> predicate)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.CustomUserPredicate, predicate, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
         /// <summary>
         /// Selects types that have a specific name.
         /// </summary>

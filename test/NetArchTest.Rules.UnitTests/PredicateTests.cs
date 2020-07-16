@@ -26,7 +26,21 @@
 
     public class PredicateTests
     {
-        [Fact(DisplayName = "Types can be selected by name name.")]
+        [Fact(DisplayName = "Types can be selected by user-defined custom predicate.")]
+        public void CustomPredicate_MatchFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .Have(x => x.Namespace.StartsWith("NetArchTest.TestStructure.NameMatching"))
+                .And()
+                .Have(x => x.Name == "ClassA1").GetTypes();
+
+            Assert.Single(result); // Only one type found
+            Assert.Equal<Type>(typeof(ClassA1), result.First()); // The correct type found
+        }
+
+        [Fact(DisplayName = "Types can be selected by name.")]
         public void HaveName_MatchFound_ClassesSelected()
         {
             var result = Types

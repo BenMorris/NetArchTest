@@ -14,6 +14,19 @@
 
     public class ConditionTests
     {
+        [Fact(DisplayName = "Types can be selected by user-defined custom predicate.")]
+        public void CustomPredicate_MatchFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3")
+                .Should()
+                .Have(x => x.Name == "ClassB2").GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected by name.")]
         public void HaveName_MatchFound_ClassesSelected()
         {

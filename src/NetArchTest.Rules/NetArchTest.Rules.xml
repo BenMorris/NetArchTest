@@ -77,6 +77,20 @@
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Conditions"/> class.
             </summary>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.Have(System.Func{Mono.Cecil.TypeDefinition,System.Boolean})">
+            <summary>
+            Selects types that fulfil user-defined custom predicate.
+            </summary>
+            <param name="predicate">The custom predicate to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.Be(System.Func{Mono.Cecil.TypeDefinition,System.Boolean})">
+            <summary>
+            Selects types that fulfil user-defined custom predicate.
+            </summary>
+            <param name="predicate">The custom predicate to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveName(System.String)">
             <summary>
             Selects types that have a specific name.
@@ -470,9 +484,9 @@
             Finds matching dependencies for a given method by scanning the code.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter},NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference},NetArchTest.Rules.Dependencies.SearchDefinition@)">
             <summary>
-            Finds matching dependencies for a set of generic parameters
+            Finds matching dependencies for a set of generic or not parameters
             </summary>
         </member>
         <member name="T:NetArchTest.Rules.Dependencies.NamespaceTree">
@@ -740,6 +754,9 @@
         </member>
         <member name="T:NetArchTest.Rules.FunctionDelegates.FunctionDelegate`1">
             <summary> The base delegate type used by every function. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.CustomUserPredicate">
+            <summary> Function for finding a specific type name. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.HaveName">
             <summary> Function for finding a specific type name. </summary>
@@ -1091,6 +1108,20 @@
             <summary>
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Predicates"/> class.
             </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.Are(System.Func{Mono.Cecil.TypeDefinition,System.Boolean})">
+            <summary>
+            Selects types that fulfil user-defined custom predicate.
+            </summary>
+            <param name="predicate">The custom predicate to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.Have(System.Func{Mono.Cecil.TypeDefinition,System.Boolean})">
+            <summary>
+            Selects types that fulfil user-defined custom predicate.
+            </summary>
+            <param name="predicate">The custom predicate to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveName(System.String)">
             <summary>
