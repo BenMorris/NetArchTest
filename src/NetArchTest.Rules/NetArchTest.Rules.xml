@@ -470,9 +470,9 @@
             Finds matching dependencies for a given method by scanning the code.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter},NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference},NetArchTest.Rules.Dependencies.SearchDefinition@)">
             <summary>
-            Finds matching dependencies for a set of generic parameters
+            Finds matching dependencies for a set of generic or not parameters
             </summary>
         </member>
         <member name="T:NetArchTest.Rules.Dependencies.NamespaceTree">
@@ -754,6 +754,9 @@
             <summary> Function for matching the end of a type name. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.HaveCustomAttribute">
+            <summary> Function for finding classes with a particular custom attribute. </summary>
+        </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.HaveCustomAttributeOrInherit">
             <summary> Function for finding classes with a particular custom attribute. </summary>
         </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.Inherits">
@@ -1150,16 +1153,30 @@
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveCustomAttribute(System.Type)">
             <summary>
-            Selects types that implement a specific custom attribute.
+            Selects types that are decorated with a specific custom attribute.
             </summary>
             <param name="attribute">The attribute to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveCustomAttributeOrInherit(System.Type)">
+            <summary>
+            Selects types that are decorated with a specific custom attribute or derived one.
+            </summary>
+            <param name="attribute">The base attribute to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotHaveCustomAttribute(System.Type)">
             <summary>
-            Selects types that do not implement a specific custom attribute.
+            Selects types that are not decorated with a specific custom attribute.
             </summary>
             <param name="attribute">The attribute to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveCustomAttributeOrInherit(System.Type)">
+            <summary>
+            Selects types that are not decorated with a specific custom attribute or derived one.
+            </summary>
+            <param name="attribute">The base attribute to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.Inherit(System.Type)">
