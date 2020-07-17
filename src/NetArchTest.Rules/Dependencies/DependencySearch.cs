@@ -101,6 +101,9 @@
                 }
             }
 
+            CheckInterfaces(type, ref results);
+                
+
             // Check the properties
             CheckProperties(type, ref results);
 
@@ -168,6 +171,34 @@
             // Check the contents of the method body
             CheckMethodBody(type, method, ref results);
         }
+
+        private void CheckInterfaces(TypeDefinition type, ref SearchDefinition results)
+        {
+            if (type.HasInterfaces)
+            {
+                foreach (var @interface in type.Interfaces)
+                {
+                    if (@interface.InterfaceType.IsGenericInstance == false)
+                    {
+                        // happy path, type refence is not generic
+                        if (results.GetAllMatchingDependencies(@interface.InterfaceType.FullName).Any())
+                        {
+                            results.AddToFound(type, @interface.InterfaceType.FullName);
+                        }
+                    }
+                    else
+                    {
+                        var types = ExtractTypeNames(@interface.InterfaceType);
+                        var matches = results.GetAllDependenciesMatchingAnyOf(types);
+                        foreach (var item in matches)
+                        {
+                            results.AddToFound(type, item);
+                        }
+                    }                   
+                }
+            }
+        }
+
 
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the properties.
@@ -328,6 +359,28 @@
                 }
             }
         }
+        /// <summary>
+        /// Extract type names from generic or not reference
+        /// </summary>
+        private IEnumerable<string> ExtractTypeNames(TypeReference reference)
+        {
+            yield return reference.FullName;
+            if (reference.IsGenericInstance)
+            {
+                var referenceAsGenericInstance = reference as GenericInstanceType;
+                if (referenceAsGenericInstance.HasGenericArguments)
+                {
+                    foreach (var genericArgument in referenceAsGenericInstance.GenericArguments)
+                    {                       
+                        foreach(var name in ExtractTypeNames(genericArgument))
+                        {
+                            yield return name;
+                        }
+                    }
+                }
+            }
+        }
+
 
         static readonly char[] GenericSepartors = new char[] { ' ', '<', ',', '>' };
         private IEnumerable<string> ExtractTypeNames(string fullName)
@@ -337,7 +390,7 @@
         private bool IsTypeGeneric(string fullName)
         {
             foreach(char separtor in GenericSepartors)
-            {
+            {                
                 if (fullName.Contains(separtor))
                 {
                     return true;
