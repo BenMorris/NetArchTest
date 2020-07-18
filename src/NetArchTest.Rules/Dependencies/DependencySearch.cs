@@ -101,6 +101,7 @@
                 }
             }
 
+            CheckCustomAttributes(type, type, ref results);
             CheckInterfaces(type, ref results);
                 
 
@@ -132,11 +133,25 @@
             }
         }
 
+        private void CheckCustomAttributes(TypeDefinition type, ICustomAttributeProvider typeToCheck, ref SearchDefinition results)
+        {
+            if (typeToCheck.HasCustomAttributes)
+            {
+                foreach (var customAttribute in typeToCheck.CustomAttributes)
+                {
+                    CheckTypeReference(type, results, customAttribute.AttributeType);
+                }
+            }
+        }
+
         /// <summary>
         /// Finds matching dependencies for a given method by walking through the IL instructions.
         /// </summary>
         private void CheckMethod(TypeDefinition type, MethodDefinition method, ref SearchDefinition results)
         {
+            CheckCustomAttributes(type, method, ref results);
+            CheckCustomAttributes(type, method.MethodReturnType, ref results);
+
             // Check the return type
             if (method.ReturnType.ContainsGenericParameter)
             {
@@ -165,6 +180,10 @@
 
             if (method.HasParameters)
             {
+                foreach (var parameter in method.Parameters)
+                {
+                    CheckCustomAttributes(type, parameter, ref results);
+                }
                 CheckParameters(type, method.Parameters.Select(x => x.ParameterType), ref results);
             }
 
@@ -195,6 +214,8 @@
             {
                 foreach (var property in type.Properties)
                 {
+                    CheckCustomAttributes(type, property, ref results);
+
                     // The property could be a generic property
                     if (property.ContainsGenericParameter)
                     {
@@ -217,6 +238,7 @@
             {
                 foreach (var field in type.Fields)
                 {
+                    CheckCustomAttributes(type, field, ref results);
                     CheckTypeReference(type, results, field.FieldType);                  
                 }
             }
@@ -231,6 +253,8 @@
             {
                 foreach (var eventDef in type.Events)
                 {
+                    CheckCustomAttributes(type, eventDef, ref results);
+                    
                     if (eventDef.HasOtherMethods)
                     {
                         foreach (var method in eventDef.OtherMethods)
@@ -300,7 +324,7 @@
         private void CheckParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
         {
             foreach (var parameter in parameters)
-            {       
+            {                
                 if (parameter.IsGenericParameter)
                 {
                     // generic parameters do not contain information about type, they are only placeholder for a type
