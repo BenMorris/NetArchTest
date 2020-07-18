@@ -178,26 +178,12 @@
             {
                 foreach (var @interface in type.Interfaces)
                 {
-                    if (@interface.InterfaceType.IsGenericInstance == false)
-                    {
-                        // happy path, type refence is not generic
-                        if (results.GetAllMatchingDependencies(@interface.InterfaceType.FullName).Any())
-                        {
-                            results.AddToFound(type, @interface.InterfaceType.FullName);
-                        }
-                    }
-                    else
-                    {
-                        var types = ExtractTypeNames(@interface.InterfaceType);
-                        var matches = results.GetAllDependenciesMatchingAnyOf(types);
-                        foreach (var item in matches)
-                        {
-                            results.AddToFound(type, item);
-                        }
-                    }                   
+                    CheckTypeReference(type, results, @interface.InterfaceType);
                 }
             }
         }
+
+        
 
 
         /// <summary>
@@ -224,25 +210,14 @@
             }
         }
 
-        /// <summary>
-        /// Finds matching dependencies for a given method by walking through the fields.
-        /// </summary>
+ 
         private void CheckFields(TypeDefinition type, ref SearchDefinition results)
         {
             if (type.HasFields)
             {
                 foreach (var field in type.Fields)
                 {
-                    // The field could be a generic property
-                    if (field.ContainsGenericParameter)
-                    {
-                        CheckParameters(type, field.FieldType.GenericParameters, ref results);
-                    }
-
-                    if (results.GetAllMatchingDependencies(field.FieldType.FullName).Any())
-                    {
-                        results.AddToFound(type, field.FieldType.FullName);
-                    }
+                    CheckTypeReference(type, results, field.FieldType);                  
                 }
             }
         }
@@ -359,12 +334,40 @@
                 }
             }
         }
+
+
+
+
+        private void CheckTypeReference(TypeDefinition type, SearchDefinition results, TypeReference reference)
+        {
+            if (reference.IsGenericInstance == false)
+            {
+                // happy path, type refence is not generic
+                if (results.GetAllMatchingDependencies(reference.FullName).Any())
+                {
+                    results.AddToFound(type, reference.FullName);
+                }
+            }
+            else
+            {
+                var types = ExtractTypeNames(reference);
+                var matches = results.GetAllDependenciesMatchingAnyOf(types);
+                foreach (var item in matches)
+                {
+                    results.AddToFound(type, item);
+                }
+            }
+        }
+
         /// <summary>
         /// Extract type names from generic or not reference
         /// </summary>
         private IEnumerable<string> ExtractTypeNames(TypeReference reference)
         {
-            yield return reference.FullName;
+            if (!reference.IsGenericParameter)
+            {
+                yield return reference.FullName;
+            }
             if (reference.IsGenericInstance)
             {
                 var referenceAsGenericInstance = reference as GenericInstanceType;
