@@ -24,20 +24,12 @@
             // Check each type in turn
             foreach (var type in input)
             {
-                CheckType(type, ref results);
+                CheckType(type, results);
             }
 
-            var output = new List<TypeDefinition>();
-
-            foreach (var found in results.TypesFound)
-            {
-                // NB: Nested classes won't be picked up here
-                var match = input.FirstOrDefault(d => d.FullName.Equals(found, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null)
-                {
-                    output.Add(match);
-                }
-            }
+            // NB: Nested classes won't be picked up here
+            var hash = new HashSet<string>(results.TypesFound, StringComparer.InvariantCultureIgnoreCase);
+            var output = input.Where(x => hash.Contains(x.FullName)).ToList();
 
             return output;
         }
@@ -56,22 +48,12 @@
             // Check each type in turn
             foreach (var type in input)
             {
-                CheckType(type, ref results);
-            }
+                CheckType(type, results);
+            }           
 
-            var output = new List<TypeDefinition>();
-
-            foreach (var typeFound in results.TypesFound)
-            {
-                // NB: Nested classes won't be picked up here
-                var match = input.FirstOrDefault(d => d.FullName.Equals(typeFound, StringComparison.InvariantCultureIgnoreCase));
-                if (match != null &&
-                    results.GetAllDependenciesMatchingAnyOf(results.GetDependenciesFoundForType(typeFound)).Count() == results.UniqueDependenciesCount)
-                {
-                    // Check found 
-                    output.Add(match);
-                }
-            }
+            // NB: Nested classes won't be picked up here 
+            var hash = new HashSet<string>(results.TypesFound, StringComparer.InvariantCultureIgnoreCase);           
+            var output = input.Where(x => hash.Contains(x.FullName) && results.GetDependenciesFoundForType(x.FullName).Count() == results.UniqueDependenciesCount).ToList();
 
             return output;
         }
@@ -79,7 +61,7 @@
         /// <summary>
         /// Finds matching dependencies for a given type by walking through the type contents.
         /// </summary>
-        private void CheckType(TypeDefinition type, ref SearchDefinition results)
+        private void CheckType(TypeDefinition type, SearchDefinition results)
         {
             // Have we already checked this type?
             if (results.IsChecked(type))
@@ -91,49 +73,22 @@
             results.AddToChecked(type);
 
             // Does this directly inherit from a dependency?
-            var baseClass = type.BaseType?.Resolve();
-            if (baseClass != null)
+            if (type.BaseType != null)
             {
-                foreach (var dependency in results.GetAllMatchingDependencies(baseClass.FullName))
-                {
-
-                    results.AddToFound(type, dependency);
-                }
+                CheckTypeReference(type, results, type.BaseType);
             }
 
-            CheckCustomAttributes(type, type, ref results);
-            CheckInterfaces(type, ref results);
-                
-
-            // Check the properties
-            CheckProperties(type, ref results);
-
-            // Check the generic parameters for the type
-            if (type.HasGenericParameters)
-            {
-                CheckGenericTypeParameters(type, type.GenericParameters, ref results);
-            }
-
-            // Check the fields
-            CheckFields(type, ref results);
-
-            // Check the events
-            CheckEvents(type, ref results);
-
-            // Check the nested types
-            foreach (var nested in type.NestedTypes)
-            {
-                this.CheckType(nested, ref results);
-            }
-
-            // Check each method
-            foreach (var method in type.Methods)
-            {
-                this.CheckMethod(type, method, ref results);
-            }
+            CheckCustomAttributes(type, results, type);
+            CheckImplementedInterfaces(type, results);
+            CheckGenericTypeParametersConstraints(type, results, type);
+            CheckFields(type, results);
+            CheckProperties(type, results);           
+            CheckEvents(type, results);
+            CheckMethods(type, results);
+            CheckNestedTypes(type, results);
         }
 
-        private void CheckCustomAttributes(TypeDefinition type, ICustomAttributeProvider typeToCheck, ref SearchDefinition results)
+        private void CheckCustomAttributes(TypeDefinition type, SearchDefinition results, ICustomAttributeProvider typeToCheck)
         {
             if (typeToCheck.HasCustomAttributes)
             {
@@ -143,55 +98,7 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Finds matching dependencies for a given method by walking through the IL instructions.
-        /// </summary>
-        private void CheckMethod(TypeDefinition type, MethodDefinition method, ref SearchDefinition results)
-        {
-            CheckCustomAttributes(type, method, ref results);
-            CheckCustomAttributes(type, method.MethodReturnType, ref results);
-
-            // Check the return type
-            if (method.ReturnType.ContainsGenericParameter)
-            {
-                CheckParameters(type, method.ReturnType.GenericParameters, ref results);
-            }
-
-            if (method.ReturnType.IsGenericInstance)
-            {
-                var returnTypeAsGenericInstance = method.ReturnType as GenericInstanceType;
-                if (returnTypeAsGenericInstance.HasGenericArguments)
-                {
-                    CheckParameters(type, returnTypeAsGenericInstance.GenericArguments, ref results);
-                }
-            }
-
-            if (results.GetAllMatchingDependencies(method.ReturnType.FullName).Any())
-            {
-                results.AddToFound(type, method.ReturnType.FullName);
-            }
-
-            // Check for any generic parameters
-            if (method.ContainsGenericParameter)
-            {
-                CheckGenericTypeParameters(type, method.GenericParameters, ref results);
-            }
-
-            if (method.HasParameters)
-            {
-                foreach (var parameter in method.Parameters)
-                {
-                    CheckCustomAttributes(type, parameter, ref results);
-                }
-                CheckParameters(type, method.Parameters.Select(x => x.ParameterType), ref results);
-            }
-
-            // Check the contents of the method body
-            CheckMethodBody(type, method, ref results);
-        }
-
-        private void CheckInterfaces(TypeDefinition type, ref SearchDefinition results)
+        private void CheckImplementedInterfaces(TypeDefinition type, SearchDefinition results)
         {
             if (type.HasInterfaces)
             {
@@ -201,180 +108,176 @@
                 }
             }
         }
-
-        
-
-
-        /// <summary>
-        /// Finds matching dependencies for a given method by walking through the properties.
-        /// </summary>
-        private void CheckProperties(TypeDefinition type, ref SearchDefinition results)
+        private void CheckGenericTypeParametersConstraints(TypeDefinition type, SearchDefinition results, IGenericParameterProvider typeToCheck)
         {
-            if (type.HasProperties)
+            if (typeToCheck.HasGenericParameters)
             {
-                foreach (var property in type.Properties)
+                foreach (var parameter in typeToCheck.GenericParameters)
                 {
-                    CheckCustomAttributes(type, property, ref results);
-
-                    // The property could be a generic property
-                    if (property.ContainsGenericParameter)
+                    if (parameter.HasConstraints)
                     {
-                        CheckParameters(type, property.PropertyType.GenericParameters, ref results);
-                    }
-
-                    // Check the property type
-                    if (results.GetAllMatchingDependencies(property.PropertyType.FullName).Any())
-                    {
-                        results.AddToFound(type, property.PropertyType.FullName);
+                        foreach (var constraint in parameter.Constraints)
+                        {
+                            CheckTypeReference(type, results, constraint.ConstraintType);
+                        }
                     }
                 }
             }
         }
-
- 
-        private void CheckFields(TypeDefinition type, ref SearchDefinition results)
+        private void CheckFields(TypeDefinition type, SearchDefinition results)
         {
             if (type.HasFields)
             {
                 foreach (var field in type.Fields)
                 {
-                    CheckCustomAttributes(type, field, ref results);
-                    CheckTypeReference(type, results, field.FieldType);                  
+                    CheckCustomAttributes(type, results, field);
+                    CheckTypeReference(type, results, field.FieldType);
                 }
             }
         }
-
-        /// <summary>
-        /// Finds matching dependencies for a given method by walking through the events.
-        /// </summary>
-        private void CheckEvents(TypeDefinition type, ref SearchDefinition results)
+        private void CheckProperties(TypeDefinition type, SearchDefinition results)
+        {
+            if (type.HasProperties)
+            {
+                foreach (var property in type.Properties)
+                {
+                    CheckCustomAttributes(type, results, property);
+                    CheckTypeReference(type, results, property.PropertyType);
+                }
+            }
+        }
+        private void CheckEvents(TypeDefinition type, SearchDefinition results)
         {
             if (type.HasEvents)
             {
-                foreach (var eventDef in type.Events)
+                foreach (var @event in type.Events)
                 {
-                    CheckCustomAttributes(type, eventDef, ref results);
-                    
-                    if (eventDef.HasOtherMethods)
+                    CheckCustomAttributes(type, results, @event);
+                    CheckTypeReference(type, results, @event.EventType);
+
+                    if (@event.HasOtherMethods) // are we sure that event can have others method? TODO : we need unit test for this case
                     {
-                        foreach (var method in eventDef.OtherMethods)
+                        foreach (var method in @event.OtherMethods)
                         {
-                            CheckMethod(type, method, ref results);
+                            CheckMethod(type, results, method);
                         }
                     }
                 }
             }
         }
+        private void CheckMethods(TypeDefinition type, SearchDefinition results)
+        {
+            if (type.HasMethods)
+            {
+                foreach (var method in type.Methods)
+                {
+                    this.CheckMethod(type, results, method);
+                }
+            }
+        }
+        private void CheckNestedTypes(TypeDefinition type, SearchDefinition results)
+        {
+            if (type.HasNestedTypes)
+            {
+                foreach (var nested in type.NestedTypes)
+                {
+                    this.CheckType(nested, results);
+                }
+            }
+        }
+        private void CheckMethod(TypeDefinition type, SearchDefinition results, MethodDefinition method)
+        {
+            CheckCustomAttributes(type, results, method);
+            CheckCustomAttributes(type, results, method.MethodReturnType);
+            CheckGenericTypeParametersConstraints(type, results, method);
+            CheckTypeReference(type, results, method.ReturnType);
 
-      
-        private void CheckMethodBody(TypeDefinition type, MethodDefinition method, ref SearchDefinition results)
+            if (method.HasParameters)
+            {
+                foreach (var parameter in method.Parameters)
+                {
+                    CheckCustomAttributes(type, results, parameter);
+                    CheckTypeReference(type, results, parameter.ParameterType);
+                }               
+            }
+            
+            CheckMethodBody(type, results, method);
+        }
+        /// <summary>
+        /// Finds matching dependencies for a given method by walking through the IL instructions.
+        /// </summary>
+        private void CheckMethodBody(TypeDefinition type, SearchDefinition results, MethodDefinition method)
         {
             if (method.HasBody)
             {
-                foreach (var variable in method.Body.Variables)
+                if (method.Body.HasVariables)
                 {
-                    // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator.
-                    if (variable.VariableType.IsNested)
+                    foreach (var variable in method.Body.Variables)
                     {
-                        CheckType(variable.VariableType.Resolve(), ref results);
+                        // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator.
+                        if (variable.VariableType.IsNested)
+                        {
+                            CheckType(variable.VariableType.Resolve(), results); // are we sure that this line is needed? TODO : we need unit test proving that
+                        }
+                        else
+                        {
+                            CheckTypeReference(type, results, variable.VariableType);
+                        }
                     }
-                    else
-                    {
-                        CheckTypeReference(type, results, variable.VariableType);                       
-                    }
-                }
+                }                
 
-                // Check each instruction for references to our types
                 foreach (var instruction in method.Body.Instructions)
-                {
-                    if (instruction.Operand != null)
+                {                   
+                    switch (instruction.Operand)
                     {
-                        var operands = ExtractTypeNames(instruction.Operand.ToString());
-                        var matches = results.GetAllDependenciesMatchingAnyOf(operands);
-                        foreach (var item in matches)
-                        {
-                            results.AddToFound(type, item);
-                        }
-                    }
+                        case TypeReference reference:
+                            CheckTypeReference(type, results, reference);
+                            break;                         
+                        case GenericInstanceMethod genericInstanceMethod:
+                            CheckTypeReference(type, results, genericInstanceMethod.DeclaringType);
+                            if (genericInstanceMethod.HasGenericArguments)
+                            {
+                                foreach (var argument in genericInstanceMethod.GenericArguments)
+                                {
+                                    CheckTypeReference(type, results, argument);
+                                }
+                            }
+                            break;
+                        case MethodReference methodReference:                              
+                            CheckTypeReference(type, results, methodReference.DeclaringType);                               
+                            break; 
+                    }                    
                 }
             }
         }
-
-
-        private void CheckGenericTypeParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
-        {
-            foreach (var parameter in parameters)
-            {
-                if (parameter.HasConstraints)
-                {
-                    foreach (var constraint in parameter.Constraints)
-                    {
-                        if (results.GetAllMatchingDependencies(constraint.ConstraintType.FullName).Any())
-                        {
-                            results.AddToFound(type, constraint.ConstraintType.FullName);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Finds matching dependencies for a set of generic or not parameters
-        /// </summary>
-        private void CheckParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
-        {
-            foreach (var parameter in parameters)
-            {                
-                if (parameter.IsGenericParameter)
-                {
-                    // generic parameters do not contain information about type, they are only placeholder for a type
-                    continue;
-                }
-                if (IsTypeGeneric(parameter.FullName))
-                {
-                    var types = ExtractTypeNames(parameter.FullName);
-                    var matches = results.GetAllDependenciesMatchingAnyOf(types);
-                    foreach (var item in matches)
-                    {
-                        results.AddToFound(type, item);
-                    }
-                }
-                else
-                {
-                    if (results.GetAllMatchingDependencies(parameter.FullName).Any())
-                    {
-                        results.AddToFound(type, parameter.FullName);
-                    }
-                }
-            }
-        }
-
-
-
 
         private void CheckTypeReference(TypeDefinition type, SearchDefinition results, TypeReference reference)
         {
             if (reference.IsGenericInstance == false)
             {
-                // happy path, type refence is not generic
-                if (results.GetAllMatchingDependencies(reference.FullName).Any())
+                if (reference.IsGenericParameter == false)
                 {
-                    results.AddToFound(type, reference.FullName);
+                    // happy/fast path, type reference is not generic                   
+                    var matches = results.GetAllMatchingDependencies(reference.FullName);
+                    foreach (var match in matches)
+                    {
+                        results.AddToFound(type, match);
+                    }
                 }
             }
             else
             {
                 var types = ExtractTypeNames(reference);
                 var matches = results.GetAllDependenciesMatchingAnyOf(types);
-                foreach (var item in matches)
+                foreach (var match in matches)
                 {
-                    results.AddToFound(type, item);
+                    results.AddToFound(type, match);
                 }
             }
         }
 
         /// <summary>
-        /// Extract type names from generic or not reference
+        /// Extract type names from generic or not type reference
         /// </summary>
         private IEnumerable<string> ExtractTypeNames(TypeReference reference)
         {
@@ -396,24 +299,6 @@
                     }
                 }
             }
-        }
-
-
-        static readonly char[] GenericSepartors = new char[] { ' ', '<', ',', '>' };
-        private IEnumerable<string> ExtractTypeNames(string fullName)
-        {
-            return fullName.Split(GenericSepartors).Where(x => !String.IsNullOrWhiteSpace(x));
-        }
-        private bool IsTypeGeneric(string fullName)
-        {
-            foreach(char separtor in GenericSepartors)
-            {                
-                if (fullName.Contains(separtor))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        }       
     }
 }

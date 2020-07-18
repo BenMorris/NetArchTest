@@ -39,8 +39,13 @@
             /// <summary> Maps child namespace to its root node. </summary>
             private Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
 
-            /// <summary> Returs node's "terminated" flag. </summary>
+            /// <summary> Returns node's "terminated" flag. </summary>
             public bool IsTerminated
+            {
+                get; private set;
+            }
+            /// <summary>Returns full path from root to terminated node. Only available on terminated node.</summary>
+            public string FullName
             {
                 get; private set;
             }
@@ -77,9 +82,10 @@
             /// <summary>
             /// Terminates the node.
             /// </summary>
-            public void Terminate()
+            public void Terminate(string fullName)
             {
                 IsTerminated = true;
+                FullName = fullName;
             }
 
             private static string NormalizeString(string str)
@@ -129,7 +135,7 @@
 
             if (!deepestNode.IsTerminated)
             {
-                deepestNode.Terminate();
+                deepestNode.Terminate(fullName);
                 TerminatedNodesCount++;
             }
         }
@@ -150,8 +156,6 @@
         /// </example>
         public IEnumerable<string> GetAllMatchingNames(string fullName)
         {
-            var builder = new StringBuilder();
-
             var deepestNode = _root;
 
             int subnameEndIndex = -1;
@@ -167,11 +171,8 @@
                 }
 
                 if (deepestNode.IsTerminated)
-                {
-                    builder.Append(name);
-                    yield return builder.ToString();
-
-                    builder.Append('.');
+                {                  
+                    yield return deepestNode.FullName;                    
                 }
             }
         }
