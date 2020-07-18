@@ -242,9 +242,7 @@
             }
         }
 
-        /// <summary>
-        /// Finds matching dependencies for a given method by scanning the code.
-        /// </summary>
+      
         private void CheckMethodBody(TypeDefinition type, MethodDefinition method, ref SearchDefinition results)
         {
             if (method.HasBody)
@@ -258,15 +256,7 @@
                     }
                     else
                     {
-                        if (variable.VariableType.ContainsGenericParameter)
-                        {
-                            CheckParameters(type, variable.VariableType.GenericParameters, ref results);
-                        }
-
-                        if (results.GetAllMatchingDependencies(variable.VariableType.FullName).Any())
-                        {
-                            results.AddToFound(type, variable.VariableType.FullName);
-                        }
+                        CheckTypeReference(type, results, variable.VariableType);                       
                     }
                 }
 
