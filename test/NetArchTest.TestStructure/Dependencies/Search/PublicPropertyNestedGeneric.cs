@@ -4,16 +4,13 @@
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
-    /// Example class that includes a dependency in using statement.     
+    /// Example class that includes a dependency in a public property definition.    
     /// </summary>
-    class UsingStatement
+    public class PublicPropertyNestedGeneric
     {
-        public UsingStatement()
+        public List<List<ExampleDependency>> ExampleProperty
         {
-            using(var foo = new DisposableDependency())
-            {
-
-            }
+            get { return null; }
         }
     }
 }

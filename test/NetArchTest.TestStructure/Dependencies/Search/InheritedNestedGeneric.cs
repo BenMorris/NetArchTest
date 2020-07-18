@@ -6,7 +6,7 @@
     /// <summary>
     /// Example class that includes a dependency as a generic parameter.    
     /// </summary>
-    public class GenericParameter: List<ExampleDependency>
+    public class InheritedNestedGeneric : GenericClass<GenericClass<ExampleDependency>>
     {
     }
 }

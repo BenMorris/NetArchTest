@@ -5,7 +5,7 @@
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
-    /// Example class that includes a dependency in switch Pattern Matching.    
+    /// Example class that includes a dependency in switch pattern matching.    
     /// </summary>
     class SwitchPatternMatching
     {

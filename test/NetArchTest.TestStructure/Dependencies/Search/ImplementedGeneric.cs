@@ -3,9 +3,9 @@
     using NetArchTest.TestStructure.Dependencies.Examples;
         
     /// <summary>
-    /// Example interface that inherits from a dependency.    
-    /// </summary>
-    interface InheritedInterface : InterfaceDependecy
+    /// Example class that implements dependency.    
+    /// </summary>   
+    class ImplementedGeneric : IGenericInterface<InterfaceDependecy>
     {
     }
 }

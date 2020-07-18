@@ -4,9 +4,9 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Example class that includes a dependency as a generic constraint.    
+    /// Example class that includes a dependency as a generic parameter.    
     /// </summary>
-    public class GenericConstraint<T>  where T : ExampleDependency
+    public class InheritedGeneric: GenericClass<ExampleDependency>
     {
     }
 }

@@ -14,29 +14,24 @@
 
     public class DependencySearchTests
     {
-        [Fact(DisplayName = "Finds a dependency in an exception filter.")]
-        public void DependencySearch_TryCatchExceptionFilter_Found()
+        [Fact(DisplayName = "Finds a dependency in an async method.")]
+        public void DependencySearch_AsyncMethod_Found()
         {
-            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(ExceptionDependency), true, true);
+            this.RunDependencyTest(typeof(AsyncMethod));
         }
 
-        [Fact(DisplayName = "Finds a dependency in attribute that decorates class.")]
-        public void DependencySearch_AttributeOnClass_Found()
+        [Theory(DisplayName = "Finds a dependency in an attribute.")]
+        [InlineData(typeof(AttributeOnClass))]
+        [InlineData(typeof(AttributeOnEvent))]
+        [InlineData(typeof(AttributeOnField))]
+        [InlineData(typeof(AttributeOnMethod))]
+        [InlineData(typeof(AttributeOnParameter))]
+        [InlineData(typeof(AttributeOnProperty))]
+        [InlineData(typeof(AttributeOnReturnValue))]
+        public void DependencySearch_Attribute_Found(Type input)
         {
-            this.RunDependencyTest(typeof(AttributeOnClass), typeof(AttributeDependency), true, true);
-        }
-
-        [Fact(DisplayName = "Finds a dependency in attribute that decorates field.")]
-        public void DependencySearch_AttributeOnField_Found()
-        {
-            this.RunDependencyTest(typeof(AttributeOnField), typeof(AttributeDependency), true, true);
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a using statement.")]
-        public void DependencySearch_UsingStatement_Found()
-        { 
-            this.RunDependencyTest(typeof(UsingStatement), typeof(DisposableDependency), true, true);
-        }
+            this.RunDependencyTest(input, typeof(AttributeDependency), true, true);
+        }       
 
         [Fact(DisplayName = "Finds a dependency in a default interface method body.")]
         public void DependencySearch_DefaultInterfaceMethod_Found()
@@ -44,40 +39,26 @@
             this.RunDependencyTest(typeof(DefaultInterfaceMethod));
         }
 
-        [Fact(DisplayName = "Finds a dependency in a switch pattern matching.")]
-        public void DependencySearch_SwitchPatternMatching_Found()
+        [Fact(DisplayName = "Finds a dependency in a generic class constraint.")]
+        public void DependencySearch_GenericClassConstraint_Found()
         {
-            this.RunDependencyTest(typeof(SwitchPatternMatching));
+            this.RunDependencyTest(typeof(GenericClassConstraint<>));
         }
 
-        [Fact(DisplayName = "Finds a dependency in a static local function body.")]
-        public void DependencySearch_StaticLocalFunctions_Found()
+        [Fact(DisplayName = "Finds a dependency in a generic method constraint.")]
+        public void DependencySearch_GenericMethodConstraint_Found()
         {
-            this.RunDependencyTest(typeof(StaticLocalFunction));
-        }
+            this.RunDependencyTest(typeof(GenericMethodConstraint));
+        }       
 
-        [Fact(DisplayName = "Finds a dependency in an async method.")]
-        public void DependencySearch_AsyncMethod_Found()
+        [Theory(DisplayName = "Finds a dependency in a generic type argument.")]
+        [InlineData(typeof(GenericMethodTypeArgument))]
+        [InlineData(typeof(GenericMethodTypeArgumentGeneric))]
+        [InlineData(typeof(GenericMethodTypeArgumentNestedGeneric))]
+        [InlineData(typeof(GenericMethodTypeArgumentTuple))]
+        public void DependencySearch_GenericMethodTypeArgument_Found(Type input)
         {
-            this.RunDependencyTest(typeof(AsyncMethod));
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a generic constraint.")]
-        public void DependencySearch_GenericConstraint_Found()
-        {
-            this.RunDependencyTest(typeof(GenericConstraint<>));
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a generic parameter.")]
-        public void DependencySearch_GenericParameter_Found()
-        {
-            this.RunDependencyTest(typeof(GenericParameter));
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a generic argument.")]
-        public void DependencySearch_GenericArgument_Found()
-        {
-            this.RunDependencyTest(typeof(GenericMethodInvocationWithManyTypeArguments));
+            this.RunDependencyTest(input);
         }
 
         [Fact(DisplayName = "Does not find a dependency in an indirect reference.")]
@@ -87,50 +68,82 @@
             this.RunDependencyTest(typeof(IndirectReference), false);
         }
 
-        [Fact(DisplayName = "Finds a dependency that a class inherits from.")]
-        public void DependencySearch_Inherits_Found()
+        [Theory(DisplayName = "Finds a dependency that a class implements from.")]
+        [InlineData(typeof(Implemented))]
+        [InlineData(typeof(ImplementedGeneric))]
+        [InlineData(typeof(ImplementedNestedGeneric))]
+        [InlineData(typeof(ImplementedTuple))]
+        public void DependencySearch_ImplementedInterface_Found(Type input)
         {
-            this.RunDependencyTest(typeof(Inherited));
-        }
-        [Fact(DisplayName = "Finds a dependency that a interface inherits from.")]
-        public void DependencySearch_InheritedInterface_Found()
-        {
-            this.RunDependencyTest(typeof(InheritedInterface), typeof(InterfaceDependecy), true, true);
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a public method's return type.")]
-        public void DependencySearch_MethodReturnType_Found()
-        {
-            this.RunDependencyTest(typeof(MethodReturnType));
+            this.RunDependencyTest(input, typeof(InterfaceDependecy), true, true);
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public method's generic return type.")]
-        public void DependencySearch_MethodReturnTypeGeneric_Found()
+        [Theory(DisplayName = "Finds a dependency that a class inherits from.")]
+        [InlineData(typeof(Inherited))]
+        [InlineData(typeof(InheritedGeneric))]
+        [InlineData(typeof(InheritedNestedGeneric))]
+        [InlineData(typeof(InheritedTuple))]
+        public void DependencySearch_InheritedClass_Found(Type input)
         {
-            this.RunDependencyTest(typeof(MethodReturnTypeGeneric));
+            this.RunDependencyTest(input);
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public method's generic return type that contains another generic.")]
-        public void DependencySearch_MethodReturnTypeNestedGeneric_Found()
+        [Theory(DisplayName = "Finds a dependency in an instruction invocation.")]
+        [InlineData(typeof(InstructionCtor))]
+        [InlineData(typeof(InstructionStaticClassTypeArgument))]
+        [InlineData(typeof(InstructionStaticMethodTypeArgument))]
+        public void DependencySearch_Instruction_Found(Type input)
         {
-            this.RunDependencyTest(typeof(MethodReturnTypeNestedGeneric));
+            this.RunDependencyTest(input);
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public method's tuple return type.")]
-        public void DependencySearch_MethodReturnTypeTuple_Found()
+        [Theory(DisplayName = "Finds a dependency in a static instruction invocation.")]
+        [InlineData(typeof(InstructionStaticClass))]
+        public void DependencySearch_InstructionStatic_Found(Type input)
         {
-            this.RunDependencyTest(typeof(MethodReturnTypeTuple));
+            this.RunDependencyTest(input, typeof(StaticDependency<>), true, true);
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public method's parameter.")]
-        public void DependencySearch_MethodParameter_Found()
+        [Fact(DisplayName = "Does not find things that are not dependency at all")]       
+        public void DependencySearch_Instruction_NotFound()
         {
-            this.RunDependencyTest(typeof(MethodParameter));
+            var search = new DependencySearch();
+            var subject = Types
+               .InAssembly(Assembly.GetAssembly(typeof(InstructionCtor)))
+               .That().DoNotHaveNameStartingWith("NetArchTest.TestStructure.Dependencies.Search").GetTypeDefinitions();
+
+            var resultClass = search.FindTypesWithAnyDependencies(subject, new List<string> { "System.Object::.ctor()" , "T", "T1", "T2", "ctor()", "!1)", "::.ctor(!0" });
+            Assert.Equal(0, resultClass.Count);
         }
-        [Fact(DisplayName = "Finds a dependency in a public method's generic parameter.")]
-        public void DependencySearch_MethodParameterGeneric_Found()
+
+        [Theory(DisplayName = "Finds a dependency in a public method's argument.")]
+        [InlineData(typeof(MethodArgument))]
+        [InlineData(typeof(MethodArgumentGeneric))]
+        [InlineData(typeof(MethodArgumentNestedGeneric))]
+        [InlineData(typeof(MethodArgumentTuple))]
+        public void DependencySearch_MethodArgument_Found(Type input)
         {
-            this.RunDependencyTest(typeof(MethodParameterGeneric));
+            this.RunDependencyTest(input);
+        }        
+
+        [Theory(DisplayName = "Finds a dependency in a public method's parameter.")]
+        [InlineData(typeof(MethodParameter))]
+        [InlineData(typeof(MethodParameterGeneric))]
+        [InlineData(typeof(MethodParameterNestedGeneric))]
+        [InlineData(typeof(MethodParameterTuple))]
+        public void DependencySearch_MethodParameter_Found(Type input)
+        {
+            this.RunDependencyTest(input);
+        }
+
+        [Theory(DisplayName = "Finds a dependency in a public method's return type.")]
+        [InlineData(typeof(MethodReturnType))]
+        [InlineData(typeof(MethodReturnTypeGeneric))]
+        [InlineData(typeof(MethodReturnTypeNestedGeneric))]
+        [InlineData(typeof(MethodReturnTypeTuple))]
+        public void DependencySearch_MethodReturnType_Found(Type input)
+        {
+            this.RunDependencyTest(input);
         }
 
         [Fact(DisplayName = "Finds a dependency in a nested private class.")]
@@ -169,10 +182,26 @@
             this.RunDependencyTest(typeof(PublicConstructor));
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public field.")]
-        public void DependencySearch_PublicField_Found()
+        [Fact(DisplayName = "Finds a dependency in a public event.")]
+        public void DependencySearch_PublicEvent_Found()
         {
-            this.RunDependencyTest(typeof(PublicField));
+            this.RunDependencyTest(typeof(PublicEvent));
+        }
+
+        [Theory(DisplayName = "Finds a dependency in a public field.")]
+        [InlineData(typeof(PublicField))]
+        [InlineData(typeof(PublicFieldGeneric))]
+        [InlineData(typeof(PublicFieldNestedGeneric))]
+        [InlineData(typeof(PublicFieldTuple))]
+        public void DependencySearch_PublicField_Found(Type input)
+        {
+            this.RunDependencyTest(input);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public indexer.")]
+        public void DependencySearch_PublicIndexer_Found()
+        {
+            this.RunDependencyTest(typeof(PublicIndexer));
         }
 
         [Fact(DisplayName = "Finds a dependency in a public method.")]
@@ -181,15 +210,73 @@
             this.RunDependencyTest(typeof(PublicMethod));
         }
 
-        [Fact(DisplayName = "Finds a dependency in a public property.")]
-        public void DependencySearch_PublicProperty_Found()
+        [Theory(DisplayName = "Finds a dependency in a public property.")]
+        [InlineData(typeof(PublicProperty))]
+        [InlineData(typeof(PublicPropertyGeneric))]
+        [InlineData(typeof(PublicPropertyNestedGeneric))]
+        [InlineData(typeof(PublicPropertyTuple))]
+        [InlineData(typeof(PublicPropertyGet))]
+        [InlineData(typeof(PublicPropertySet))]
+        public void DependencySearch_PublicProperty_Found(Type input)
         {
-            this.RunDependencyTest(typeof(PublicProperty));
+            this.RunDependencyTest(input);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a static local function body.")]
+        public void DependencySearch_StaticLocalFunctions_Found()
+        {
+            this.RunDependencyTest(typeof(StaticLocalFunction));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a switch pattern matching.")]
+        public void DependencySearch_SwitchPatternMatching_Found()
+        {
+            this.RunDependencyTest(typeof(SwitchPatternMatching));
+        }        
+
+        [Fact(DisplayName = "Finds a dependency in a catch statement.")]
+        public void DependencySearch_TryCatch_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatch), typeof(ExceptionDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a catch block.")]
+        public void DependencySearch_TryCatchBlock_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatchBlock), typeof(ExceptionDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in an exception filter.")]
+        public void DependencySearch_TryCatchExceptionFilter_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(ExceptionDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a finally block.")]
+        public void DependencySearch_TryFinallyBlock_Found()
+        {
+            this.RunDependencyTest(typeof(TryFinallyBlock));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a using statement.")]
+        public void DependencySearch_UsingStatement_Found()
+        {
+            this.RunDependencyTest(typeof(UsingStatement), typeof(DisposableDependency), true, true);
+        }
+
+        [Theory(DisplayName = "Finds a dependency in a variable.")]
+        [InlineData(typeof(Variable))]
+        [InlineData(typeof(VariableGeneric))]
+        [InlineData(typeof(VariableNestedGeneric))]
+        [InlineData(typeof(VariableTuple))]
+        public void DependencySearch_Variable_Found(Type input)
+        {
+            this.RunDependencyTest(input);
         }
 
         [Theory(DisplayName = "Does not find a dependency that only partially matches actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericParameter))]
+        [InlineData(typeof(InheritedGeneric))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -210,7 +297,7 @@
 
         [Theory(DisplayName = "Does not find a dependency from the namespace matching partially to the namespace of actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericParameter))]
+        [InlineData(typeof(InheritedGeneric))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
@@ -231,7 +318,7 @@
 
         [Theory(DisplayName = "Does not find a dependency that differs only in case from actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
-        [InlineData(typeof(GenericParameter))]
+        [InlineData(typeof(InheritedGeneric))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
         [InlineData(typeof(NestedPrivateClass))]
@@ -310,6 +397,42 @@
             Assert.Equal(typeof(HasDependency).FullName, result.Last().FullName);
         }
 
+        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list. List contains overlapping dependencies.")]
+        public void FindTypesWithAnyDependencies_WithOverlappingDependencies_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName, "NetArchTest.TestStructure.Dependencies" });
+
+            // Assert
+            Assert.Equal(3, result.Count); // Three types found           
+        }
+
+        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list. List contains only parent namespace")]
+        public void FindTypesWithAnyDependencies_WithOnlyParentNamespace_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> {  "NetArchTest.TestStructure.Dependencies" });
+
+            // Assert
+            Assert.Equal(3, result.Count); // Three types found           
+        }
+
         [Fact(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list.")]
         public void FindTypesWithAllDependencies_PublicProperty_Found()
         {
@@ -328,6 +451,25 @@
             Assert.Single(result); // One type found
             Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct type returned
         }
+
+        [Fact(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list. List contains overlapping dependencies.")]
+        public void FindTypesWithAllDependencies_WithOverlappingDependencies_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName, "NetArchTest.TestStructure.Dependencies" });
+
+            // Assert
+            Assert.Single(result); // One type found
+            Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct type returned
+        }        
 
         /// <summary>
         /// Run a generic test against a target type to ensure that a single dependency is picked up by the search.
