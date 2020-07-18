@@ -107,7 +107,7 @@
             // Check the generic parameters for the type
             if (type.HasGenericParameters)
             {
-                CheckParameters(type, type.GenericParameters, ref results);
+                CheckGenericTypeParameters(type, type.GenericParameters, ref results);
             }
 
             // Check the fields
@@ -157,7 +157,7 @@
             // Check for any generic parameters
             if (method.ContainsGenericParameter)
             {
-                CheckParameters(type, method.GenericParameters, ref results);
+                CheckGenericTypeParameters(type, method.GenericParameters, ref results);
             }
 
             if (method.HasParameters)
@@ -280,13 +280,36 @@
             }
         }
 
+
+        private void CheckGenericTypeParameters(TypeDefinition type, IEnumerable<GenericParameter> parameters, ref SearchDefinition results)
+        {
+            foreach (var parameter in parameters)
+            {
+                if (parameter.HasConstraints)
+                {
+                    foreach (var constraint in parameter.Constraints)
+                    {
+                        if (results.GetAllMatchingDependencies(constraint.ConstraintType.FullName).Any())
+                        {
+                            results.AddToFound(type, constraint.ConstraintType.FullName);
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Finds matching dependencies for a set of generic or not parameters
         /// </summary>
         private void CheckParameters(TypeDefinition type, IEnumerable<TypeReference> parameters, ref SearchDefinition results)
         {
             foreach (var parameter in parameters)
-            {
+            {       
+                if (parameter.IsGenericParameter)
+                {
+                    // generic parameters do not contain information about type, they are only placeholder for a type
+                    continue;
+                }
                 if (IsTypeGeneric(parameter.FullName))
                 {
                     var types = ExtractTypeNames(parameter.FullName);
