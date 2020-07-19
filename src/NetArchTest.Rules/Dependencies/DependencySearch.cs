@@ -214,12 +214,8 @@
                 {
                     foreach (var variable in method.Body.Variables)
                     {
-                        // Check any nested types in methods - the compiler will create one for every asynchronous method or iterator.
-                        if (variable.VariableType.IsNested)
-                        {
-                            CheckType(variable.VariableType.Resolve(), results); // are we sure that this line is needed? TODO : we need unit test proving that
-                        }
-                        else
+                        // Check not nested types in methods - the compiler will create nested one for every asynchronous method or iterator or lambda closure and they are already checked in CheckNestedTypes().
+                        if (!variable.VariableType.IsNested)
                         {
                             CheckTypeReference(type, results, variable.VariableType);
                         }
