@@ -1,5 +1,6 @@
 ﻿namespace NetArchTest.Rules.Dependencies
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,11 +11,15 @@
     /// </summary>
     internal class SearchDefinition
     {
+        public enum SearchType { FindTypesWithAnyDependencies, FindTypesWithAllDependencies }
+
+        private readonly SearchType _searchType;
+
         /// <summary> The list of dependencies that has been found in the search. </summary>
         private readonly Dictionary<string, HashSet<string>> _found;
 
         /// <summary> The list of types that has been checked by the search. </summary>
-        private readonly HashSet<string> _checked;
+        private readonly HashSet<string> _checkedTypes;
 
         /// <summary> The list of dependencies being searched for. </summary>
         private readonly NamespaceTree _searchTree;
@@ -22,106 +27,109 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchDefinition"/> class.
         /// </summary>
-        internal SearchDefinition(IEnumerable<string> dependencies)
+        public SearchDefinition(SearchType searchType, IEnumerable<string> dependencies)
         {
+            _searchType = searchType;
             _found = new Dictionary<string, HashSet<string>>();
-            _checked = new HashSet<string>();
+            _checkedTypes = new HashSet<string>();
             _searchTree = new NamespaceTree(dependencies);
         }
-
-        ///<summary> Count of unique dependencies in the set to search in. </summary>
-        internal int UniqueDependenciesCount => _searchTree.TerminatedNodesCount;
+                             
 
         /// <summary>
-        /// Returns all dependencies matching given type full name.
+        /// Gets an indication of whether a type has been checked.
+        /// If type has not been checked, it is marked as checked.
         /// </summary>
-        /// <param name="typeFullName"> Type full name for a dependency to match. </param>
-        /// <returns> Sequence of all dependencies matching given type full name or empty sequence, if there is no match. </returns>
-        internal IEnumerable<string> GetAllMatchingDependencies(string typeFullName)
+        public bool ShouldTypeBeChecked(TypeDefinition type)
         {
-            return _searchTree.GetAllMatchingNames(typeFullName);
-        }
-
-        /// <summary>
-        /// Returns all dependencies matching any of given type full names.
-        /// </summary>
-        /// <param name="typesFullNames"> Set of type full names for a dependency to match any of them. </param>
-        /// <returns> Sequence of all dependencies matching any of given type full names or empty sequence, if there is no match. </returns>
-        internal IEnumerable<string> GetAllDependenciesMatchingAnyOf(IEnumerable<string> typesFullNames)
-        {
-            var matches = new HashSet<string>();
-
-            foreach (var match in typesFullNames.SelectMany(x => _searchTree.GetAllMatchingNames(x)))
+            if ((type == null) || _checkedTypes.Contains(type.FullName))
             {
-                matches.Add(match);
+                return false;
             }
-
-            return matches;
+            // Add the current type to the checked list - this prevents any circular checks
+            _checkedTypes.Add(type.FullName);
+            return true;
         }
 
-        /// <summary>
-        /// Gets the list of dependency names that have been found.
-        /// </summary>
-        internal IReadOnlyList<string> DependenciesFound
+        public bool IsTypeFound(string typeFullName)
         {
-            get
+            if (!_found.ContainsKey(typeFullName))
             {
-                return _found.Values.SelectMany(t => t).ToArray();
+                return false;
             }
+            switch (_searchType)
+            {
+                case SearchType.FindTypesWithAllDependencies:
+                    return _found[typeFullName].Count == _searchTree.TerminatedNodesCount;
+                case SearchType.FindTypesWithAnyDependencies:
+                    return true;              
+            }
+            return false;
         }
 
-        /// <summary>
-        /// Gets the list of types that have dependencies.
-        /// </summary>
-        internal IReadOnlyList<string> TypesFound
+        public void AddDependency(TypeDefinition type, string dependency)
         {
-            get
+            string typeFullName = GetTypeFullName(type);
+            if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
+            var matchedDependencies = _searchTree.GetAllMatchingNames(dependency);
+            //AddToFound(typeFullName, matchedDependencies);
+            foreach (var match in matchedDependencies)
             {
-                return _found.Keys.ToArray();
+                AddToFound(typeFullName, match);
             }
         }
 
-        /// <summary>
-        /// Gets the list of dependencies found for given type.
-        /// </summary>
-        /// <param name="typeFullName">Full name of the type.</param>
-        /// <returns>The list of dependencies found for given type.</returns>
-        internal IReadOnlyList<string> GetDependenciesFoundForType(string typeFullName)
+        public void AddDependencies(TypeDefinition type, IEnumerable<string> dependencies)
         {
-            return _found[typeFullName].ToList();
-        }
-
-        /// <summary>
-        /// Gets an indication of whether a type has been searched.
-        /// </summary>
-        internal bool IsChecked(TypeDefinition type)
-        {
-            if (type != null)
+            string typeFullName = GetTypeFullName(type);
+            if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
+            var matchedDependencies = dependencies.SelectMany(x => _searchTree.GetAllMatchingNames(x));
+            //AddToFound(typeFullName, matchedDependencies);
+            foreach (var match in matchedDependencies)
             {
-                return _checked.Contains(type.FullName);
+                AddToFound(typeFullName, match);
             }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Adds an item to the list of types that have been searched.
-        /// </summary>
-        internal void AddToChecked(TypeDefinition type)
-        {
-            _checked.Add(type.FullName);
         }
 
         /// <summary>
         /// Adds an item to the list of dependencies that have been found.
         /// </summary>
-        internal void AddToFound(TypeDefinition type, string dependency)
+        private void AddToFound(string typeFullName, string dependencyFullName)
+        {  
+            if (_found.ContainsKey(typeFullName))
+            {
+                _found[typeFullName].Add(dependencyFullName);
+            }
+            else
+            {
+                _found.Add(typeFullName, new HashSet<string> { dependencyFullName });
+            }
+        }
+        /// <summary>
+        /// Adds items to the list of dependencies that have been found.
+        /// </summary>
+        private void AddToFound(string typeFullName, IEnumerable<string> dependencies)
+        {
+            HashSet<string> bucket = null;
+            foreach (var dependency in dependencies)
+            {
+                if (bucket == null)
+                {
+                    if (!_found.ContainsKey(typeFullName))
+                    {
+                        _found.Add(typeFullName, new HashSet<string>());
+                    }
+                    bucket = _found[typeFullName];
+                }
+                bucket.Add(dependency);
+            }
+        }
+
+        private string GetTypeFullName(TypeDefinition type)
         {
             // For private nested types we should treat the parent as the dependency - e.g. async methods are always implemented as private nested classes
             var key = type.FullName;
-            while (type.IsNestedPrivate || type == null)
+            while (type != null && type.IsNestedPrivate)
             {
                 type = type.DeclaringType;
                 if (type != null)
@@ -130,14 +138,7 @@
                 }
             }
 
-            if (_found.ContainsKey(key))
-            {
-                _found[key].Add(dependency);
-            }
-            else
-            {
-                _found.Add(key, new HashSet<string> { dependency });
-            }
+            return key;
         }
     }
 }

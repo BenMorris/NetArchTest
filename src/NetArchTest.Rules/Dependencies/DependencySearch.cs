@@ -16,22 +16,10 @@
         /// <param name="input">The set of type definitions to search.</param>
         /// <param name="dependencies">The set of dependencies to look for.</param>
         /// <returns>A list of dependencies found in the input classes.</returns>
-        internal IReadOnlyList<TypeDefinition> FindTypesWithAnyDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
-        {
-            // Set up the search definition
-            var results = new SearchDefinition(dependencies);
-
-            // Check each type in turn
-            foreach (var type in input)
-            {
-                CheckType(type, results);
-            }
-
-            // NB: Nested classes won't be picked up here
-            var hash = new HashSet<string>(results.TypesFound, StringComparer.InvariantCultureIgnoreCase);
-            var output = input.Where(x => hash.Contains(x.FullName)).ToList();
-
-            return output;
+        public IReadOnlyList<TypeDefinition> FindTypesWithAnyDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        {            
+            var results = new SearchDefinition(SearchDefinition.SearchType.FindTypesWithAnyDependencies, dependencies);
+            return FindTypes(input, results);           
         }
 
         /// <summary>
@@ -40,21 +28,20 @@
         /// <param name="input">The set of type definitions to search.</param>
         /// <param name="dependencies">The set of dependencies to look for.</param>
         /// <returns>A list of dependencies found in the input classes.</returns>
-        internal IReadOnlyList<TypeDefinition> FindTypesWithAllDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        public IReadOnlyList<TypeDefinition> FindTypesWithAllDependencies(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        {       
+            var results = new SearchDefinition(SearchDefinition.SearchType.FindTypesWithAllDependencies, dependencies);
+            return FindTypes(input, results);         
+        }
+        private List<TypeDefinition> FindTypes(IEnumerable<TypeDefinition> input, SearchDefinition results)
         {
-            // Set up the search definition
-            var results = new SearchDefinition(dependencies);
-
             // Check each type in turn
             foreach (var type in input)
             {
                 CheckType(type, results);
-            }           
+            }
 
-            // NB: Nested classes won't be picked up here 
-            var hash = new HashSet<string>(results.TypesFound, StringComparer.InvariantCultureIgnoreCase);           
-            var output = input.Where(x => hash.Contains(x.FullName) && results.GetDependenciesFoundForType(x.FullName).Count() == results.UniqueDependenciesCount).ToList();
-
+            var output = input.Where(x =>results.IsTypeFound(x.FullName)).ToList();
             return output;
         }
 
@@ -63,14 +50,11 @@
         /// </summary>
         private void CheckType(TypeDefinition type, SearchDefinition results)
         {
-            // Have we already checked this type?
-            if (results.IsChecked(type))
+            // Have we already checked this type or type is null?
+            if (results.ShouldTypeBeChecked(type) == false)
             {
                 return;
             }
-
-            // Add the current type to the checked list - this prevents any circular checks
-            results.AddToChecked(type);
 
             // Does this directly inherit from a dependency?
             if (type.BaseType != null)
@@ -84,7 +68,14 @@
             CheckFields(type, results);
             CheckProperties(type, results);           
             CheckEvents(type, results);
+
+            // if we already know that type is found, we can skip
+            if (results.IsTypeFound(type.FullName)) return;
+
             CheckMethods(type, results);
+
+            if (results.IsTypeFound(type.FullName)) return;
+
             CheckNestedTypes(type, results);
         }
 
@@ -253,22 +244,15 @@
             {
                 if (reference.IsGenericParameter == false)
                 {
-                    // happy/fast path, type reference is not generic                   
-                    var matches = results.GetAllMatchingDependencies(reference.FullName);
-                    foreach (var match in matches)
-                    {
-                        results.AddToFound(type, match);
-                    }
+                    // happy/fast path, type reference is not generic  
+                    results.AddDependency(type, reference.FullName);                    
                 }
             }
             else
             {
+                // slower path, we need to extract all names from generic type reference
                 var types = ExtractTypeNames(reference);
-                var matches = results.GetAllDependenciesMatchingAnyOf(types);
-                foreach (var match in matches)
-                {
-                    results.AddToFound(type, match);
-                }
+                results.AddDependencies(type, types);               
             }
         }
 
