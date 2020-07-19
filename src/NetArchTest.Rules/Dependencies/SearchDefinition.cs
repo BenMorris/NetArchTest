@@ -71,8 +71,7 @@
         {
             string typeFullName = GetTypeFullName(type);
             if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
-            var matchedDependencies = _searchTree.GetAllMatchingNames(dependency);
-            //AddToFound(typeFullName, matchedDependencies);
+            var matchedDependencies = GetAllMatchingNames(dependency);            
             foreach (var match in matchedDependencies)
             {
                 AddToFound(typeFullName, match);
@@ -83,12 +82,28 @@
         {
             string typeFullName = GetTypeFullName(type);
             if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
-            var matchedDependencies = dependencies.SelectMany(x => _searchTree.GetAllMatchingNames(x));
-            //AddToFound(typeFullName, matchedDependencies);
-            foreach (var match in matchedDependencies)
+            foreach(var dependency in dependencies)
             {
-                AddToFound(typeFullName, match);
+                var matchedDependencies = GetAllMatchingNames(dependency);                
+                foreach (var match in matchedDependencies)
+                {
+                    AddToFound(typeFullName, match);
+                }
             }
+        }
+
+        /// <summary>
+        /// Searching tree is costly (it requires a lot of operations on strings like SubString, IndexOf).
+        /// For a given dependency we always get the same answer, so let us cache what tree returns.
+        /// </summary>
+        private readonly Dictionary<string, IEnumerable<string>> cachedAnswersFromSearchTree = new Dictionary<string, IEnumerable<string>>();
+        private IEnumerable<string> GetAllMatchingNames(string dependecy)
+        {
+            if (!cachedAnswersFromSearchTree.ContainsKey(dependecy))
+            {
+                cachedAnswersFromSearchTree[dependecy] = _searchTree.GetAllMatchingNames(dependecy).ToArray();
+            }
+            return cachedAnswersFromSearchTree[dependecy];
         }
 
         /// <summary>
@@ -105,25 +120,7 @@
                 _found.Add(typeFullName, new HashSet<string> { dependencyFullName });
             }
         }
-        /// <summary>
-        /// Adds items to the list of dependencies that have been found.
-        /// </summary>
-        private void AddToFound(string typeFullName, IEnumerable<string> dependencies)
-        {
-            HashSet<string> bucket = null;
-            foreach (var dependency in dependencies)
-            {
-                if (bucket == null)
-                {
-                    if (!_found.ContainsKey(typeFullName))
-                    {
-                        _found.Add(typeFullName, new HashSet<string>());
-                    }
-                    bucket = _found[typeFullName];
-                }
-                bucket.Add(dependency);
-            }
-        }
+       
 
         private string GetTypeFullName(TypeDefinition type)
         {
