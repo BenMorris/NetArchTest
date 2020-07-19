@@ -56,6 +56,7 @@
         [InlineData(typeof(GenericMethodTypeArgumentGeneric))]
         [InlineData(typeof(GenericMethodTypeArgumentNestedGeneric))]
         [InlineData(typeof(GenericMethodTypeArgumentTuple))]
+        [InlineData(typeof(GenericMethodOneOpenOneCloseedTypeArgument<>))]
         public void DependencySearch_GenericMethodTypeArgument_Found(Type input)
         {
             this.RunDependencyTest(input);
@@ -97,7 +98,7 @@
             this.RunDependencyTest(input);
         }
 
-        [Theory(DisplayName = "Finds a dependency in a static instruction invocation.")]
+        [Theory(DisplayName = "Finds a dependency in a static class.")]
         [InlineData(typeof(InstructionStaticClass))]
         public void DependencySearch_InstructionStatic_Found(Type input)
         {
@@ -114,6 +115,12 @@
 
             var resultClass = search.FindTypesWithAnyDependencies(subject, new List<string> { "System.Object::.ctor()" , "T", "T1", "T2", "ctor()", "!1)", "::.ctor(!0" });
             Assert.Equal(0, resultClass.Count);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a captured variable by lambda closure.")]
+        public void DependencySearch_LambdaCapturedVariable_Found()
+        {
+            this.RunDependencyTest(typeof(LambdaCapturedVariable));
         }
 
         [Theory(DisplayName = "Finds a dependency in a public method's argument.")]
@@ -274,6 +281,12 @@
             this.RunDependencyTest(input);
         }
 
+        [Fact(DisplayName = "Finds a dependency in a yield return statement.")]
+        public void DependencySearch_Yield_Found()
+        {
+            this.RunDependencyTest(typeof(Yield));
+        }
+
         [Theory(DisplayName = "Does not find a dependency that only partially matches actually referenced type.")]
         [InlineData(typeof(AsyncMethod))]
         [InlineData(typeof(InheritedGeneric))]
@@ -374,10 +387,15 @@
 
             // Assert: Before PR#36 this would have returned classes in NamespaceMatchToo in the results
             Assert.Empty(result); // No results returned
-        }
+        }       
 
-        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list.")]
-        public void FindTypesWithAnyDependencies_PublicProperty_Found()
+        [Theory(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" }, "List contains two distinct dependencies.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies" }, "List contains overlapping dependencies.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies" }, "List contains only ancestor namespace.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies" }, "List contains duplicated ancestor namespace.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies.Examples" }, "List contains overlapping namespaces.")]
+        public void FindTypesWithAnyDependencies_Found(string[] dependecies, string comment)
         {
             // Arrange
             var search = new DependencySearch();
@@ -388,17 +406,21 @@
                 .GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName });
+            var result = search.FindTypesWithAnyDependencies(typeList, dependecies);
 
             // Assert
-            Assert.Equal(3, result.Count); // Three types found
+            Assert.Equal(3, result.Count); // Three types found   
             Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct types returned...
             Assert.Equal(typeof(HasAnotherDependency).FullName, result.Skip(1).First().FullName);
             Assert.Equal(typeof(HasDependency).FullName, result.Last().FullName);
         }
 
-        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list. List contains overlapping dependencies.")]
-        public void FindTypesWithAnyDependencies_WithOverlappingDependencies_Found()
+        [Theory(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" }, "List contains two distinct dependencies.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies" }, "List contains overlapping dependencies.")]      
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" }, "List contains duplicated dependencies.")]
+        [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies.Examples" }, "List contains overlapping namespaces.")]
+        public void FindTypesWithAllDependencies_Found(string[] dependecies, string comment)
         {
             // Arrange
             var search = new DependencySearch();
@@ -409,67 +431,12 @@
                 .GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName, "NetArchTest.TestStructure.Dependencies" });
-
-            // Assert
-            Assert.Equal(3, result.Count); // Three types found           
-        }
-
-        [Fact(DisplayName = "A search for types with ANY dependencies returns types that have a dependency on at least one item in the list. List contains only parent namespace")]
-        public void FindTypesWithAnyDependencies_WithOnlyParentNamespace_Found()
-        {
-            // Arrange
-            var search = new DependencySearch();
-            var typeList = Types
-                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
-                .That()
-                .ResideInNamespace(typeof(HasDependency).Namespace)
-                .GetTypeDefinitions();
-
-            // Act
-            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> {  "NetArchTest.TestStructure.Dependencies" });
-
-            // Assert
-            Assert.Equal(3, result.Count); // Three types found           
-        }
-
-        [Fact(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list.")]
-        public void FindTypesWithAllDependencies_PublicProperty_Found()
-        {
-            // Arrange
-            var search = new DependencySearch();
-            var typeList = Types
-                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
-                .That()
-                .ResideInNamespace(typeof(HasDependency).Namespace)
-                .GetTypeDefinitions();
-
-            // Act
-            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName });
+            var result = search.FindTypesWithAllDependencies(typeList, dependecies);
 
             // Assert
             Assert.Single(result); // One type found
             Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct type returned
-        }
-
-        [Fact(DisplayName = "A search for types with ALL dependencies returns types that have a dependency on all the items in the list. List contains overlapping dependencies.")]
-        public void FindTypesWithAllDependencies_WithOverlappingDependencies_Found()
-        {
-            // Arrange
-            var search = new DependencySearch();
-            var typeList = Types
-                .InAssembly(Assembly.GetAssembly(typeof(HasDependency)))
-                .That()
-                .ResideInNamespace(typeof(HasDependency).Namespace)
-                .GetTypeDefinitions();
-
-            // Act
-            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName, "NetArchTest.TestStructure.Dependencies" });
-
-            // Assert
-            Assert.Single(result); // One type found
-            Assert.Equal(typeof(HasDependencies).FullName, result.First().FullName); // Correct type returned
-        }        
+        }      
 
         /// <summary>
         /// Run a generic test against a target type to ensure that a single dependency is picked up by the search.
