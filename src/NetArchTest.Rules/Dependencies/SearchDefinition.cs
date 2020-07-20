@@ -51,43 +51,61 @@
             return true;
         }
 
-        public bool IsTypeFound(string typeFullName)
+        public bool IsTypeFound(TypeDefinition type)
         {
-            if (!_found.ContainsKey(typeFullName))
+            if (_found.TryGetValue(type.FullName, out HashSet<string> bucket))
             {
-                return false;
-            }
-            switch (_searchType)
-            {
-                case SearchType.FindTypesWithAllDependencies:
-                    return _found[typeFullName].Count == _searchTree.TerminatedNodesCount;
-                case SearchType.FindTypesWithAnyDependencies:
-                    return true;              
+                switch (_searchType)
+                {
+                    case SearchType.FindTypesWithAllDependencies:
+                        return bucket.Count == _searchTree.TerminatedNodesCount;
+                    case SearchType.FindTypesWithAnyDependencies:
+                        // if the bucket exists in _found, we know that at least one dependency exists
+                        return true;
+                }
             }
             return false;
         }
 
-        public void AddDependency(TypeDefinition type, string dependency)
+        /// <summary>
+        /// If we already know the final answer to the question if type was found,
+        /// doing another search will not change the result
+        /// </summary>     
+        public bool CanWeSkipFurtherSearch(TypeDefinition type)
         {
-            string typeFullName = GetTypeFullName(type);
-            if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
-            var matchedDependencies = GetAllMatchingNames(dependency);            
+            return IsTypeFound(type) == true;
+        }
+
+        public void AddDependency(TypeDefinition type, TypeReference dependency)
+        {
+            type = GetParentTypeIfTypeIsNested(type);
+            if (CanWeSkipFurtherSearch(type)) return;
+            var matchedDependencies = GetAllMatchingNames(dependency.FullName);
             foreach (var match in matchedDependencies)
             {
-                AddToFound(typeFullName, match);
+                AddToFound(type.FullName, match);
             }
         }
 
-        public void AddDependencies(TypeDefinition type, IEnumerable<string> dependencies)
+        public void AddDependencies(TypeDefinition type, IEnumerable<TypeReference> dependencies)
         {
-            string typeFullName = GetTypeFullName(type);
-            if (IsTypeFound(typeFullName)) return; // if we already know that type is found, doing another search does not change the result
-            foreach(var dependency in dependencies)
+            type = GetParentTypeIfTypeIsNested(type);
+            if (CanWeSkipFurtherSearch(type)) return;
+            HashSet<string> bucket = null;
+            foreach (var dependency in dependencies)
             {
-                var matchedDependencies = GetAllMatchingNames(dependency);                
-                foreach (var match in matchedDependencies)
-                {
-                    AddToFound(typeFullName, match);
+                var matchedDependencies = GetAllMatchingNames(dependency.FullName);
+                if (matchedDependencies.Count() > 0)
+                {                    
+                    if ((bucket == null) && !_found.TryGetValue(type.FullName, out bucket))
+                    {
+                        bucket = new HashSet<string>();
+                        _found.Add(type.FullName, bucket);
+                    }
+                    foreach (var match in matchedDependencies)
+                    {
+                        bucket.Add(match);
+                    }
                 }
             }
         }
@@ -99,11 +117,13 @@
         private readonly Dictionary<string, IEnumerable<string>> cachedAnswersFromSearchTree = new Dictionary<string, IEnumerable<string>>();
         private IEnumerable<string> GetAllMatchingNames(string dependecy)
         {
-            if (!cachedAnswersFromSearchTree.ContainsKey(dependecy))
+            if (cachedAnswersFromSearchTree.TryGetValue(dependecy, out var bucket))
             {
-                cachedAnswersFromSearchTree[dependecy] = _searchTree.GetAllMatchingNames(dependecy).ToArray();
+                return bucket;
             }
-            return cachedAnswersFromSearchTree[dependecy];
+            var matchedNames = _searchTree.GetAllMatchingNames(dependecy).ToArray();
+            cachedAnswersFromSearchTree[dependecy] = matchedNames;
+            return matchedNames;
         }
 
         /// <summary>
@@ -111,31 +131,25 @@
         /// </summary>
         private void AddToFound(string typeFullName, string dependencyFullName)
         {  
-            if (_found.ContainsKey(typeFullName))
+            if (_found.TryGetValue(typeFullName, out var bucket))
             {
-                _found[typeFullName].Add(dependencyFullName);
+                bucket.Add(dependencyFullName);
             }
             else
             {
                 _found.Add(typeFullName, new HashSet<string> { dependencyFullName });
             }
-        }
-       
+        }       
 
-        private string GetTypeFullName(TypeDefinition type)
+        private TypeDefinition GetParentTypeIfTypeIsNested(TypeDefinition type)
         {
             // For private nested types we should treat the parent as the dependency - e.g. async methods are always implemented as private nested classes
-            var key = type.FullName;
-            while (type != null && type.IsNestedPrivate)
+            while (type.IsNestedPrivate && type.DeclaringType != null)
             {
-                type = type.DeclaringType;
-                if (type != null)
-                {
-                    key = type.FullName;
-                }
+                type = type.DeclaringType;               
             }
 
-            return key;
+            return type;
         }
     }
 }

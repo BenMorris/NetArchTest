@@ -123,14 +123,10 @@
             }
 
             var deepestNode = _root;
-
-            int subnameEndIndex = -1;
-            while (subnameEndIndex != fullName.Length)
-            {
-                int subnameStartIndex = subnameEndIndex + 1;
-                subnameEndIndex = GetSubnameEndIndex(fullName, subnameStartIndex);
-
-                deepestNode = deepestNode.GetOrAddNode(fullName.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex));
+          
+            foreach (var name in fullName.Split(_namespaceSeparators, StringSplitOptions.RemoveEmptyEntries))
+            {      
+                deepestNode = deepestNode.GetOrAddNode(name);
             }
 
             if (!deepestNode.IsTerminated)

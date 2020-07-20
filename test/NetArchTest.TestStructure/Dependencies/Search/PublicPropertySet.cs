@@ -7,7 +7,7 @@
     /// </summary>
     public class PublicPropertySet
     {
-        public ExampleDependency ExampleProperty
+        public object ExampleProperty
         {
             set { var foo = value as ExampleDependency; }
         }
