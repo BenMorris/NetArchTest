@@ -259,6 +259,41 @@
             this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(ExceptionDependency), true, true);
         }
 
+        [Fact(DisplayName = "Finds a generic open dependecy.")]
+        public void DependencySearch_GenericOpen_Found()
+        {
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(GenericDependecy)))
+                .That()
+                .HaveName("GenericDependecy")
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1" });
+
+            Assert.Single(result);
+            Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
+        }
+        [Fact(DisplayName = "Finds a generic closed dependecy.")]
+        public void DependencySearch_GenericClosed_Found()
+        {          
+            // Arrange
+            var search = new DependencySearch();
+            var typeList = Types
+                .InAssembly(Assembly.GetAssembly(typeof(GenericDependecy)))
+                .That()
+                .HaveName("GenericDependecy")
+                .GetTypeDefinitions();
+
+            // Act
+            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1<System.Int32>" });
+                      
+            Assert.Single(result);
+            Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
+        }
+
         [Fact(DisplayName = "Finds a dependency in a finally block.")]
         public void DependencySearch_TryFinallyBlock_Found()
         {
