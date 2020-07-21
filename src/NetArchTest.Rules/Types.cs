@@ -248,25 +248,19 @@
         /// <returns>The expanded collection of types</returns>
         private static IEnumerable<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> types)
         {
-            var output = new List<TypeDefinition>();
-            var check = new Queue<TypeDefinition>(types);
+            var output = new List<TypeDefinition>(types.Where(x => !_exclusionTree.GetAllMatchingNames(x.FullName).Any()));          
 
-            while (check.Count > 0)
+            for (int i = 0; i < output.Count; ++i)
             {
-                var type = check.Dequeue();
-                
-                if (!_exclusionTree.GetAllMatchingNames(type.FullName).Any())
-                {
-                    output.Add(type);
+                var type = output[i];
 
-                    foreach (var nested in type.NestedTypes)
+                foreach (var nested in type.NestedTypes)
+                {                   
+                    // Ignore all compiler-generated nested classes
+                    if (!nested.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName))
                     {
-                        // Ignore all compiler-generated nested classes
-                        if (!nested.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName))
-                        {
-                            check.Enqueue(nested);
-                        }
-                    }
+                        output.Add(nested);
+                    }                   
                 }
             }
 
