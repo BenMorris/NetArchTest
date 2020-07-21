@@ -19,15 +19,29 @@
 
             Assert.DoesNotContain(result, t => t.FullName.StartsWith("System.") || t.FullName.Equals("System"));
             Assert.DoesNotContain(result, t => t.FullName.StartsWith("Microsoft.") || t.FullName.Equals("Microsoft"));
-            Assert.DoesNotContain(result, t => t.FullName.StartsWith("netstandard.") | t.FullName.Equals("netstandard"));
+            Assert.DoesNotContain(result, t => t.FullName.StartsWith("netstandard.") | t.FullName.Equals("netstandard"));           
         }
         [Fact(DisplayName = "Types that reside in namespace that has \"System\" prefix but is not system namespace should be included in the current domain. ")]
-        public void InCurrentDomain_SystemTypesExcluded2()
+        public void InCurrentDomain_TypesWithPrefixSystemInclude()
         {          
             var result = Types.InCurrentDomain().GetTypeDefinitions();
 
             Assert.Contains(result, t => t.FullName == typeof(SystemAsNamespacePrefix.ExampleClass).FullName);           
         }
+        [Fact(DisplayName = "Types that reside in namespace that has \"Module\" prefix but is not <Module> namespace should be included in the current domain. ")]
+        public void InCurrentDomain_TypesWithPrefixModuleInclude()
+        {
+            var result = Types.InCurrentDomain().GetTypeDefinitions();
+
+            Assert.Contains(result, t => t.FullName == typeof(ModuleAsNamespacePrefix.ExampleClass).FullName);
+        }
+        [Fact(DisplayName = "<Module> types should be excluded from the current domain.")]
+        public void InCurrentDomain_SystemTypesExcludedModule()
+        {
+            var result = Types.InCurrentDomain().GetTypeDefinitions();
+            Assert.DoesNotContain(result, t => t.FullName.StartsWith("<Module>") | t.FullName.Equals("<Module>"));
+        }
+
 
         [Fact(DisplayName = "NetArchTest types should be excluded from the current domain.")]
         public void InCurrentDomain_NetArchTestTypesExcluded()
