@@ -259,8 +259,19 @@
             this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(ExceptionDependency), true, true);
         }
 
+        [Fact(DisplayName = "Finds an array dependency.")]
+        public void DependencySearch_Array_Found()
+        {
+            this.RunDependencyTest(typeof(TestStructure.Dependencies.Search.Array), typeof(ExampleDependency[]), true, true);
+        }
         [Fact(DisplayName = "Finds a generic open dependecy.")]
         public void DependencySearch_GenericOpen_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(GenericDependecy<>), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a generic open dependecy. Specified as string")]
+        public void DependencySearch_GenericOpenSpecifiedAsString_Found()
         {
             // Arrange
             var search = new DependencySearch();
@@ -270,14 +281,22 @@
                 .HaveName("GenericDependecy")
                 .GetTypeDefinitions();
 
-            // Act
+            // Act           
+           
             var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1" });
-
-            Assert.Single(result);
+                     
+            Assert.Single(result);          
             Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
         }
+
         [Fact(DisplayName = "Finds a generic closed dependecy.")]
         public void DependencySearch_GenericClosed_Found()
+        {
+            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(GenericDependecy<int>), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a generic closed dependecy. Specified as string")]
+        public void DependencySearch_GenericClosedSpecifiedAsString_Found()
         {          
             // Arrange
             var search = new DependencySearch();
@@ -287,11 +306,17 @@
                 .HaveName("GenericDependecy")
                 .GetTypeDefinitions();
 
-            // Act
+         
+            // Act          
             var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1<System.Int32>" });
                       
-            Assert.Single(result);
+            Assert.Single(result);          
             Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
+        }
+        [Fact(DisplayName = "Finds a dependecy on nested type.")]
+        public void DependencySearch_NestedType_Found()
+        {
+            this.RunDependencyTest(typeof(Nested), typeof(Nested.NestedDependency), true, true);
         }
 
         [Fact(DisplayName = "Finds a dependency in a finally block.")]
