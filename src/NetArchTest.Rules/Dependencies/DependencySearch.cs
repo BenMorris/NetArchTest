@@ -216,12 +216,8 @@
                 if (method.Body.HasVariables)
                 {
                     foreach (var variable in method.Body.Variables)
-                    {
-                        // Check not nested types in methods - the compiler will create nested one for every asynchronous method or iterator or lambda closure and they are already checked in CheckNestedTypes().
-                        if (!variable.VariableType.IsNested)
-                        {
-                            CheckTypeReference(type, results, variable.VariableType);
-                        }
+                    {                        
+                        CheckTypeReference(type, results, variable.VariableType);
                     }
                 } 
             }

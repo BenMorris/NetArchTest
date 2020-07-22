@@ -99,7 +99,7 @@
         /// <summary> Holds the root for the namespace tree. </summary>
         private readonly Node _root = new Node();
 
-        private static readonly char[] _namespaceSeparators = new char[] { '.', '<', '>', ':' };
+        private static readonly char[] _namespaceSeparators = new char[] { '.', '<', '>', ':', '/', '+' };
 
         /// <summary>
         /// Initially fills the tree with given names.
