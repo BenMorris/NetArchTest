@@ -91,7 +91,7 @@
         {
             if ((typeDefinition.IsNestedPrivate) || (typeDefinition.IsNestedPublic))
             {
-                return typeDefinition.DeclaringType.Namespace;
+                return typeDefinition.DeclaringType.FullName;
             }
             return typeDefinition.Namespace;
         }
