@@ -1,8 +1,10 @@
-﻿namespace NetArchTest.Rules.Dependencies
+﻿namespace NetArchTest.Rules.Dependencies.DataStructures
 {
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using Mono.Cecil;
+    using NetArchTest.Rules.Extensions;
 
     /// <summary>
     /// Holds tree structure of full names; child nodes of each parent are indexed for optimal time of search.
@@ -173,6 +175,55 @@
                 if (deepestNode.IsTerminated)
                 {                  
                     yield return deepestNode.FullName;                    
+                }
+            }
+        }
+
+        public IEnumerable<string> GetAllMatchingNames(TypeReference reference)
+        {
+            var deepestNode = _root;
+           
+            foreach (var token in GetTokens(reference))
+            {
+                int subnameEndIndex = -1;
+                while (subnameEndIndex != token.Length)
+                {
+                    int subnameStartIndex = subnameEndIndex + 1;
+                    subnameEndIndex = GetSubnameEndIndex(token, subnameStartIndex);
+
+                    string name = token.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex);
+                    if (!deepestNode.TryGetNode(name, out deepestNode))
+                    {
+                        yield break;
+                    }
+
+                    if (deepestNode.IsTerminated)
+                    {
+                        yield return deepestNode.FullName;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursively extracts every part from type full name
+        /// </summary>      
+        private IEnumerable<string> GetTokens(TypeReference reference)
+        {
+            yield return reference.GetNamespace();
+            yield return reference.Name;
+            if (reference.IsGenericInstance)
+            {                
+                var referenceAsGenericInstance = reference as GenericInstanceType;
+                if (referenceAsGenericInstance.HasGenericArguments)
+                {
+                    for (int i = 0; i < referenceAsGenericInstance.GenericArguments.Count; i++)
+                    {
+                        foreach (var token in GetTokens(referenceAsGenericInstance.GenericArguments[i]))
+                        {
+                            yield return token;
+                        }
+                    }
                 }
             }
         }

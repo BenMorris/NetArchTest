@@ -9,6 +9,7 @@
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
     using NetArchTest.Rules.Dependencies;
+    using NetArchTest.Rules.Dependencies.DataStructures;
 
     /// <summary>
     /// Creates a list of types that can have predicates and conditions applied to it.

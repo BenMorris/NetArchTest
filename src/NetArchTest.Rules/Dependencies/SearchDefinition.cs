@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
+    using NetArchTest.Rules.Dependencies.DataStructures;
 
     /// <summary>
     /// Manages the parameters and results for a dependency search.
@@ -80,50 +81,26 @@
         {
             type = GetParentTypeIfTypeIsNested(type);
             if (CanWeSkipFurtherSearch(type)) return;
-            var matchedDependencies = GetAllMatchingNames(dependency.FullName);
+            var matchedDependencies = GetAllMatchingNames(dependency);
             foreach (var match in matchedDependencies)
             {
                 AddToFound(type.FullName, match);
             }
-        }
-
-        public void AddDependencies(TypeDefinition type, IEnumerable<TypeReference> dependencies)
-        {
-            type = GetParentTypeIfTypeIsNested(type);
-            if (CanWeSkipFurtherSearch(type)) return;
-            HashSet<string> bucket = null;
-            foreach (var dependency in dependencies)
-            {
-                var matchedDependencies = GetAllMatchingNames(dependency.FullName);
-                if (matchedDependencies.Count() > 0)
-                {                    
-                    if ((bucket == null) && !_found.TryGetValue(type.FullName, out bucket))
-                    {
-                        bucket = new HashSet<string>();
-                        _found.Add(type.FullName, bucket);
-                    }
-                    foreach (var match in matchedDependencies)
-                    {
-                        bucket.Add(match);
-                    }
-                }
-            }
-        }
+        }      
 
         /// <summary>
-        /// Searching tree is costly (it requires a lot of operations on strings like SubString, IndexOf).
-        /// For a given dependency we always get the same answer, so let us cache what tree returns.
-        /// </summary>
-        private readonly Dictionary<string, IEnumerable<string>> cachedAnswersFromSearchTree = new Dictionary<string, IEnumerable<string>>();
-        private IEnumerable<string> GetAllMatchingNames(string dependecy)
+        /// Searching search tree is costly (it requires a lot of operations on strings like SubString, IndexOf).
+        /// For a given type we always get the same answer, so let us cache what search tree returns.
+        /// </summary>        
+        TypeReferenceTree<IEnumerable<string>> cachedAnswersFromSearchTree = new TypeReferenceTree<IEnumerable<string>>();
+        private IEnumerable<string> GetAllMatchingNames(TypeReference type)
         {
-            if (cachedAnswersFromSearchTree.TryGetValue(dependecy, out var bucket))
+            var node = cachedAnswersFromSearchTree.GetNode(type);
+            if (node.value == null)
             {
-                return bucket;
+                node.value = _searchTree.GetAllMatchingNames(type).ToArray();
             }
-            var matchedNames = _searchTree.GetAllMatchingNames(dependecy).ToArray();
-            cachedAnswersFromSearchTree[dependecy] = matchedNames;
-            return matchedNames;
+            return node.value;
         }
 
         /// <summary>

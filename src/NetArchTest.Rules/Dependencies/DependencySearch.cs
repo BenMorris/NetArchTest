@@ -46,7 +46,7 @@
         }
 
         /// <summary>
-        /// Finds matching dependencies for a given type by walking through the type contents.
+        /// Finds matching dependencies for a given type by walking through the type.
         /// </summary>
         private void CheckType(TypeDefinition type, SearchDefinition results)
         {
@@ -72,8 +72,7 @@
         }
 
         private void CheckBaseType(TypeDefinition type, SearchDefinition results)
-        {
-            // Does this directly inherit from a dependency?
+        {            
             if (type.BaseType != null)
             {
                 CheckTypeReference(type, results, type.BaseType);
@@ -256,47 +255,32 @@
             }
         }
 
+        /// <summary>
+        /// Recursively checks every generic or not type reference
+        /// <example>
+        /// for closed generic : List{Tuple{Task{int}, int}}
+        /// it will check: List{Tuple{Task{int}, int}}, Tuple{Task{int}, int}, Task{int}, int, int
+        /// for open generic : List{T}
+        /// only List will be checked, T as a generic parameter will be skipped
+        /// </example>         
+        /// </summary>      
         private void CheckTypeReference(TypeDefinition type, SearchDefinition results, TypeReference reference)
         {
-            if (reference.IsGenericInstance == false)
+            if (reference.IsGenericParameter == false)
             {
-                if (reference.IsGenericParameter == false)
+                results.AddDependency(type, reference);
+                if (reference.IsGenericInstance == true)
                 {
-                    // happy/fast path, type reference is not generic  
-                    results.AddDependency(type, reference);                    
-                }
-            }
-            else
-            {
-                // slower path, we need to extract all names from generic type reference
-                var types = ExtractTypeNames(reference);
-                results.AddDependencies(type, types);               
-            }
-        }
-
-        /// <summary>
-        /// Extract nested type refences from generic or not given type reference     
-        /// </summary>
-        private IEnumerable<TypeReference> ExtractTypeNames(TypeReference reference)
-        {
-            if (!reference.IsGenericParameter)
-            {
-                yield return reference;
-            }
-            if (reference.IsGenericInstance)
-            {
-                var referenceAsGenericInstance = reference as GenericInstanceType;
-                if (referenceAsGenericInstance.HasGenericArguments)
-                {
-                    foreach (var genericArgument in referenceAsGenericInstance.GenericArguments)
-                    {                       
-                        foreach(var name in ExtractTypeNames(genericArgument))
+                    var referenceAsGenericInstance = reference as GenericInstanceType;
+                    if (referenceAsGenericInstance.HasGenericArguments)
+                    {
+                        foreach (var genericArgument in referenceAsGenericInstance.GenericArguments)
                         {
-                            yield return name;
+                            CheckTypeReference(type, results, genericArgument);
                         }
                     }
                 }
             }
-        }       
+        }        
     }
 }
