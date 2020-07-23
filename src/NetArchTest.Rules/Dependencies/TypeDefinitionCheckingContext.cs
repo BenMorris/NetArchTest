@@ -2,84 +2,77 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using Mono.Cecil;
+    using NetArchTest.Rules.Extensions;
 
     internal class TypeDefinitionCheckingContext
     {
         private TypeDefinition _typeToCheck;
         private SearchDefinition _searchDefinition;
+        /// <summary> The list of dependencies that have been found in the search.</summary>
+        private HashSet<string> _foundDependencies = new HashSet<string>();
 
         public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, SearchDefinition searchDefinition)
         {
-            this._typeToCheck = typeToCheck;
-            this._searchDefinition = searchDefinition;
+            _typeToCheck = typeToCheck;
+            _searchDefinition = searchDefinition;         
         }
 
         public bool IsTypeFound()
         {
-            CheckType(_typeToCheck, _searchDefinition);
-            return _searchDefinition.IsTypeFound(_typeToCheck);
+            CheckType(_typeToCheck);
+            return _searchDefinition.IsTypeFound(_foundDependencies);
         }
 
 
         /// <summary>
         /// Finds matching dependencies for a given type by walking through the type.
         /// </summary>
-        private void CheckType(TypeDefinition type, SearchDefinition results)
+        private void CheckType(TypeDefinition type)
         {
-            // Have we already checked this type or type is null?
-            if (results.ShouldTypeBeChecked(type) == false)
-            {
-                return;
-            }
-
-            CheckBaseType(type, results);
-            CheckCustomAttributes(type, results, type);
-            CheckImplementedInterfaces(type, results);
-            CheckGenericTypeParametersConstraints(type, results, type);
-            CheckFields(type, results);
-            if (results.CanWeSkipFurtherSearch(type)) return;
-            CheckProperties(type, results);
-            if (results.CanWeSkipFurtherSearch(type)) return;
-            CheckEvents(type, results);
-            if (results.CanWeSkipFurtherSearch(type)) return;
-            CheckMethods(type, results);
-            if (results.CanWeSkipFurtherSearch(type)) return;
-            CheckNestedTypes(type, results);
+            CheckBaseType(type);
+            CheckCustomAttributes(type);
+            CheckImplementedInterfaces(type);
+            CheckGenericTypeParametersConstraints(type);
+            CheckFields(type);
+            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            CheckProperties(type);
+            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            CheckEvents(type);
+            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            CheckMethods(type);
+            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            CheckNestedCompilerGeneratedTypes(type);
         }
 
-        private void CheckBaseType(TypeDefinition type, SearchDefinition results)
+        private void CheckBaseType(TypeDefinition typeToCheck)
         {
-            if (type.BaseType != null)
+            if (typeToCheck.BaseType != null)
             {
-                CheckTypeReference(type, results, type.BaseType);
+                CheckTypeReference(typeToCheck.BaseType);
             }
         }
-        private void CheckCustomAttributes(TypeDefinition type, SearchDefinition results, ICustomAttributeProvider typeToCheck)
+        private void CheckCustomAttributes(ICustomAttributeProvider typeToCheck)
         {
             if (typeToCheck.HasCustomAttributes)
             {
                 foreach (var customAttribute in typeToCheck.CustomAttributes)
                 {
-                    CheckTypeReference(type, results, customAttribute.AttributeType);
+                    CheckTypeReference(customAttribute.AttributeType);
                 }
             }
-        }
-
-       
-
-        private void CheckImplementedInterfaces(TypeDefinition type, SearchDefinition results)
+        }    
+        private void CheckImplementedInterfaces(TypeDefinition typeToCheck)
         {
-            if (type.HasInterfaces)
+            if (typeToCheck.HasInterfaces)
             {
-                foreach (var @interface in type.Interfaces)
+                foreach (var @interface in typeToCheck.Interfaces)
                 {
-                    CheckTypeReference(type, results, @interface.InterfaceType);
+                    CheckTypeReference(@interface.InterfaceType);
                 }
             }
         }
-        private void CheckGenericTypeParametersConstraints(TypeDefinition type, SearchDefinition results, IGenericParameterProvider typeToCheck)
+        private void CheckGenericTypeParametersConstraints(IGenericParameterProvider typeToCheck)
         {
             if (typeToCheck.HasGenericParameters)
             {
@@ -89,143 +82,146 @@
                     {
                         foreach (var constraint in parameter.Constraints)
                         {
-                            CheckTypeReference(type, results, constraint.ConstraintType);
+                            CheckTypeReference(constraint.ConstraintType);
                         }
                     }
                 }
             }
         }
-        private void CheckFields(TypeDefinition type, SearchDefinition results)
+        private void CheckFields(TypeDefinition typeToCheck)
         {
-            if (type.HasFields)
+            if (typeToCheck.HasFields)
             {
-                foreach (var field in type.Fields)
+                foreach (var field in typeToCheck.Fields)
                 {
-                    CheckCustomAttributes(type, results, field);
-                    CheckTypeReference(type, results, field.FieldType);
+                    CheckCustomAttributes(field);
+                    CheckTypeReference(field.FieldType);
                 }
             }
         }
-        private void CheckProperties(TypeDefinition type, SearchDefinition results)
+        private void CheckProperties(TypeDefinition typeToCheck)
         {
-            if (type.HasProperties)
+            if (typeToCheck.HasProperties)
             {
-                foreach (var property in type.Properties)
+                foreach (var property in typeToCheck.Properties)
                 {
-                    CheckCustomAttributes(type, results, property);
-                    CheckTypeReference(type, results, property.PropertyType);
+                    CheckCustomAttributes(property);
+                    CheckTypeReference(property.PropertyType);
                 }
             }
         }
-        private void CheckEvents(TypeDefinition type, SearchDefinition results)
+        private void CheckEvents(TypeDefinition typeToCheck)
         {
-            if (type.HasEvents)
+            if (typeToCheck.HasEvents)
             {
-                foreach (var @event in type.Events)
+                foreach (var @event in typeToCheck.Events)
                 {
-                    CheckCustomAttributes(type, results, @event);
-                    CheckTypeReference(type, results, @event.EventType);
+                    CheckCustomAttributes(@event);
+                    CheckTypeReference(@event.EventType);
 
                     if (@event.HasOtherMethods) // are we sure that event can have other methods? TODO : we need unit test for this case
                     {
                         foreach (var method in @event.OtherMethods)
                         {
-                            CheckMethodHeader(type, results, method);
-                            CheckMethodBodyVariables(type, results, method);
-                            CheckMethodBodyInstructions(type, results, method);
+                            CheckMethodHeader(method);
+                            CheckMethodBodyVariables(method);
+                            CheckMethodBodyInstructions(method);
                         }
                     }
                 }
             }
         }
-        private void CheckMethods(TypeDefinition type, SearchDefinition results)
+        private void CheckMethods(TypeDefinition typeToCheck)
         {
-            if (type.HasMethods)
+            if (typeToCheck.HasMethods)
             {
                 // checking method body is the most costly checking from all, 
                 // therefore we want to do it as late as possible and end as fast as we can
-                foreach (var method in type.Methods)
+                foreach (var method in typeToCheck.Methods)
                 {
-                    if (results.CanWeSkipFurtherSearch(type)) return;
-                    this.CheckMethodHeader(type, results, method);
+                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    this.CheckMethodHeader(method);
                 }
 
-                foreach (var method in type.Methods)
+                foreach (var method in typeToCheck.Methods)
                 {
-                    if (results.CanWeSkipFurtherSearch(type)) return;
-                    this.CheckMethodBodyVariables(type, results, method);
+                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    this.CheckMethodBodyVariables(method);
                 }
 
-                foreach (var method in type.Methods)
+                foreach (var method in typeToCheck.Methods)
                 {
-                    if (results.CanWeSkipFurtherSearch(type)) return;
-                    this.CheckMethodBodyInstructions(type, results, method);
+                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    this.CheckMethodBodyInstructions(method);
                 }
             }
         }
-        private void CheckNestedTypes(TypeDefinition type, SearchDefinition results)
+        private void CheckNestedCompilerGeneratedTypes(TypeDefinition typeToCheck)
         {
-            if (type.HasNestedTypes)
+            if (typeToCheck.HasNestedTypes)
             {
-                foreach (var nested in type.NestedTypes)
+                foreach (var nested in typeToCheck.NestedTypes)
                 {
-                    if (results.CanWeSkipFurtherSearch(type)) return;
-                    this.CheckType(nested, results);
-                }
-            }
-        }
-        private void CheckMethodHeader(TypeDefinition type, SearchDefinition results, MethodDefinition method)
-        {
-            CheckCustomAttributes(type, results, method);
-            CheckGenericTypeParametersConstraints(type, results, method);
-            CheckCustomAttributes(type, results, method.MethodReturnType);
-            CheckTypeReference(type, results, method.ReturnType);
-
-            if (method.HasParameters)
-            {
-                foreach (var parameter in method.Parameters)
-                {
-                    CheckCustomAttributes(type, results, parameter);
-                    CheckTypeReference(type, results, parameter.ParameterType);
-                }
-            }
-        }
-        private void CheckMethodBodyVariables(TypeDefinition type, SearchDefinition results, MethodDefinition method)
-        {
-            if (method.HasBody)
-            {
-                if (method.Body.HasVariables)
-                {
-                    foreach (var variable in method.Body.Variables)
+                    if (nested.IsCompilerGenerated())
                     {
-                        CheckTypeReference(type, results, variable.VariableType);
+                        if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                        this.CheckType(nested);
                     }
                 }
             }
         }
-        private void CheckMethodBodyInstructions(TypeDefinition type, SearchDefinition results, MethodDefinition method)
+        private void CheckMethodHeader(MethodDefinition methodToCheck)
         {
-            if (method.HasBody)
+            CheckCustomAttributes(methodToCheck);
+            CheckGenericTypeParametersConstraints(methodToCheck);
+            CheckCustomAttributes(methodToCheck.MethodReturnType);
+            CheckTypeReference(methodToCheck.ReturnType);
+
+            if (methodToCheck.HasParameters)
             {
-                foreach (var instruction in method.Body.Instructions)
+                foreach (var parameter in methodToCheck.Parameters)
+                {
+                    CheckCustomAttributes(parameter);
+                    CheckTypeReference(parameter.ParameterType);
+                }
+            }
+        }
+        private void CheckMethodBodyVariables(MethodDefinition methodToCheck)
+        {
+            if (methodToCheck.HasBody)
+            {
+                if (methodToCheck.Body.HasVariables)
+                {
+                    foreach (var variable in methodToCheck.Body.Variables)
+                    {
+                        CheckTypeReference(variable.VariableType);
+                    }
+                }
+            }
+        }
+        private void CheckMethodBodyInstructions(MethodDefinition methodToCheck)
+        {
+            if (methodToCheck.HasBody)
+            {
+                foreach (var instruction in methodToCheck.Body.Instructions)
                 {
                     switch (instruction.Operand)
                     {
                         case TypeReference reference:
-                            CheckTypeReference(type, results, reference);
+                            CheckTypeReference(reference);
                             break;
                         case GenericInstanceMethod genericInstanceMethod:
-                            CheckTypeReference(type, results, genericInstanceMethod.DeclaringType);
+                            CheckTypeReference(genericInstanceMethod.DeclaringType);
                             if (genericInstanceMethod.HasGenericArguments)
                             {
                                 foreach (var argument in genericInstanceMethod.GenericArguments)
                                 {
-                                    CheckTypeReference(type, results, argument);
+                                    CheckTypeReference(argument);
                                 }
                             }
                             break;
                         case MethodReference methodReference:
-                            CheckTypeReference(type, results, methodReference.DeclaringType);
+                            CheckTypeReference( methodReference.DeclaringType);
                             break;
                     }
                 }
@@ -233,19 +229,21 @@
         }
 
         /// <summary>
-        /// Recursively checks every generic or not type reference
+        /// Recursively checks every array, generic or not type reference
         /// <example>
         /// for closed generic : List{Tuple{Task{int}, int}}
         /// it will check: List{Tuple{Task{int}, int}}, Tuple{Task{int}, int}, Task{int}, int, int
         /// for open generic : List{T}
         /// only List will be checked, T as a generic parameter will be skipped
+        /// for arrays: int[][]
+        /// it will check : int[][], int[], int
         /// </example>         
         /// </summary>      
-        private void CheckTypeReference(TypeDefinition type, SearchDefinition results, TypeReference reference)
+        private void CheckTypeReference(TypeReference reference)
         {
             if (reference.IsGenericParameter == false)
             {
-                results.AddDependency(type, reference);
+                CheckDependency(reference);
                 if (reference.IsGenericInstance == true)
                 {
                     var referenceAsGenericInstance = reference as GenericInstanceType;
@@ -253,10 +251,23 @@
                     {
                         foreach (var genericArgument in referenceAsGenericInstance.GenericArguments)
                         {
-                            CheckTypeReference(type, results, genericArgument);
+                            CheckTypeReference(genericArgument);
                         }
                     }
                 }
+                if (reference.IsArray)
+                {
+                    var referenceAsArrayType = reference as ArrayType;
+                    CheckTypeReference(referenceAsArrayType.ElementType);
+                }
+            }
+        }
+        private void CheckDependency(TypeReference dependency)
+        {            
+            var matchedDependencies = _searchDefinition.GetAllMatchingNames(dependency);
+            foreach (var match in matchedDependencies)
+            {
+                _foundDependencies.Add(match);
             }
         }
     }

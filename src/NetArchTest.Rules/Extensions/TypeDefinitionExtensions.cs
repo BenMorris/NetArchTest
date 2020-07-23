@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using Mono.Cecil;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Extensions for the <see cref="TypeDefinition"/> class.
@@ -82,6 +83,12 @@
             var propertiesAreNullable = typeDefinition.Properties.All(p => p.IsNullable());
             var fieldsAreNullable = typeDefinition.Fields.All(f => f.IsNullable());
             return propertiesAreNullable && fieldsAreNullable;
+        }
+
+
+        public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
+        {
+            return typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
         }
     }
 }

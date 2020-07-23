@@ -153,10 +153,10 @@
             this.RunDependencyTest(input);
         }
 
-        [Fact(DisplayName = "Finds a dependency in a nested private class.")]
+        [Fact(DisplayName = "Finds a dependency in a nested class form other class.")]
         public void DependencySearch_NestedPrivateClass_Found()
         {
-            this.RunDependencyTest(typeof(NestedPrivateClass));
+            this.RunDependencyTest(typeof(NestedDependencyClass), typeof(NestedLevel1.NestedLevel2.NestedDependency), true, true);
         }
 
         [Fact(DisplayName = "Finds a dependency in a private constructor.")]
@@ -352,8 +352,7 @@
         [InlineData(typeof(InheritedGeneric))]
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
-        [InlineData(typeof(MethodReturnType))]
-        [InlineData(typeof(NestedPrivateClass))]
+        [InlineData(typeof(MethodReturnType))]       
         [InlineData(typeof(PrivateConstructor))]
         [InlineData(typeof(PrivateField))]
         [InlineData(typeof(PrivateMethod))]
@@ -374,7 +373,7 @@
         [InlineData(typeof(IndirectReference))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
-        [InlineData(typeof(NestedPrivateClass))]
+        [InlineData(typeof(NestedDependencyClass))]
         [InlineData(typeof(PrivateConstructor))]
         [InlineData(typeof(PrivateField))]
         [InlineData(typeof(PrivateMethod))]
@@ -394,7 +393,6 @@
         [InlineData(typeof(InheritedGeneric))]
         [InlineData(typeof(Inherited))]
         [InlineData(typeof(MethodReturnType))]
-        [InlineData(typeof(NestedPrivateClass))]
         [InlineData(typeof(PrivateConstructor))]
         [InlineData(typeof(PrivateField))]
         [InlineData(typeof(PrivateMethod))]
