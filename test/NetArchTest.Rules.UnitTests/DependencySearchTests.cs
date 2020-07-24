@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
     using NetArchTest.Rules.Dependencies;
     using NetArchTest.TestStructure.Dependencies.Example;
     using NetArchTest.TestStructure.Dependencies.Examples;
@@ -14,6 +15,36 @@
 
     public class DependencySearchTests
     {
+        [Fact(DisplayName = "Finds a dependency in array of dependencies.")]
+        public void DependencySearch_ArraySingle_Found()
+        {
+            this.RunDependencyTest(typeof(TestStructure.Dependencies.Search.Array));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in array of generic dependencies.")]
+        public void DependencySearch_ArrayGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(ArrayGeneric), typeof(GenericDependecy<int>), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in array of generic dependencies.")]
+        public void DependencySearch_ArrayGenericNested_Found()
+        {
+            this.RunDependencyTest(typeof(ArrayGenericNested));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in jagged array of dependencies.")]
+        public void DependencySearch_ArrayJagged_Found()
+        {
+            this.RunDependencyTest(typeof(TestStructure.Dependencies.Search.ArrayJagged));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in multidimensional array of dependencies.")]
+        public void DependencySearch_ArrayMultidimensional_Found()
+        {
+            this.RunDependencyTest(typeof(TestStructure.Dependencies.Search.ArrayMultidimensional));
+        }
+
         [Fact(DisplayName = "Finds a dependency in an async method.")]
         public void DependencySearch_AsyncMethod_Found()
         {
@@ -151,13 +182,7 @@
         public void DependencySearch_MethodReturnType_Found(Type input)
         {
             this.RunDependencyTest(input);
-        }
-
-        [Fact(DisplayName = "Finds a dependency in a nested class form other class.")]
-        public void DependencySearch_NestedPrivateClass_Found()
-        {
-            this.RunDependencyTest(typeof(NestedDependencyClass), typeof(NestedLevel1.NestedLevel2.NestedDependency), true, true);
-        }
+        }     
 
         [Fact(DisplayName = "Finds a dependency in a private constructor.")]
         public void DependencySearch_PrivateConstructor_Found()
@@ -260,63 +285,142 @@
         }
 
         [Fact(DisplayName = "Finds an array dependency.")]
-        public void DependencySearch_Array_Found()
+        public void DependencySearch_OnArray_Found()
         {
             this.RunDependencyTest(typeof(TestStructure.Dependencies.Search.Array), typeof(ExampleDependency[]), true, true);
         }
+
+        [Fact(DisplayName = "Does not find an array dependency.")]
+        public void DependencySearch_OnArray_NotFound()
+        {
+            this.RunDependencyTest(typeof(ArrayMultidimensional), typeof(ExampleDependency[]), false, true);
+        }
+
+        [Fact(DisplayName = "Finds an array (jagged) dependency.")]
+        public void DependencySearch_OnJaggedArray_Found()
+        {
+            this.RunDependencyTest(typeof(ArrayJagged), typeof(ExampleDependency[][]), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find an array (jagged) dependency.")]
+        public void DependencySearch_OnJaggedArray_NotFound()
+        {
+            this.RunDependencyTest(typeof(ArrayMultidimensional), typeof(ExampleDependency[][]), false, true);
+        }
+
+        [Fact(DisplayName = "Finds an array (multidimensional) dependency.")]
+        public void DependencySearch_OnMultidimensionalArray_Found()
+        {
+            this.RunDependencyTest(typeof(ArrayMultidimensional), typeof(ExampleDependency[,,,]), true, true);
+        }
+        
+        [Fact(DisplayName = "Does not find an array (multidimensional) dependency.")]
+        public void DependencySearch_OnMultidimensionalArray_NotFound()
+        {
+            this.RunDependencyTest(typeof(ArrayJagged), typeof(ExampleDependency[,]), false, true);
+        }
+
+        [Fact(DisplayName = "Finds a nested type dependency.")]
+        public void DependencySearch_OnNested_Found()
+        {
+            this.RunDependencyTest(typeof(NestedDependencyClass), typeof(NestedDependencyTree.NestedLevel1.NestedDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Finds a nested generic type dependency.")]
+        public void DependencySearch_OnNestedGeneric_Found()
+        {
+            this.RunDependencyTest(typeof(NestedDependencyGeneric), typeof(NestedDependencyTree.NestedLevel1<int>.NestedDependency), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a nested type dependency.")]
+        public void DependencySearch_OnNested_NotFound()
+        {
+            this.RunDependencyTest(typeof(NestedDependencyGeneric), typeof(NestedDependencyTree.NestedLevel1.NestedDependency), false, true);
+        }
+
+        [Fact(DisplayName = "Does not find a nested generic type dependency.")]
+        public void DependencySearch_OnNestedGeneric_NotFound()
+        {
+            this.RunDependencyTest(typeof(NestedDependencyClass), typeof(NestedDependencyTree.NestedLevel1<int>.NestedDependency), false, true);
+        }
+
         [Fact(DisplayName = "Finds a generic open dependecy.")]
         public void DependencySearch_GenericOpen_Found()
         {
-            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(GenericDependecy<>), true, true);
+            this.RunDependencyTest(typeof(GenericDependecyVariable), typeof(GenericDependecy<>), true, true);
         }
-
-        [Fact(DisplayName = "Finds a generic open dependecy. Specified as string")]
-        public void DependencySearch_GenericOpenSpecifiedAsString_Found()
+        [Fact(DisplayName = "Does not find a generic open dependecy.")]
+        public void DependencySearch_GenericOpen_Not()
         {
-            // Arrange
-            var search = new DependencySearch();
-            var typeList = Types
-                .InAssembly(Assembly.GetAssembly(typeof(GenericDependecy)))
-                .That()
-                .HaveName("GenericDependecy")
-                .GetTypeDefinitions();
-
-            // Act           
-           
-            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1" });
-                     
-            Assert.Single(result);          
-            Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
+            this.RunDependencyTest(typeof(GenericDependecyVariable), typeof(GenericDependecy), false, true);
         }
 
         [Fact(DisplayName = "Finds a generic closed dependecy.")]
         public void DependencySearch_GenericClosed_Found()
         {
-            this.RunDependencyTest(typeof(TryCatchExceptionFilter), typeof(GenericDependecy<int>), true, true);
+            this.RunDependencyTest(typeof(GenericDependecyVariable), typeof(GenericDependecy<int>), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a generic closed dependecy.")]
+        public void DependencySearch_GenericClosed_NotFound()
+        {
+            this.RunDependencyTest(typeof(GenericDependecyVariable), typeof(GenericDependecy<string>), false, true);
         }
 
         [Fact(DisplayName = "Finds a generic closed dependecy. Specified as string")]
         public void DependencySearch_GenericClosedSpecifiedAsString_Found()
-        {          
-            // Arrange
+        {           
             var search = new DependencySearch();
             var typeList = Types
-                .InAssembly(Assembly.GetAssembly(typeof(GenericDependecy)))
+                .InAssembly(Assembly.GetAssembly(typeof(GenericDependecyVariable)))
                 .That()
-                .HaveName("GenericDependecy")
+                .HaveName(nameof(GenericDependecyVariable))
                 .GetTypeDefinitions();
-
-         
+            
             // Act          
-            var result = search.FindTypesWithAnyDependencies(typeList, new List<string> { "NetArchTest.TestStructure.Dependencies.Examples.GenericDependecy`1<System.Int32>" });
+            var result = search.FindTypesWithAnyDependencies(typeList,
+                new List<string> {
+                    typeof(GenericDependecy<int>).ToString(),
+                });
                       
             Assert.Single(result);          
-            Assert.Equal(typeof(GenericDependecy).FullName, result.First().FullName);
+            Assert.Equal(typeof(GenericDependecyVariable).FullName, result.First().FullName);
         }
-        [Fact(DisplayName = "Finds a dependecy on nested type.")]
-        public void DependencySearch_NestedType_Found()
+
+        [Fact(DisplayName = "Finds a generic closed array dependecy.")]
+        public void DependencySearch_GenericClosedArray_Found()
         {
-            this.RunDependencyTest(typeof(Nested), typeof(Nested.NestedDependency), true, true);
+            this.RunDependencyTest(typeof(GenericDependecyArray), typeof(GenericDependecy<int>[]), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a generic closed array dependecy.")]
+        public void DependencySearch_GenericClosedArray_NotFound()
+        {
+            this.RunDependencyTest(typeof(GenericDependecyArray), typeof(GenericDependecy<string>[]), false, true);
+        }
+
+        [Fact(DisplayName = "Finds a generic closed double dependecy.")]
+        public void DependencySearch_GenericClosedDouble_Found()
+        {
+            this.RunDependencyTest(typeof(VariableTuple), typeof(Tuple<int, ExampleDependency>), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a generic closed double dependecy.")]
+        public void DependencySearch_GenericClosedDouble_NotFound()
+        {
+            this.RunDependencyTest(typeof(VariableTuple), typeof(Tuple<int, double>), false, true);
+        }
+
+        [Fact(DisplayName = "Finds a generic closed nested dependecy.")]
+        public void DependencySearch_GenericClosedNested_Found()
+        {
+            this.RunDependencyTest(typeof(VariableNestedGeneric), typeof(List<List<ExampleDependency>>), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a generic closed nested dependecy.")]
+        public void DependencySearch_GenericClosedNested_NotFound()
+        {
+            this.RunDependencyTest(typeof(VariableNestedGeneric), typeof(List<List<int>>), false, true);
         }
 
         [Fact(DisplayName = "Finds a dependency in a finally block.")]

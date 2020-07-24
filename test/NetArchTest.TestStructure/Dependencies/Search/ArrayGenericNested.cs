@@ -6,11 +6,12 @@
     /// <summary>
     /// Example class that includes an array dependency    
     /// </summary>
-    public class Array
+    public class ArrayGenericNested
     { 
         public void ExampleMethod()
         {
-            ExampleDependency[] test = null;          
+            GenericClass<int>[] test1 = null;
+            GenericClass<ExampleDependency>[] test2 = null;          
         }
     }
 }

@@ -1,20 +1,16 @@
 ﻿namespace NetArchTest.TestStructure.Dependencies.Search
 {
+    using System.Threading.Tasks;
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
-    /// Example class that has a dependency on a nested class.    
+    /// Example class that includes an array dependency    
     /// </summary>
-    public class Nested
-    {
+    public class ArrayJagged
+    { 
         public void ExampleMethod()
         {
-            NestedDependency foo = null;
-        }
-
-        public class NestedDependency
-        {
-         
+            ExampleDependency[][] test = null;
         }
     }
 }

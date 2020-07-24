@@ -6,11 +6,11 @@
     /// <summary>
     /// Example class that includes an array dependency    
     /// </summary>
-    public class Array
+    public class ArrayMultidimensional
     { 
         public void ExampleMethod()
         {
-            ExampleDependency[] test = null;          
+            ExampleDependency[,] test = null;
         }
     }
 }

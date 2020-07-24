@@ -4,4 +4,9 @@
     {
 
     }
+
+    public class GenericDependecy
+    {
+
+    }
 }

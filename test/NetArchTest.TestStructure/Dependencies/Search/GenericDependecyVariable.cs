@@ -5,9 +5,9 @@
     /// <summary>
     /// Example class that includes a dependency in an instruction invocation.
     /// </summary>
-    public class GenericDependecy
+    public class GenericDependecyVariable
     {
-        public GenericDependecy()
+        public GenericDependecyVariable()
         {
             GenericDependecy<int> dependecy = null;
         }

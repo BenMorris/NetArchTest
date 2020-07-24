@@ -6,11 +6,11 @@
     /// <summary>
     /// Example class that includes a dependency as a generic parameter.    
     /// </summary>
-    public class InheritedTuple : Tuple<int, ExampleDependency>
+    public class InheritedTuple : TupleGeneric<int, ExampleDependency>
     {
     }
 
-    public class Tuple<T1, T2>
+    public class TupleGeneric<T1, T2>
     {
     }
 }
