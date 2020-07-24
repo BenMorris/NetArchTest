@@ -23,7 +23,7 @@
         public SearchDefinition(SearchType searchType, IEnumerable<string> dependencies)
         {
             _searchType = searchType;            
-            _searchTree = new NamespaceTree(dependencies);
+            _searchTree = new NamespaceTree(dependencies, true);
         }
 
         public bool IsTypeFound(HashSet<string> dependencies)

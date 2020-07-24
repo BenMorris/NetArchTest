@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
     using Mono.Cecil;
     using NetArchTest.Rules.Extensions;
@@ -33,15 +34,12 @@
     /// </remarks>
     internal class NamespaceTree
     {
-        /// <summary>
-        /// Represents a node in the namespace tree.
-        /// </summary>
+        [DebuggerDisplay("Node (nodes : {Nodes.Count})")]
         private sealed class Node
         {
             /// <summary> Maps child namespace to its root node. </summary>
             private Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
-
-            /// <summary> Returns node's "terminated" flag. </summary>
+                        
             public bool IsTerminated
             {
                 get; private set;
@@ -80,10 +78,7 @@
             {
                 return Nodes.TryGetValue(NormalizeString(name), out node) && node != null;
             }
-
-            /// <summary>
-            /// Terminates the node.
-            /// </summary>
+                       
             public void Terminate(string fullName)
             {
                 IsTerminated = true;
@@ -99,17 +94,18 @@
         /// <summary> Holds the root for the namespace tree. </summary>
         private readonly Node _root = new Node();
 
-        private static readonly char[] _namespaceSeparators = new char[] { '.', '<', '>', ':', '/', '+' };
+        private static readonly char[] _namespaceSeparators = new char[] { '.', ':', '/', '+' };
 
         /// <summary>
         /// Initially fills the tree with given names.
         /// </summary>
         /// <param name="fullNames">Sequence of full names.</param>
-        public NamespaceTree(IEnumerable<string> fullNames)
+        /// <param name="parseNames">if names should be parsed by mono parser</param>
+        public NamespaceTree(IEnumerable<string> fullNames, bool parseNames = false)
         {
             foreach (string fullName in fullNames)
             {
-                Add(fullName);
+                Add(fullName, parseNames);
             }
         }
 
@@ -117,7 +113,8 @@
         /// Splits full name into subnamespaces and adds corresponding nodes to the tree.
         /// </summary>
         /// <param name="fullName">Can be empty, but not null.</param>
-        private void Add(string fullName)
+        /// <param name="parseNames">if names should be parsed by mono parser</param>
+        private void Add(string fullName, bool parseNames)
         {
             if (fullName == null)
             {
@@ -125,16 +122,17 @@
             }
 
             var deepestNode = _root;
+            foreach (var token in TypeParser.Parse(fullName, parseNames))
+            {              
+                int subnameEndIndex = -1;
+                while (subnameEndIndex != token.Length)
+                {
+                    int subnameStartIndex = subnameEndIndex + 1;
+                    subnameEndIndex = GetSubnameEndIndex(token, subnameStartIndex);
 
-            int subnameEndIndex = -1;
-            while (subnameEndIndex != fullName.Length)
-            {
-                int subnameStartIndex = subnameEndIndex + 1;
-                subnameEndIndex = GetSubnameEndIndex(fullName, subnameStartIndex);
-
-                deepestNode = deepestNode.GetOrAddNode(fullName.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex));
+                    deepestNode = deepestNode.GetOrAddNode(token.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex));
+                }
             }
-
             if (!deepestNode.IsTerminated)
             {
                 deepestNode.Terminate(fullName);
@@ -210,22 +208,38 @@
         /// </summary>      
         private IEnumerable<string> GetTokens(TypeReference reference)
         {
-            yield return reference.GetNamespace();
-            yield return reference.Name;
+            if (reference.IsArray == false)
+            {
+                yield return reference.GetNamespace();
+                yield return reference.Name;
+            }
+            else
+            {
+                var referenceAsArrayType = reference as ArrayType;
+                foreach (var token in GetTokens(referenceAsArrayType.ElementType))
+                {
+                    yield return token;
+                }
+                yield return referenceAsArrayType.Rank == 1 ? "[]" : "[,]";
+            }
+
             if (reference.IsGenericInstance)
             {                
                 var referenceAsGenericInstance = reference as GenericInstanceType;
                 if (referenceAsGenericInstance.HasGenericArguments)
                 {
+                    yield return "<";
                     for (int i = 0; i < referenceAsGenericInstance.GenericArguments.Count; i++)
                     {
                         foreach (var token in GetTokens(referenceAsGenericInstance.GenericArguments[i]))
                         {
-                            yield return token;
+                            yield return token;                            
                         }
+                        yield return ",";
                     }
                 }
             }
+            
         }
 
         private static int GetSubnameEndIndex(string namespaceFullName, int subnameStartIndex)
