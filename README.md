@@ -70,6 +70,21 @@ Finally, you obtain a result from the rule by using an executor, i.e. use `GetTy
 var isValid = types.That().ResideInNamespace(“MyProject.Data”).Should().BeSealed().GetResult().IsSuccessful;
 ```
 
+### Custom rules
+
+You can extend the library by writing custom rules that implement the `ICustomRule` interface. These can be applied as both predicates and conditions using a `MeetsCustomRule()` method, e.g.
+
+```csharp
+var myRule = new CustomRule();
+
+// Write your own custom rules that can be used as both predicates and conditions
+result = Types.InCurrentDomain()
+    .That().AreClasses()
+    .Should()
+    .MeetCustomRule(myRule)
+    .GetResult().IsSuccessful;
+```
+
 ### Grouping rules into Policies
 
 Rules can be grouped into policies using the fluent interface exposed by the `Policy` class, e.g. 

@@ -85,10 +85,21 @@
             return propertiesAreNullable && fieldsAreNullable;
         }
 
-
         public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
         {
             return typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
+        }
+
+        /// <summary>
+        /// Returns namespace of the given type, if the type is nested, namespace of containing type is returned instead
+        /// </summary>        
+        public static string GetNamespace(this TypeDefinition typeDefinition)
+        {
+            if ((typeDefinition.IsNestedPrivate) || (typeDefinition.IsNestedPublic))
+            {
+                return typeDefinition.DeclaringType.FullName;
+            }
+            return typeDefinition.Namespace;
         }
     }
 }

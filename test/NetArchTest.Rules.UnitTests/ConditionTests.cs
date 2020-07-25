@@ -1,5 +1,6 @@
 ﻿namespace NetArchTest.Rules.UnitTests
 {
+    using System;
     using System.Linq;
     using System.Reflection;
     using NetArchTest.TestStructure.CustomAttributes;
@@ -809,6 +810,28 @@
             Assert.Equal(2, failingTypes.Count);
             Assert.Equal("NetArchTest.TestStructure.NameMatching.Namespace1.ClassA1", failingTypes[0].ToString());
             Assert.Equal("NetArchTest.TestStructure.NameMatching.Namespace1.ClassB1", failingTypes[1].ToString());
+        }
+
+        [Fact(DisplayName = "Types can be selected according to a custom rule.")]
+        public void MeetCustomRule_MatchesFound_ClassSelected()
+        {
+            // Create a custom rule that selected "ClassA1"
+            var rule = new CustomRuleExample(t => t.Name.Equals("ClassA1", StringComparison.InvariantCultureIgnoreCase));
+
+            // This rule uses the custom rule to confirm that "ClassA1" has been selected
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveName("ClassA1")
+                .Should()
+                .MeetCustomRule(rule)
+                .GetResult();
+
+            // The custom rule selected the right class
+            Assert.True(result.IsSuccessful);
+
+            // The custom rule was executed at least once
+            Assert.True(rule.TestMethodCalled);
         }
     }
 }

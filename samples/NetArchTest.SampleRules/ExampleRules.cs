@@ -73,6 +73,18 @@
                 .Should()
                 .HaveNameStartingWith("I")
                 .GetResult().IsSuccessful;
+
+            //****************************************************
+            // Custom rule example
+
+            var myRule = new CustomRule();
+
+            // Write your own custom rules that can be used as both predicates and conditions
+            result = Types.InCurrentDomain()
+                .That().AreClasses()
+                .Should()
+                .MeetCustomRule(myRule)
+                .GetResult().IsSuccessful;
         }
     }
 }

@@ -700,6 +700,19 @@
             Assert.Contains<Type>(typeof(ClassA1), result);
         }
 
+        [Fact(DisplayName = "Types (nested) can be selected if they reside in a namespace that contains a name part.")]
+        public void ResideInNamespaceContaining_NestedClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespaceContaining("Nested")
+                .GetTypes();
+
+            Assert.Equal(13, result.Count()); // Seven types found
+            Assert.Contains<Type>(typeof(NestedPublic.NestedPublicClass), result);
+        }
+
         [Fact(DisplayName = "Types can be selected if they do not reside in a namespace that contains name part.")]
         public void DoNotResideInNamespaceContaiings_ClassSelected()
         {
@@ -829,6 +842,27 @@
             Assert.Equal<Type>(typeof(HasAnotherDependency), result.First());
             Assert.Equal<Type>(typeof(HasDependency), result.Skip(1).First());
             Assert.Equal<Type>(typeof(NoDependency), result.Last());
+        }
+
+        [Fact(DisplayName = "Types can be selected according to a custom rule.")]
+        public void MeetCustomRule_MatchesFound_ClassSelected()
+        {
+            // Create a custom rule that selects "ClassA1"
+            var rule = new CustomRuleExample(t => t.Name.Equals("ClassA1", StringComparison.InvariantCultureIgnoreCase));
+
+            // Use the custom rule
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .MeetCustomRule(rule)
+                .GetTypes();
+
+            // ClassA1 has been returned
+            Assert.Single(result);
+            Assert.Equal<Type>(typeof(ClassA1), result.First());
+
+            // The custom rule was executed at least once
+            Assert.True(rule.TestMethodCalled);
         }
     }
 }
