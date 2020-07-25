@@ -335,5 +335,17 @@
             }
         };
 
+        /// <summary> Function for finding public classes. </summary>
+        internal static FunctionDelegate<ICustomRule> MeetCustomRule = delegate (IEnumerable<TypeDefinition> input, ICustomRule rule, bool condition)
+        {
+            if (condition)
+            {
+                return input.Where(t => rule.MeetsRule(t));
+            }
+            else
+            {
+                return input.Where(t => !rule.MeetsRule(t));
+            }
+        };
     }
 }

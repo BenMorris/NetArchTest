@@ -419,6 +419,13 @@
             <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.MeetCustomRule(NetArchTest.Rules.ICustomRule)">
+            <summary>
+            Selects types that meet a custom rule.
+            </summary>
+            <param name="rule">An instance of the custom rule.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="T:NetArchTest.Rules.Dependencies.DependencySearch">
             <summary>
             Finds dependencies within a given set of types.
@@ -470,9 +477,9 @@
             Finds matching dependencies for a given method by scanning the code.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckGenericParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.GenericParameter},NetArchTest.Rules.Dependencies.SearchDefinition@)">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.CheckParameters(Mono.Cecil.TypeDefinition,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference},NetArchTest.Rules.Dependencies.SearchDefinition@)">
             <summary>
-            Finds matching dependencies for a set of generic parameters
+            Finds matching dependencies for a set of generic or not parameters
             </summary>
         </member>
         <member name="T:NetArchTest.Rules.Dependencies.NamespaceTree">
@@ -807,6 +814,9 @@
         <member name="F:NetArchTest.Rules.FunctionDelegates.HaveDependencyOnAll">
             <summary> Function for finding types that have a dependency on all of the supplied types. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.MeetCustomRule">
+            <summary> Function for finding public classes. </summary>
+        </member>
         <member name="T:NetArchTest.Rules.FunctionSequence">
             <summary>
             A sequence of function calls that are combined to select types.
@@ -860,6 +870,18 @@
             <summary>
             The Condition to apply to the call - i.e. "is" or "is not".
             </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.ICustomRule">
+            <summary>
+            An externally defined rule that can be applied as a condition or a predicate.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ICustomRule.MeetsRule(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Tests whether the supplied type meets the rule.
+            </summary>
+            <param name="type">The type to be tested.</param>
+            <returns>The result of the test.</returns>
         </member>
         <member name="T:NetArchTest.Rules.Policies.Policy">
             <summary>
@@ -1440,6 +1462,13 @@
             Selects types that do not have a dependency on all of the particular types.
             </summary>
             <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.MeetCustomRule(NetArchTest.Rules.ICustomRule)">
+            <summary>
+            Selects types that meet a custom rule.
+            </summary>
+            <param name="rule">An instance of the custom rule.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="T:NetArchTest.Rules.TestResult">

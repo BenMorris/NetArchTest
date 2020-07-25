@@ -588,5 +588,16 @@
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, false);
             return new ConditionList(_types, _should, _sequence);
         }
+
+        /// <summary>
+        /// Selects types that meet a custom rule.
+        /// </summary>
+        /// <param name="rule">An instance of the custom rule.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList MeetCustomRule(ICustomRule rule)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.MeetCustomRule, rule, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
     }
 }

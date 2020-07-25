@@ -830,5 +830,26 @@
             Assert.Equal<Type>(typeof(HasDependency), result.Skip(1).First());
             Assert.Equal<Type>(typeof(NoDependency), result.Last());
         }
+
+        [Fact(DisplayName = "Types can be selected according to a custom rule.")]
+        public void MeetCustomRule_MatchesFound_ClassSelected()
+        {
+            // Create a custom rule that selects "ClassA1"
+            var rule = new CustomRuleExample(t => t.Name.Equals("ClassA1", StringComparison.InvariantCultureIgnoreCase));
+
+            // Use the custom rule
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .MeetCustomRule(rule)
+                .GetTypes();
+
+            // ClassA1 has been returned
+            Assert.Single(result);
+            Assert.Equal<Type>(typeof(ClassA1), result.First());
+
+            // The custom rule was executed at least once
+            Assert.True(rule.TestMethodCalled);
+        }
     }
 }
