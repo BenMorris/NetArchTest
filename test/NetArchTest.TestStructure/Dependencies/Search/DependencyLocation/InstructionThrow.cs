@@ -1,15 +1,15 @@
-﻿namespace NetArchTest.TestStructure.Dependencies.Search.DependencyType
+﻿namespace NetArchTest.TestStructure.Dependencies.Search.DependencyLocation
 {
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
     /// Example class that includes a dependency in an instruction invocation.
     /// </summary>
-    public class VariableGeneric
+    public class InstructionThrow
     {
-        public VariableGeneric()
+        public void ExampleMethod()
         {
-            ExampleDependency<int> dependecy = null;
+            throw new ExceptionDependency();
         }
     }
 }

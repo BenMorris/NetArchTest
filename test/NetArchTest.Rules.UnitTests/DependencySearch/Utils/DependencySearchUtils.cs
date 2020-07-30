@@ -20,41 +20,44 @@
         public static void RunDependencyTest(Type input, bool expectToFind = true)
         {
             RunDependencyTest(input, typeof(ExampleDependency), expectToFind, expectToFind);
-        }       
-
-        public static void RunDependencyTest(Type input, IEnumerable<string> dependenciesToSearch, bool expectToFind)
-        {
-            IEnumerable<Mono.Cecil.TypeDefinition> subject = GetSubject(input);
-            FindTypesWithAnyDependencies(subject, dependenciesToSearch, expectToFind);
         }
 
         public static void RunDependencyTest(Type input, Type dependencyToSearch, bool expectToFindClass, bool expectToFindNamespace)
         {
-            IEnumerable<Mono.Cecil.TypeDefinition> subject = GetSubject(input);
+            var subject = Types.InAssembly(Assembly.GetAssembly(input)).That().HaveName(input.Name).GetTypeDefinitions();
 
-            // Search against the type name and its namespace - this demonstrates that namespace based searches also work
-            FindTypesWithAnyDependencies(subject, new List<string> { dependencyToSearch.FullName }, expectToFindClass);
-            FindTypesWithAnyDependencies(subject, new List<string> { dependencyToSearch.Namespace }, expectToFindNamespace);
+            RunDependencyTest(subject, dependencyToSearch, expectToFindClass, expectToFindNamespace);
         }
 
-        private static IEnumerable<TypeDefinition> GetSubject(Type input)
+        public static void RunDependencyTest(IEnumerable<Mono.Cecil.TypeDefinition> inputs, Type dependencyToSearch, bool expectToFindClass, bool expectToFindNamespace)
         {
-            IEnumerable<TypeDefinition> subject;
-            if (input != null)
-            {
-                subject = Types.InAssembly(Assembly.GetAssembly(input)).That().HaveName(input.Name).GetTypeDefinitions();
-            }
-            else
-            {
-                subject = Types.InAssembly(Assembly.GetAssembly(typeof(InstructionCtor)))
-                    .That()
-                    .ResideInNamespaceStartingWith(typeof(InstructionCtor).Namespace)
-                    .And()
-                    .DoNotHaveName(typeof(IndirectReference).Name)
-                    .GetTypeDefinitions();
-            }
+            // Search against the type name and its namespace - this demonstrates that namespace based searches also work
+            FindTypesWithAnyDependencies(inputs, new List<string> { dependencyToSearch.FullName }, expectToFindClass);
+            FindTypesWithAnyDependencies(inputs, new List<string> { dependencyToSearch.Namespace }, expectToFindNamespace);
+        }
 
-            return subject;
+        public static void RunDependencyTest(Type input, IEnumerable<string> dependenciesToSearch, bool expectToFind)
+        {
+            var subject = Types.InAssembly(Assembly.GetAssembly(input)).That().HaveName(input.Name).GetTypeDefinitions();
+
+            RunDependencyTest(subject, dependenciesToSearch, expectToFind);
+        }
+
+        public static void RunDependencyTest(IEnumerable<Mono.Cecil.TypeDefinition> inputs, IEnumerable<string> dependenciesToSearch, bool expectToFind)
+        {
+            FindTypesWithAnyDependencies(inputs, dependenciesToSearch, expectToFind);
+        }
+                
+        public static IEnumerable<Mono.Cecil.TypeDefinition> GetTypesThatResideInTheSameNamespaceButWithoutGivenType(params Type[] type)
+        {
+            var types = Types.InAssembly(Assembly.GetAssembly(type.First()))
+                     .That()
+                     .ResideInNamespaceStartingWith(type.First().Namespace);
+            foreach (var item in type)
+            {
+                types = types.And().DoNotHaveName(item.Name);
+            }
+            return types.GetTypeDefinitions();
         }
 
         private static void FindTypesWithAnyDependencies(IEnumerable<Mono.Cecil.TypeDefinition> subjects, IEnumerable<string> dependencies, bool expectToFind)

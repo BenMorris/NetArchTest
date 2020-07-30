@@ -10,7 +10,7 @@
     {
         public VariableGenericTypeArgumentNested()
         {
-            List<List<ExampleDependency>> test = null;           
+            GenericClass<GenericClass<ExampleDependency>> test = null;           
         }
     }
 }

@@ -13,28 +13,54 @@
                 {
 
                 }
-            }
 
-            public class NestedLevel2<T>
-            {
-                public class NestedDependency
+                public class NestedDependency<T>
                 {
 
                 }
             }
 
-            public class NestedDependency
+            public class NestedLevel2<U>
             {
+                public class NestedDependency
+                {
 
+                }
+
+                public class NestedDependency<T>
+                {
+
+                }
             }
         }
 
 
-        public class NestedLevel1<T>
-        { 
-            public class NestedDependency
+        public class NestedLevel1<W>
+        {
+            public class NestedLevel2
             {
+                public class NestedDependency
+                {
 
+                }
+
+                public class NestedDependency<T>
+                {
+
+                }
+            }
+
+            public class NestedLevel2<U>
+            {
+                public class NestedDependency
+                {
+
+                }
+
+                public class NestedDependency<T>
+                {
+
+                }
             }
         }
     }

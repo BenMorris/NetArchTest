@@ -3,13 +3,13 @@
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
-    /// Example class that includes a dependency in an instruction invocation.
+    /// Example class that includes a dependency in method's parameter passed by reference.
     /// </summary>
-    public class VariableGeneric
+    public class MethodParameterRef
     {
-        public VariableGeneric()
+        public void Foo(ref ExampleDependency example)
         {
-            ExampleDependency<int> dependecy = null;
+            
         }
     }
 }

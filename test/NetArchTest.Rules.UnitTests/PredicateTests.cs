@@ -709,7 +709,7 @@
                 .ResideInNamespaceContaining("Nested")
                 .GetTypes();
 
-            Assert.Equal(13, result.Count()); // Seven types found
+            Assert.Equal(19, result.Count()); 
             Assert.Contains<Type>(typeof(NestedPublic.NestedPublicClass), result);
         }
 

@@ -10,8 +10,8 @@
     { 
         public void ExampleMethod()
         {
-            GenericDependecy<double>[] test1 = null;
-            GenericDependecy<int>[] test2 = null;          
+            ExampleDependency<double>[] test1 = null;
+            ExampleDependency<int>[] test2 = null;          
         }
     }
 }

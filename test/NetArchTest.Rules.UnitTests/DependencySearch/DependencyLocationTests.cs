@@ -50,10 +50,28 @@
             Utils.RunDependencyTest(typeof(DefaultInterfaceMethodBody));
         }
 
+        [Fact(DisplayName = "Finds a dependency in a delegate declaration.")]
+        public void DependencySearch_DelegateDeclaration_Found()
+        {
+            Utils.RunDependencyTest(typeof(DelegateDeclaration));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public event's add accessor.")]
+        public void DependencySearch_EventAdd_Found()
+        {
+            Utils.RunDependencyTest(typeof(EventAdd));
+        }
+
         [Fact(DisplayName = "Finds a dependency in a public event.")]
         public void DependencySearch_EventPublic_Found()
         {
             Utils.RunDependencyTest(typeof(EventPublic));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a public event's remove accessor.")]
+        public void DependencySearch_EventRemove_Found()
+        {
+            Utils.RunDependencyTest(typeof(EventRemove));
         }
 
         [Fact(DisplayName = "Finds a dependency in a private field.")]
@@ -109,10 +127,16 @@
         [Theory(DisplayName = "Finds a dependency in an instruction invocation.")]
         [InlineData(typeof(InstructionCtor))]
         [InlineData(typeof(InstructionStaticClassTypeArgument))]
-        [InlineData(typeof(InstructionStaticMethodTypeArgument))]
+        [InlineData(typeof(InstructionStaticMethodTypeArgument))]        
         public void DependencySearch_Instruction_Found(Type input)
         {
             Utils.RunDependencyTest(input);
+        }
+
+        [Fact(DisplayName = "Finds a dependency in an instruction invocation (throw).")]    
+        public void DependencySearch_InstructionThrow_Found()
+        {
+            Utils.RunDependencyTest(typeof(InstructionThrow), typeof(ExceptionDependency), true, true);
         }
 
         [Fact(DisplayName = "Finds a dependency in a captured variable by lambda closure.")]
@@ -155,6 +179,12 @@
         public void DependencySearch_PropertyPublic_Found()
         {
             Utils.RunDependencyTest(typeof(PropertyPublic));
+        }
+
+        [Fact(DisplayName = "Finds a dependency in a P/Invoke.")]
+        public void DependencySearch_PInvoke_Found()
+        {
+            Utils.RunDependencyTest(typeof(PInvoke));
         }
 
         [Fact(DisplayName = "Finds a dependency in a property getter.")]
@@ -203,7 +233,13 @@
         public void DependencySearch_TryFinallyBlock_Found()
         {
             Utils.RunDependencyTest(typeof(TryFinallyBlock));
-        }        
+        }
+
+        [Fact(DisplayName = "Finds a dependency in using statement.")]
+        public void DependencySearch_UsingStatement_Found()
+        {
+            Utils.RunDependencyTest(typeof(UsingStatement), typeof(DisposableDependency), true, true);
+        }
 
         [Fact(DisplayName = "Finds a dependency in a yield return statement.")]
         public void DependencySearch_Yield_Found()

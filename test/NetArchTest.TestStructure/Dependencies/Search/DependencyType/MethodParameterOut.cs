@@ -5,11 +5,11 @@
     /// <summary>
     /// Example class that includes a dependency in an instruction invocation.
     /// </summary>
-    public class VariableGeneric
+    public class MethodParameterOut
     {
-        public VariableGeneric()
+        public void Foo(out ExampleDependency example)
         {
-            ExampleDependency<int> dependecy = null;
+            example = null;
         }
     }
 }

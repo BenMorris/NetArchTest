@@ -6,4 +6,9 @@
     public class ExampleDependency
     {
     }
+
+    public class ExampleDependency<T>
+    {
+
+    }
 }

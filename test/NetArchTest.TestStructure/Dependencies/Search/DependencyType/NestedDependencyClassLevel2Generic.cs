@@ -5,11 +5,11 @@
     /// <summary>
     /// Example class that includes a dependency in a nested class from difrent class.    
     /// </summary>
-    public class NestedInGenericDependency
+    public class NestedDependencyClassLevel2Generic
     {
         private void ExampleMethod()
         {
-            NestedDependencyTree.NestedLevel1<int>.NestedDependency foo = null;
+            NestedDependencyTree.NestedLevel1.NestedLevel2<int>.NestedDependency foo = null;
         }
     }    
 }

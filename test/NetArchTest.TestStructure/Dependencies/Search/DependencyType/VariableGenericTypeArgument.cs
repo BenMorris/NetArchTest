@@ -10,7 +10,7 @@
     {
         public VariableGenericTypeArgument()
         {
-            List<ExampleDependency> test = null;           
+            GenericClass<ExampleDependency> test = null;           
         }
     }
 }

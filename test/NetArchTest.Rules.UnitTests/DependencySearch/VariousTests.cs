@@ -22,13 +22,13 @@
         [Fact(DisplayName = "Does not find things that are not dependency at all")]
         public void DependencySearch_Garbage_NotFound()
         {
-            Utils.RunDependencyTest(null, new List<string> { "System.Object::.ctor()", "T", "T1", "T2", "ctor()", "!1)", "::.ctor(!0" }, false);            
+            Utils.RunDependencyTest(Utils.GetTypesThatResideInTheSameNamespaceButWithoutGivenType(typeof(IndirectReference)), new List<string> { "System.Object::.ctor()", "T", "T1", "T2", "ctor()", "!1)", "::.ctor(!0" }, false);            
         }
 
         [Fact(DisplayName = "Does not find a dependency that only partially matches actually referenced type.")]       
         public void DependencySearch_PartiallyMatchingDependency_NotFound()
-        {
-            Utils.RunDependencyTest(null,
+        { 
+            Utils.RunDependencyTest(Utils.GetTypesThatResideInTheSameNamespaceButWithoutGivenType(typeof(IndirectReference)),
                                     dependencyToSearch: typeof(ExampleDep),
                                     expectToFindClass: false,
                                     expectToFindNamespace: true);
@@ -37,7 +37,7 @@
         [Fact(DisplayName = "Does not find a dependency from the namespace matching partially to the namespace of actually referenced type.")]       
         public void DependencySearch_PartiallyMatchingNamespace_NotFound()
         {
-            Utils.RunDependencyTest(null, 
+            Utils.RunDependencyTest(Utils.GetTypesThatResideInTheSameNamespaceButWithoutGivenType(typeof(IndirectReference)),
                                     dependencyToSearch: typeof(ExampleDependencyInPartiallyMatchingNamespace),
                                     expectToFindClass: false,
                                     expectToFindNamespace: false);
@@ -46,7 +46,7 @@
         [Fact(DisplayName = "Does not find a dependency that differs only in case from actually referenced type.")]       
         public void DependencySearch_DependencyWithDifferentCaseOfCharacters_NotFound()
         {
-            Utils.RunDependencyTest(null, 
+            Utils.RunDependencyTest(Utils.GetTypesThatResideInTheSameNamespaceButWithoutGivenType(typeof(IndirectReference)),
                                     dependencyToSearch: typeof(ExampleDEPENDENCY),
                                     expectToFindClass: false,
                                     expectToFindNamespace: true);
