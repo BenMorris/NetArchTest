@@ -64,6 +64,14 @@
             {
                 for (int i = 0; i < specs.Length; ++i)
                 {
+                    if (specs[i] == -1)
+                    {
+                        yield return "*";
+                    }
+                    if (specs[i] == -2)
+                    {
+                        yield return "&";
+                    }
                     if (specs[i] == -3)
                     {
                         yield return "[]";

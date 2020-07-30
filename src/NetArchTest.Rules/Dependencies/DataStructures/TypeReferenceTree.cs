@@ -25,16 +25,16 @@
         private NameNode TraverseThroughReferenceName(TypeReference reference, StartOfTypeNode startOfTypeNode)
         {
             NameNode deepestNameNode;
-            if (reference.IsArray == false)
+            if ((reference.IsArray == false) && (reference.IsByReference == false) && (reference.IsPointer == false))
             {
                 deepestNameNode = startOfTypeNode.GetNamespace(reference.GetNamespace()).GetName(reference.Name);
                 deepestNameNode = GoDeeperIntoGenericArgumentList(reference, deepestNameNode);
             } 
             else
             {
-                var referenceAsArrayType = reference as ArrayType;
-                deepestNameNode = TraverseThroughReferenceName(referenceAsArrayType.ElementType, startOfTypeNode);
-                deepestNameNode = deepestNameNode.AddArray(referenceAsArrayType);
+                var referenceAsTypeSpecification = reference as TypeSpecification;
+                deepestNameNode = TraverseThroughReferenceName(referenceAsTypeSpecification.ElementType, startOfTypeNode);
+                deepestNameNode = deepestNameNode.AddTypeSpecification(referenceAsTypeSpecification);
             }
             return deepestNameNode;
         }
@@ -98,8 +98,8 @@
             public T value;
             private StartOfTypeNode startNode;
             private StartOfTypeNode andNode;
-            private NameNode arrayNode;
-            private NameNode multiDimensionalArrayNode;
+            private Dictionary<int, NameNode> typeSpecifications { get; set; }
+
 
             public StartOfTypeNode StartArgumentList()
             {
@@ -117,15 +117,27 @@
                 // thus we do not need store information about list end, and we can simply return the last name from the list
                 return this;
             }
-            public NameNode AddArray(ArrayType arrayType)
+            public NameNode AddTypeSpecification(TypeSpecification typeSpecification)
             {
-                if (arrayType.Rank == 1)
+                typeSpecifications = typeSpecifications ?? new Dictionary<int, NameNode>();
+
+                int specificationNumber = (int)typeSpecification.MetadataType;
+                if (typeSpecification.IsArray)
                 {
-                    arrayNode = arrayNode ?? new NameNode();
-                    return arrayNode;
+                    var arrayType = typeSpecification as ArrayType;
+                    if (arrayType.Rank > 1)
+                    {
+                        specificationNumber = 666;
+                    }
                 }
-                multiDimensionalArrayNode = multiDimensionalArrayNode ?? new NameNode();
-                return multiDimensionalArrayNode;
+
+                NameNode result;
+                if (!typeSpecifications.TryGetValue(specificationNumber, out result))
+                {
+                    result = new NameNode();
+                    typeSpecifications.Add(specificationNumber, result);
+                }
+                return result;
             }
         }
     }

@@ -255,10 +255,10 @@
                         }
                     }
                 }
-                if (reference.IsArray)
+                if ((reference.IsArray) || (reference.IsPointer) || (reference.IsByReference))
                 {
-                    var referenceAsArrayType = reference as ArrayType;
-                    CheckTypeReference(referenceAsArrayType.ElementType);
+                    var referenceAsTypeSpecification = reference as TypeSpecification;
+                    CheckTypeReference(referenceAsTypeSpecification.ElementType);
                 }
             }
         }

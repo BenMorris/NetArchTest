@@ -208,19 +208,31 @@
         /// </summary>      
         private IEnumerable<string> GetTokens(TypeReference reference)
         {
-            if (reference.IsArray == false)
+            if ((reference.IsArray == false) && (reference.IsByReference == false) && (reference.IsPointer == false))
             {
                 yield return reference.GetNamespace();
                 yield return reference.Name;
             }
             else
             {
-                var referenceAsArrayType = reference as ArrayType;
-                foreach (var token in GetTokens(referenceAsArrayType.ElementType))
+                var referenceAsTypeSpecification = reference as TypeSpecification;
+                foreach (var token in GetTokens(referenceAsTypeSpecification.ElementType))
                 {
                     yield return token;
                 }
-                yield return referenceAsArrayType.Rank == 1 ? "[]" : "[,]";
+                if (reference.IsByReference)
+                {
+                    yield return "&";
+                }
+                if (reference.IsPointer)
+                {
+                    yield return "*";
+                }
+                if (reference.IsArray)
+                {
+                    var referenceAsArrayType = reference as ArrayType;
+                    yield return referenceAsArrayType.Rank == 1 ? "[]" : "[,]";
+                }
             }
 
             if (reference.IsGenericInstance)
