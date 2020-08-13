@@ -690,6 +690,23 @@
             <param name="parent">The parent that is inherited.</param>
             <returns>An indication of whether the child inherits from the parent.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.IsFromSameAssemblyAs(Mono.Cecil.TypeDefinition,Mono.Cecil.TypeDefinition)">
+            <summary>
+            Tests whether two type definitions are from the same assembly.
+            The comparison is based on the full assembly names.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns>An indication of whether the both types are from the same assembly.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.IsSameTypeAs(Mono.Cecil.TypeDefinition,Mono.Cecil.TypeDefinition)">
+            <summary>
+            Tests whether the provided types are the same type.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns>An indication of whether the types are the same.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Extensions.TypeDefinitionExtensions.EnumerateBaseClasses(Mono.Cecil.TypeDefinition)">
             <summary>
             Enumerate the base classes throughout the chain of inheritence.

@@ -3,6 +3,8 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using NetArchTest.CrossAssemblyTest.A;
+    using NetArchTest.CrossAssemblyTest.B;
     using NetArchTest.TestStructure.Abstract;
     using NetArchTest.TestStructure.Classes;
     using NetArchTest.TestStructure.CustomAttributes;
@@ -192,6 +194,20 @@
             Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(DerivedClass), result);
             Assert.Contains<Type>(typeof(DerivedDerivedClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they inherit from a type from a different assembly")]
+        public void Inherit_MatchesFound_ClassesSelected_AcrossAssemblies()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(DerivedClassFromB)))
+                .That()
+                .Inherit(typeof(BaseClassFromA))
+                .GetTypes();
+
+            Assert.Equal(2, result.Count());
+            Assert.Contains(typeof(DerivedClassFromB), result);
+            Assert.Contains(typeof(AnotherDerivedClassFromB), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they do not inherit from a type.")]

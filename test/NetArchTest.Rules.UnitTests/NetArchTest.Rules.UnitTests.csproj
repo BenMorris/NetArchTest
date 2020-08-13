@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\NetArchTest.Rules\NetArchTest.Rules.csproj" />
+    <ProjectReference Include="..\NetArchTest.CrossAssemblyTest.B\NetArchTest.CrossAssemblyTest.B.csproj" />
     <ProjectReference Include="..\NetArchTest.TestStructure\NetArchTest.TestStructure.csproj" />
   </ItemGroup>
 
