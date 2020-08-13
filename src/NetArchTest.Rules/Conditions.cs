@@ -128,7 +128,7 @@
         }
 
         /// <summary>
-        /// Selects types that implement a specific custom attribute.
+        /// Selects types are decorated with a specific custom attribut.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
@@ -139,13 +139,35 @@
         }
 
         /// <summary>
-        /// Selects types that do not implement a specific custom attribute.
+        /// Selects types that are not decorated with a specific custom attribute.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList NotHaveCustomAttribute(Type attribute)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttribute, attribute, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are decorated with a specific custom attribute or derived one.
+        /// </summary>
+        /// <param name="attribute">The base attribute to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveCustomAttributeOrInherit(Type attribute)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttributeOrInherit, attribute, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types are not decorated with a specific custom attribute or derived one.
+        /// </summary>
+        /// <param name="attribute">The base attribute to match against.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHaveCustomAttributeOrInherit(Type attribute)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttributeOrInherit, attribute, false);
             return new ConditionList(_types, _should, _sequence);
         }
 

@@ -124,7 +124,7 @@
         }
 
         /// <summary>
-        /// Selects types that implement a specific custom attribute.
+        /// Selects types that are decorated with a specific custom attribute.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
@@ -135,13 +135,35 @@
         }
 
         /// <summary>
-        /// Selects types that do not implement a specific custom attribute.
+        /// Selects types that are decorated with a specific custom attribute or derived one.
+        /// </summary>
+        /// <param name="attribute">The base attribute to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList HaveCustomAttributeOrInherit(Type attribute)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttributeOrInherit, attribute, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not decorated with a specific custom attribute.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList DoNotHaveCustomAttribute(Type attribute)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttribute, attribute, false);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not decorated with a specific custom attribute or derived one.
+        /// </summary>
+        /// <param name="attribute">The base attribute to match against.</param>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList DoNotHaveCustomAttributeOrInherit(Type attribute)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HaveCustomAttributeOrInherit, attribute, false);
             return new PredicateList(_types, _sequence);
         }
 

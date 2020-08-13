@@ -176,9 +176,42 @@
                 .And()
                 .DoNotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetTypes();
 
-            Assert.Equal(2, result.Count()); // Two types found
+            Assert.Equal(4, result.Count()); // Four types found
             Assert.Contains<Type>(typeof(NoAttributes), result);
             Assert.Contains<Type>(typeof(ClassCustomAttribute), result);
+            Assert.Contains<Type>(typeof(InheritAttributePresent), result);
+            Assert.Contains<Type>(typeof(InheritClassCustomAttribute), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected by the presence of an inherited custom attribute.")]
+        public void HaveInheritCustomAttribute_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .And()
+                .HaveCustomAttributeOrInherit(typeof(ClassCustomAttribute)).GetTypes();
+
+            Assert.Equal(2, result.Count()); // Two types found
+            Assert.Contains<Type>(typeof(AttributePresent), result);
+            Assert.Contains<Type>(typeof(InheritAttributePresent), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected by the absence of an inherited custom attribute.")]
+        public void DoNotHaveInheritCustomAttribute_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .And()
+                .DoNotHaveCustomAttributeOrInherit(typeof(ClassCustomAttribute)).GetTypes();
+
+            Assert.Equal(3, result.Count()); // Three types found
+            Assert.Contains<Type>(typeof(NoAttributes), result);
+            Assert.Contains<Type>(typeof(ClassCustomAttribute), result);          
+            Assert.Contains<Type>(typeof(InheritClassCustomAttribute), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they inherit from a type.")]

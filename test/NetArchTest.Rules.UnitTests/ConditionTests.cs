@@ -127,7 +127,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
                 .And()
-                .HaveName("ClassAttributePresent")
+                .HaveName("AttributePresent")
                 .Should()
                 .HaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
 
@@ -145,6 +145,37 @@
                 .DoNotHaveName("AttributePresent")
                 .Should()
                 .NotHaveCustomAttribute(typeof(ClassCustomAttribute)).GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+
+        [Fact(DisplayName = "Types can be selected by a the presence of an inherited custom attribute.")]
+        public void HaveInheritCustomAttribute_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .And()
+                .HaveName("InheritAttributePresent")
+                .Should()
+                .HaveCustomAttributeOrInherit(typeof(ClassCustomAttribute)).GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected by the absence of an inherited custom attribute.")]
+        public void NotHaveInheritCustomAttribute_MatchesFound_ClassesSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.CustomAttributes")
+                .And()
+                .DoNotHaveNameEndingWith("AttributePresent")
+                .Should()
+                .NotHaveCustomAttributeOrInherit(typeof(ClassCustomAttribute)).GetResult();
 
             Assert.True(result.IsSuccessful);
         }

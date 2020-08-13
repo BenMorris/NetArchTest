@@ -85,6 +85,22 @@
             }
         };
 
+        /// <summary> Function for finding classes decorated with a particular custom attribute or derived one</summary>
+        internal static FunctionDelegate<Type> HaveCustomAttributeOrInherit = delegate (IEnumerable<TypeDefinition> input, Type attribute, bool condition)
+        {
+            // Convert the incoming type to a definition
+            var target = attribute.ToTypeDefinition();
+            if (condition)
+            {
+                return input.Where(c => c.CustomAttributes.Any(a => a.AttributeType.Resolve().IsSubclassOf(target) || attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase)));
+            }
+            else
+            {
+                return input.Where(c => !(c.CustomAttributes.Any(a => a.AttributeType.Resolve().IsSubclassOf(target) || attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase))));
+            }
+        };
+
+
         /// <summary> Function for finding classes that inherit from a particular type. </summary>
         internal static FunctionDelegate<Type> Inherits = delegate (IEnumerable<TypeDefinition> input, Type type, bool condition)
         {
