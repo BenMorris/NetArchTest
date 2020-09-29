@@ -48,10 +48,25 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameStartingWith("Class").GetResult();
 
             Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected by the start of their name using a StringComparison.")]
+        public void HaveNameStarting_UsingStringComparison_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
+		        .Should()
+		        .HaveNameStartingWith("Some", StringComparison.Ordinal).GetResult();
+
+	        Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if their name does not have a specific start.")]
@@ -67,6 +82,19 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected if their name does not have a specific start using a StringComparison.")]
+        public void NotHaveNameStarting_UsingStringComparison_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+		        .Should()
+		        .NotHaveNameStartingWith("s", StringComparison.Ordinal).GetResult();
+
+	        Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected by the end of their name.")]
         public void HaveNameEnding_MatchesFound_ClassesSelected()
         {
@@ -78,6 +106,19 @@
                 .HaveNameEndingWith("B2").GetResult();
 
             Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected by the end of their name using a StringComparison.")]
+        public void HaveNameEnding_UsingStringComparison_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3.B")
+		        .Should()
+		        .HaveNameEndingWith("ntity").GetResult();
+
+	        Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if their name does not have a specific end.")]
@@ -93,6 +134,19 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected if their name does not have a specific end using a StringComparison.")]
+        public void NotHaveNameEnding_UsingStringComparison_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
+		        .Should()
+		        .NotHaveNameEndingWith("ENTITY", StringComparison.Ordinal).GetResult();
+
+	        Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected by a regular expression.")]
         public void HaveNameMatching_MatchesFound_ClassesSelected()
         {
@@ -100,6 +154,8 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameMatching(@"Class\w\d").GetResult();
 

@@ -1,4 +1,8 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.TestStructure.NameMatching.Namespace3;
+using NetArchTest.TestStructure.NameMatching.Namespace3.A;
+using NetArchTest.TestStructure.NameMatching.Namespace3.B;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.IO;
@@ -57,12 +61,16 @@
         {
             var result = Types.InNamespace("NetArchTest.TestStructure.NameMatching").GetTypes();
 
-            Assert.Equal(5, result.Count()); // Five types found
+            Assert.Equal(9, result.Count()); // Nine types found
             Assert.Contains<Type>(typeof(ClassA1), result);
             Assert.Contains<Type>(typeof(ClassA2), result);
             Assert.Contains<Type>(typeof(ClassA3), result);
             Assert.Contains<Type>(typeof(ClassB1), result);
             Assert.Contains<Type>(typeof(ClassB2), result);
+            Assert.Contains<Type>(typeof(SomeThing), result);
+            Assert.Contains<Type>(typeof(SomethingElse), result);
+            Assert.Contains<Type>(typeof(SomeEntity), result);
+            Assert.Contains<Type>(typeof(SomeIdentity), result);
         }
 
         [Fact(DisplayName = "A types collection can be created from a filename.")]

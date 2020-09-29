@@ -8,7 +8,7 @@
     using NetArchTest.TestStructure.NameMatching.Namespace2.Namespace3;
     using Xunit;
 
-    public class PolcyDefinitionTests
+    public class PolicyDefinitionTests
     {
         private const string POLICY_NAME = "Name";
         private const string POLICY_DESCRIPTION = "Description";
@@ -51,6 +51,8 @@
 
             policy.Add(t => t.That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameStartingWith("Class"), "Rule1", "Rule1 Description");
 
@@ -80,6 +82,8 @@
             // Act
             policy.Add(t => t.That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameStartingWith("Class"), "Rule1", "Rule1 Description");
 

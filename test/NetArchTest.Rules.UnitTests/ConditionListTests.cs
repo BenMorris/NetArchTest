@@ -113,6 +113,8 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameStartingWith("ClassA")
                 .GetResult();
@@ -148,6 +150,8 @@
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+                .And()
+                .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
                 .Should()
                 .HaveNameStartingWith("ClassA")
                 .Or()

@@ -95,6 +95,18 @@
         }
 
         /// <summary>
+        /// Selects types whose names start with the specified text.
+        /// </summary>
+        /// <param name="start">The text to match against.</param>
+        /// <param name="comparer">The string comparer.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveNameStartingWith(string start, StringComparison comparer)
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameStartingWithStringComparer(comparer), start, true);
+	        return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types whose names do not start with the specified text.
         /// </summary>
         /// <param name="start">The text to match against.</param>
@@ -103,6 +115,18 @@
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, start, false);
             return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose names do not start with the specified text.
+        /// </summary>
+        /// <param name="start">The text to match against.</param>
+        /// <param name="comparer">The string comparer.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHaveNameStartingWith(string start, StringComparison comparer)
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameStartingWithStringComparer(comparer), start, false);
+	        return new ConditionList(_types, _should, _sequence);
         }
 
         /// <summary>
@@ -120,11 +144,35 @@
         /// Selects types whose names do not end with the specified text.
         /// </summary>
         /// <param name="end">The text to match against.</param>
+        /// <param name="comparer">The string comparer.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveNameEndingWith(string end, StringComparison comparer)
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameEndingWithStringComparer(comparer), end, true);
+	        return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose names do not end with the specified text.
+        /// </summary>
+        /// <param name="end">The text to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
         public ConditionList NotHaveNameEndingWith(string end)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveNameEndingWith, end, false);
             return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types whose names do not end with the specified text.
+        /// </summary>
+        /// <param name="end">The text to match against.</param>
+        /// <param name="comparer">The string comparer.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHaveNameEndingWith(string end, StringComparison comparer)
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameEndingWithStringComparer(comparer), end, false);
+	        return new ConditionList(_types, _should, _sequence);
         }
 
         /// <summary>
