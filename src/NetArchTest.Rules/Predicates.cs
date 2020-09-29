@@ -98,7 +98,7 @@
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList HaveNameStartingWith(string start, StringComparison comparer)
         {
-	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameStartingWithStringComparer(comparer), start, true);
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(comparer), start, true);
 	        return new PredicateList(_types, _sequence);
         }
 
@@ -121,7 +121,7 @@
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList DoNotHaveNameStartingWith(string start, StringComparison comparer)
         {
-	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameStartingWithStringComparer(comparer), start, false);
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(comparer), start, false);
 	        return new PredicateList(_types, _sequence);
         }
 
@@ -144,7 +144,7 @@
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList HaveNameEndingWith(string end, StringComparison comparer)
         {
-	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameEndingWithStringComparer(comparer), end, true);
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(comparer), end, true);
 	        return new PredicateList(_types, _sequence);
         }
 
@@ -167,7 +167,7 @@
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
         public PredicateList DoNotHaveNameEndingWith(string end, StringComparison comparer)
         {
-	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateForHaveNameEndingWithStringComparer(comparer), end, false);
+	        _sequence.AddFunctionCall(FunctionDelegates.MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(comparer), end, false);
 	        return new PredicateList(_types, _sequence);
         }
 

@@ -53,9 +53,9 @@
         };
 
         /// <summary> Function for matching the start of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameStartingWith = MakeFunctionDelegateForHaveNameStartingWithStringComparer(StringComparison.InvariantCultureIgnoreCase);
+        internal static FunctionDelegate<string> HaveNameStartingWith = MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison.InvariantCultureIgnoreCase);
 
-        internal static FunctionDelegate<string> MakeFunctionDelegateForHaveNameStartingWithStringComparer(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string start, bool condition)
+        internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string start, bool condition)
         {
 	        if (condition)
 	        {
@@ -68,9 +68,9 @@
         };
 
         /// <summary> Function for matching the end of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameEndingWith = MakeFunctionDelegateForHaveNameEndingWithStringComparer(StringComparison.InvariantCultureIgnoreCase);
+        internal static FunctionDelegate<string> HaveNameEndingWith = MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison.InvariantCultureIgnoreCase);
 
-        internal static FunctionDelegate<string> MakeFunctionDelegateForHaveNameEndingWithStringComparer(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string end, bool condition)
+        internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string end, bool condition)
         {
 	        if (condition)
 	        {
