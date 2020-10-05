@@ -51,6 +51,8 @@
             .InAssembly(Assembly.GetAssembly(typeof(ClassB2)))
             .That()
             .ResideInNamespace("NetArchTest.TestStructure.NameMatching")
+            .And()
+            .DoNotResideInNamespace("NetArchTest.TestStructure.NameMatching.Namespace3")
             .GetTypeDefinitions();
 
             // Act

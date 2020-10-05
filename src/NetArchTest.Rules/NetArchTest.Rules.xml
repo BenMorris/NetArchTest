@@ -112,11 +112,27 @@
             <param name="start">The text to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveNameStartingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.NotHaveNameStartingWith(System.String)">
             <summary>
             Selects types whose names do not start with the specified text.
             </summary>
             <param name="start">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveNameStartingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names do not start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveNameEndingWith(System.String)">
@@ -126,11 +142,27 @@
             <param name="end">The text to match against.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.HaveNameEndingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.NotHaveNameEndingWith(System.String)">
             <summary>
             Selects types whose names do not end with the specified text.
             </summary>
             <param name="end">The text to match against.</param>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotHaveNameEndingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Conditions.HaveCustomAttribute(System.Type)">
@@ -1188,11 +1220,27 @@
             <param name="start">The text to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameStartingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameStartingWith(System.String)">
             <summary>
             Selects types whose names do not start with the specified text.
             </summary>
             <param name="start">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameStartingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names do not start with the specified text.
+            </summary>
+            <param name="start">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveNameEndingWith(System.String)">
@@ -1202,11 +1250,27 @@
             <param name="end">The text to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameEndingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameEndingWith(System.String)">
             <summary>
             Selects types whose names do not end with the specified text.
             </summary>
             <param name="end">The text to match against.</param>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameEndingWith(System.String,System.StringComparison)">
+            <summary>
+            Selects types whose names do not end with the specified text.
+            </summary>
+            <param name="end">The text to match against.</param>
+            <param name="comparer">The string comparer.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
         <member name="M:NetArchTest.Rules.Predicates.HaveCustomAttribute(System.Type)">

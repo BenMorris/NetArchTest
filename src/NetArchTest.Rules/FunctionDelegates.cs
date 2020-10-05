@@ -8,6 +8,12 @@
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
 
+    internal class StringAndComparisonStrategy
+    {
+		public string Value { get; }
+        public StringComparison Comparer { get; }
+    }
+
     /// <summary>
     /// Defines the various functions that can be applied to a collection of types.
     /// </summary>
@@ -47,29 +53,33 @@
         };
 
         /// <summary> Function for matching the start of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameStartingWith = delegate (IEnumerable<TypeDefinition> input, string start, bool condition)
+        internal static FunctionDelegate<string> HaveNameStartingWith = MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison.InvariantCultureIgnoreCase);
+
+        internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string start, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.Name.StartsWith(start, StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                return input.Where(c => !c.Name.StartsWith(start, StringComparison.InvariantCultureIgnoreCase));
-            }
+	        if (condition)
+	        {
+		        return input.Where(c => c.Name.StartsWith(start, comparer));
+	        }
+		    else
+	        {
+		        return input.Where(c => !c.Name.StartsWith(start, comparer));
+	        }
         };
 
         /// <summary> Function for matching the end of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameEndingWith = delegate (IEnumerable<TypeDefinition> input, string end, bool condition)
+        internal static FunctionDelegate<string> HaveNameEndingWith = MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison.InvariantCultureIgnoreCase);
+
+        internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string end, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.Name.EndsWith(end, StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                return input.Where(c => !c.Name.EndsWith(end, StringComparison.InvariantCultureIgnoreCase));
-            }
+	        if (condition)
+	        {
+		        return input.Where(c => c.Name.EndsWith(end, comparer));
+	        }
+	        else
+	        {
+		        return input.Where(c => !c.Name.EndsWith(end, comparer));
+	        }
         };
 
         /// <summary> Function for finding classes with a particular custom attribute. </summary>
