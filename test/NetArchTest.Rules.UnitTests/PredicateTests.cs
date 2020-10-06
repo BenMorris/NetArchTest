@@ -927,8 +927,8 @@ namespace NetArchTest.Rules.UnitTests
                 .GetTypes();
 
             Assert.Equal(3, result.Count()); // Three types found - i.e. the classes with dependencies on at least one of the items
-            Assert.Equal<Type>(typeof(HasDependencies), result.First());
-            Assert.Equal<Type>(typeof(HasAnotherDependency), result.Skip(1).First());
+            Assert.Equal<Type>(typeof(HasAnotherDependency), result.First());
+            Assert.Equal<Type>(typeof(HasDependencies), result.Skip(1).First());
             Assert.Equal<Type>(typeof(HasDependency), result.Last());
         }
 
@@ -945,6 +945,22 @@ namespace NetArchTest.Rules.UnitTests
 
             Assert.Single(result); // Only one type found - i.e. the class with dependencies on both items
             Assert.Equal<Type>(typeof(HasDependencies), result.First()); // The correct type found
+        }
+
+        [Fact(DisplayName = "Types can be selected if they only have a dependency on any item in a list.")]
+        public void OnlyHaveDependenciesOn_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .And()
+                .OnlyHaveDependenciesOn(new[] { typeof(ExampleDependency).FullName, "System" })
+                .GetTypes();
+
+            Assert.Equal(2, result.Count());          
+            Assert.Equal<Type>(typeof(HasDependency), result.First());
+            Assert.Equal<Type>(typeof(NoDependency), result.Skip(1).First());
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on another type.")]
@@ -993,6 +1009,22 @@ namespace NetArchTest.Rules.UnitTests
             Assert.Equal<Type>(typeof(HasAnotherDependency), result.First());
             Assert.Equal<Type>(typeof(HasDependency), result.Skip(1).First());
             Assert.Equal<Type>(typeof(NoDependency), result.Last());
+        }
+
+        [Fact(DisplayName = "Types can be selected if they do not have a dependency on any item in a list.")]
+        public void HaveDependencyOtherThan_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .And()
+                .HaveDependencyOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
+                .GetTypes();
+
+            Assert.Equal(2, result.Count());
+            Assert.Equal<Type>(typeof(HasAnotherDependency), result.First());
+            Assert.Equal<Type>(typeof(HasDependencies), result.Skip(1).First());
         }
 
         [Fact(DisplayName = "Types can be selected according to a custom rule.")]

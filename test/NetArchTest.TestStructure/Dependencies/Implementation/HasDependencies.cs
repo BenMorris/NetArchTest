@@ -2,8 +2,9 @@
 {
     using NetArchTest.TestStructure.Dependencies.Examples;
 
-    public class HasAnotherDependency
+    public class HasDependencies
     {
+        public ExampleDependency dependency { get; set; }
         public AnotherExampleDependency anotherDependency { get; set; }
     }
 }

@@ -332,7 +332,7 @@
         {
             // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesWithAnyDependencies(input, dependencies);
+            var results = search.FindTypesThatHaveDependencyOnAny(input, dependencies);
 
             if (condition)
             {
@@ -349,7 +349,23 @@
         {
             // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesWithAllDependencies(input, dependencies);
+            var results = search.FindTypesThatHaveDependencyOnAll(input, dependencies);
+
+            if (condition)
+            {
+                return results;
+            }
+            else
+            {
+                return input.Where(t => !results.Contains(t));
+            }
+        };
+
+        /// <summary> Function for finding types that have a dependency on type other than one of the supplied types.</summary>
+        internal static FunctionDelegate<IEnumerable<string>> OnlyHaveDependenciesOnAnyOrNone = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
+        {            
+            var search = new DependencySearch();
+            var results = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(input, dependencies);
 
             if (condition)
             {

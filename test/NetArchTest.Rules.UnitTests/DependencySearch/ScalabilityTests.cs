@@ -174,7 +174,7 @@
             var search = new DependencySearch();
 
             // Act
-            var result = search.FindTypesWithAnyDependencies(inputTypes, dependenciesToSearch);
+            var result = search.FindTypesThatHaveDependencyOnAny(inputTypes, dependenciesToSearch);
 
             Assert.Equal(inputTypes.Count(), result.Count());
         }
@@ -185,7 +185,7 @@
             var search = new DependencySearch();
 
             // Act
-            var result = search.FindTypesWithAllDependencies(inputTypes, dependenciesToSearch);
+            var result = search.FindTypesThatHaveDependencyOnAll(inputTypes, dependenciesToSearch);
 
             // Assert
             Assert.Equal(inputTypes.Count(), result.Count());

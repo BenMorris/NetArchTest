@@ -3,25 +3,25 @@
     using System;
     using System.Collections.Generic;
     using Mono.Cecil;
+    using NetArchTest.Rules.Dependencies.DataStructures;
     using NetArchTest.Rules.Extensions;
 
     internal class TypeDefinitionCheckingContext
     {
-        private TypeDefinition _typeToCheck;
-        private SearchDefinition _searchDefinition;
-        /// <summary> The list of dependencies that have been found in the search.</summary>
-        private HashSet<string> _foundDependencies = new HashSet<string>();
+        private readonly TypeDefinition _typeToCheck;
+        private readonly TypeDefinitionCheckingResult _result;
+        
 
-        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, SearchDefinition searchDefinition)
+        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, TypeDefinitionCheckingResult.SearchType searchType, ISearchTree searchTree)
         {
             _typeToCheck = typeToCheck;
-            _searchDefinition = searchDefinition;         
+            _result = new TypeDefinitionCheckingResult(searchType, searchTree);         
         }
 
         public bool IsTypeFound()
         {
             CheckType(_typeToCheck);
-            return _searchDefinition.IsTypeFound(_foundDependencies);
+            return _result.IsTypeFound();
         }
 
 
@@ -35,13 +35,13 @@
             CheckImplementedInterfaces(type);
             CheckGenericTypeParametersConstraints(type);
             CheckFields(type);
-            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            if (_result.CanWeSkipFurtherSearch()) return;
             CheckProperties(type);
-            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            if (_result.CanWeSkipFurtherSearch()) return;
             CheckEvents(type);
-            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            if (_result.CanWeSkipFurtherSearch()) return;
             CheckMethods(type);
-            if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+            if (_result.CanWeSkipFurtherSearch()) return;
             CheckNestedCompilerGeneratedTypes(type);
         }
 
@@ -139,19 +139,19 @@
                 // therefore we want to do it as late as possible and end as fast as we can
                 foreach (var method in typeToCheck.Methods)
                 {
-                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    if (_result.CanWeSkipFurtherSearch()) return;
                     this.CheckMethodHeader(method);
                 }
 
                 foreach (var method in typeToCheck.Methods)
                 {
-                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    if (_result.CanWeSkipFurtherSearch()) return;
                     this.CheckMethodBodyVariables(method);
                 }
 
                 foreach (var method in typeToCheck.Methods)
                 {
-                    if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                    if (_result.CanWeSkipFurtherSearch()) return;
                     this.CheckMethodBodyInstructions(method);
                 }
             }
@@ -164,7 +164,7 @@
                 {
                     if (nested.IsCompilerGenerated())
                     {
-                        if (_searchDefinition.CanWeSkipFurtherSearch(_foundDependencies)) return;
+                        if (_result.CanWeSkipFurtherSearch()) return;
                         this.CheckType(nested);
                     }
                 }
@@ -263,12 +263,8 @@
             }
         }
         private void CheckDependency(TypeReference dependency)
-        {            
-            var matchedDependencies = _searchDefinition.GetAllMatchingNames(dependency);
-            foreach (var match in matchedDependencies)
-            {
-                _foundDependencies.Add(match);
-            }
+        {
+            _result.CheckDependency(dependency);
         }
     }
 }
