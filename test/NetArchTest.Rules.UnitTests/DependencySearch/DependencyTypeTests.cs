@@ -9,7 +9,7 @@
     using Pointer = TestStructure.Dependencies.Search.DependencyType.Pointer;
 
     /// <summary>
-    /// This tests collection verifies that dependency search checks every posible type.    
+    /// This tests collection verifies that dependency search checks every possible type.    
     /// </summary>
     [CollectionDefinition("Dependency Search - type tests ")]
     public class DependencyTypeTests

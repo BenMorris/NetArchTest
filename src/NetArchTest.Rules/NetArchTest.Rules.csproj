@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bm-nuget-icon.png" Pack="true" PackagePath=""  />
+    <None Include="bm-nuget-icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

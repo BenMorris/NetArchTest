@@ -6,8 +6,8 @@
     using Xunit;
 
     /// <summary>
-    /// This tests collection verifies that dependency search checks every posible place in C# code.
-    /// It search for ExampleDependency, when in given place there is no posiblity of using ExampleDependency
+    /// This tests collection verifies that dependency search checks every possible place in C# code.
+    /// It search for ExampleDependency, when in given place there is no possibility of using ExampleDependency
     /// then it looks for: AttributeDependency or ExceptionDependency 
     /// </summary>
     [CollectionDefinition("Dependency Search - location tests ")]

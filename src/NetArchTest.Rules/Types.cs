@@ -304,6 +304,11 @@
             return new Conditions(_types, true);
         }
 
+        public ISlices Slice()
+        {
+            return new NetArchTest.Rules.Slices.Slices(_types);
+        }
+
         /// <summary>
         /// Applies a negative set of conditions to the list of types.
         /// </summary>
