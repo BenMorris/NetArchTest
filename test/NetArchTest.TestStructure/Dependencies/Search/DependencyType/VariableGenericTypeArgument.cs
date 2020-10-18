@@ -10,7 +10,9 @@
     {
         public VariableGenericTypeArgument()
         {
-            GenericClass<ExampleDependency> test = null;           
+#pragma warning disable 219
+            GenericClass<ExampleDependency> test = null;
+#pragma warning restore 219
         }
     }
 }

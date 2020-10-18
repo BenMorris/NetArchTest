@@ -10,7 +10,9 @@
     { 
         public void ExampleMethod()
         {
-            ExampleDependency[] test = null;          
+#pragma warning disable 219
+            ExampleDependency[] test = null;
+#pragma warning restore 219
         }
     }
 }

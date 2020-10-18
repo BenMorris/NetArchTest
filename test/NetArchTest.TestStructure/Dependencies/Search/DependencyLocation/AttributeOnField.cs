@@ -9,6 +9,8 @@
     public class AttributeOnField
     {
         [AttributeDependency()]
+#pragma warning disable 169
         private int field;
+#pragma warning restore 169
     }
 }

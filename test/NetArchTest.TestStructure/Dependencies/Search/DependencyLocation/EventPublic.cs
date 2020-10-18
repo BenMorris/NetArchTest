@@ -8,6 +8,8 @@
     /// </summary>
     public class EventPublic
     {
-        public event Action<ExampleDependency> ExampleProperty;        
+#pragma warning disable 67
+        public event Action<ExampleDependency> ExampleProperty;
+#pragma warning restore 67
     }
-}
+    }

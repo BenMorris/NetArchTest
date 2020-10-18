@@ -9,6 +9,8 @@
     /// </summary>
     public class GenericConstraintClass<T>  where T : ExampleDependency, new() 
     {
+#pragma warning disable 169
         private List<Task<T>> foo;
+#pragma warning restore 169
     }
 }
