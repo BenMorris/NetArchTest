@@ -832,6 +832,22 @@
             Assert.True(result.IsSuccessful);
         }
 
+        [Fact(DisplayName = "Types can be selected if they only have a dependency on any item in a list.")]
+        public void OnlyHaveDependenciesOn_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .And()
+                .HaveNameStartingWith("HasDependency")
+                .Should()
+                .OnlyHaveDependenciesOn(new[] { typeof(ExampleDependency).FullName, "System" })
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on another type.")]
         public void NotHaveDependency_MatchesFound_ClassSelected()
         {
@@ -875,6 +891,22 @@
                 .HaveNameStartingWith("NoDependency")
                 .Should()
                 .NotHaveDependencyOnAll(new[] { typeof(ExampleDependency).FullName, typeof(AnotherExampleDependency).FullName })
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they have a dependency that is not on the a list.")]
+        public void HaveDependencyOtherThan_MatchesFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace(typeof(HasDependency).Namespace)
+                .And()
+                .HaveNameStartingWith("HasDependencies")
+                .Should()
+                .HaveDependencyOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);

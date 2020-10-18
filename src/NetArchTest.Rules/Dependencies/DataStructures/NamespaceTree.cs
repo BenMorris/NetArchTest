@@ -32,7 +32,7 @@
     /// all of them are presented in the tree. For dependency search it provides the same results as original implementation
     /// based on the String.StartsWith(...) does.
     /// </remarks>
-    internal class NamespaceTree
+    internal class NamespaceTree : ISearchTree
     {
         [DebuggerDisplay("Node (nodes : {Nodes.Count})")]
         private sealed class Node

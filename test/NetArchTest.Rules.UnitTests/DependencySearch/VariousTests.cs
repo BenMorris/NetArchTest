@@ -66,7 +66,7 @@
                 .GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(PatternMatch).FullName });
+            var result = search.FindTypesThatHaveDependencyOnAll(typeList, new List<string> { typeof(PatternMatch).FullName });
 
             // Assert: Before PR#36 this would have returned PatternMatchToo in the results
             Assert.Empty(result); // No results returned
@@ -86,7 +86,7 @@
                 .GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesWithAllDependencies(typeList, new List<string> { typeof(PatternMatch).Namespace });
+            var result = search.FindTypesThatHaveDependencyOnAll(typeList, new List<string> { typeof(PatternMatch).Namespace });
 
             // Assert: Before PR#36 this would have returned classes in NamespaceMatchToo in the results
             Assert.Empty(result); // No results returned

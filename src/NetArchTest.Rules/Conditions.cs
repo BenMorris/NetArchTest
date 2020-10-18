@@ -628,6 +628,17 @@
         }
 
         /// <summary>
+        /// Selects types that have a dependency on any of the supplied types and cannot have any other dependency. 
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList OnlyHaveDependenciesOn(params string[] dependencies)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.OnlyHaveDependenciesOnAnyOrNone, dependencies, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that do not have a dependency on a particular type.
         /// </summary>
         /// <param name="dependency">The dependency type to match against. This can be a namespace or a specific type.</param>
@@ -656,6 +667,17 @@
         public ConditionList NotHaveDependencyOnAll(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAll, dependencies, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that have a dependency other than any of the given dependencies.
+        /// </summary>
+        /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HaveDependencyOtherThan(params string[] dependencies)
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.OnlyHaveDependenciesOnAnyOrNone, dependencies, false);
             return new ConditionList(_types, _should, _sequence);
         }
 
