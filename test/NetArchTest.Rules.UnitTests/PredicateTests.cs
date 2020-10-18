@@ -565,8 +565,9 @@ namespace NetArchTest.Rules.UnitTests
                 .And()
                 .ArePublic().GetTypes();
 
-            Assert.Single(result); // One result
+            Assert.Equal(2, result.Count()); 
             Assert.Contains<Type>(typeof(PublicClass), result);
+            Assert.Contains<Type>(typeof(PublicClass.PublicClassInternal), result);
         }
 
         [Fact(DisplayName = "Types can be selected for not being declared as public.")]
@@ -579,8 +580,9 @@ namespace NetArchTest.Rules.UnitTests
                 .And()
                 .AreNotPublic().GetTypes();
 
-            Assert.Single(result); // One result
+            Assert.Equal(2, result.Count());
             Assert.Contains<Type>(typeof(InternalClass), result);
+            Assert.Contains<Type>(typeof(InternalClass.InternalClassNested), result);
         }
 
         [Fact(DisplayName = "Types can be selected for being declared as sealed.")]

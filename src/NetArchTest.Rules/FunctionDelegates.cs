@@ -253,11 +253,11 @@
         {
             if (condition)
             {
-                return input.Where(c => c.IsPublic);
+                return input.Where(c => c.IsNested ? c.IsNestedPublic : c.IsPublic);
             }
             else
             {
-                return input.Where(c => c.IsNotPublic);
+                return input.Where(c => c.IsNested ? !c.IsNestedPublic : c.IsNotPublic);
             }
         };
 
