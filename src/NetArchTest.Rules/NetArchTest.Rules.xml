@@ -495,7 +495,7 @@
             For a given type we always get the same answer, so let us cache what search tree returns.
             </summary>        
         </member>
-       <member name="T:NetArchTest.Rules.Dependencies.DataStructures.NamespaceTree">
+        <member name="T:NetArchTest.Rules.Dependencies.DataStructures.NamespaceTree">
             <summary>
             Holds tree structure of full names; child nodes of each parent are indexed for optimal time of search.
             </summary>
@@ -592,17 +592,25 @@
             Finds dependencies within a given set of types.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesWithAnyDependencies(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesThatHaveDependencyOnAny(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Finds types that have a dependency on any item in a given list of dependencies.
+            Finds types that have a dependency on any item in the given list of dependencies.
             </summary>
             <param name="input">The set of type definitions to search.</param>
             <param name="dependencies">The set of dependencies to look for.</param>
             <returns>A list of found types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesWithAllDependencies(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesThatHaveDependencyOnAll(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Finds types that have a dependency on every item in a given list of dependencies.
+            Finds types that have a dependency on every item in the given list of dependencies.
+            </summary>
+            <param name="input">The set of type definitions to search.</param>
+            <param name="dependencies">The set of dependencies to look for.</param>
+            <returns>A list of found types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Finds types that may have a dependency on any item in the given list of dependencies, but cannot have a dependency that is not in the list.
             </summary>
             <param name="input">The set of type definitions to search.</param>
             <param name="dependencies">The set of dependencies to look for.</param>
@@ -646,41 +654,6 @@
             <summary>
             Manages the results of dependency search.
             </summary>
-        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._searchTree">
-            <summary> The list of dependencies being searched for. </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.SearchDefinition.CanWeSkipFurtherSearch(System.Collections.Generic.HashSet{System.String})">
-            <summary>
-            If we already know the final answer to the question if type was found,
-            doing another search will not change the result
-            </summary>     
-        </member>
-        <member name="F:NetArchTest.Rules.Dependencies.SearchDefinition._cachedAnswersFromSearchTree">
-            <summary>
-            Searching search tree is costly (it requires a lot of operations on strings like SubString, IndexOf).
-            For a given type we always get the same answer, so let us cache what search tree returns.
-            </summary>        
-        </member>
-        <member name="F:NetArchTest.Rules.Dependencies.TypeDefinitionCheckingContext._foundDependencies">
-            <summary> The list of dependencies that have been found in the search.</summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.TypeDefinitionCheckingContext.CheckType(Mono.Cecil.TypeDefinition)">
-            <summary>
-            Finds matching dependencies for a given type by walking through the type.
-            </summary>
-        </member>
-        <member name="M:NetArchTest.Rules.Dependencies.TypeDefinitionCheckingContext.CheckTypeReference(Mono.Cecil.TypeReference)">
-            <summary>
-            Recursively checks every array, generic or not type reference
-            <example>
-            for closed generic : List{Tuple{Task{int}, int}}
-            it will check: List{Tuple{Task{int}, int}}, Tuple{Task{int}, int}, Task{int}, int, int
-            for open generic : List{T}
-            only List will be checked, T as a generic parameter will be skipped
-            for arrays: int[][]
-            it will check : int[][], int[], int
-            </example>         
-            </summary>      
         </member>
         <member name="F:NetArchTest.Rules.Dependencies.TypeDefinitionCheckingResult._foundDependencies">
             <summary> The list of dependencies that have been found in the search.</summary>
