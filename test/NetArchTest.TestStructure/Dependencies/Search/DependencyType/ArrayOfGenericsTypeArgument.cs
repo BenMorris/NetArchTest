@@ -10,8 +10,10 @@
     { 
         public void ExampleMethod()
         {
+#pragma warning disable 219
             GenericClass<int>[] test1 = null;
-            GenericClass<ExampleDependency>[] test2 = null;          
+            GenericClass<ExampleDependency>[] test2 = null;
+#pragma warning restore 219
         }
     }
 }

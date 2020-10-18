@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
 
+#pragma warning disable 169
 
     public class Class_A
     {
@@ -48,4 +49,7 @@
         Dependency_2 dp2;
         Dependency_3 dp3;
     }
+
+#pragma warning restore 169
+
 }

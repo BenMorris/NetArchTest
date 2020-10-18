@@ -11,10 +11,12 @@
         public void ExampleMethod()
         {
 
-            static void LocalFunction() 
+#pragma warning disable 8321
+            static void LocalFunction()
             {
-                var y = new ExampleDependency(); 
+                var y = new ExampleDependency();
             }
+#pragma warning restore 8321
         }
     }
 }

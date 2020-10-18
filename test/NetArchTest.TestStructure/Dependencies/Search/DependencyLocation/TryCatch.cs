@@ -15,7 +15,9 @@
             {
 
             }
-            catch (ExceptionDependency ex) 
+#pragma warning disable 168
+            catch (ExceptionDependency ex)
+#pragma warning restore 168
             {
 
             }

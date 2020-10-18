@@ -7,9 +7,9 @@
     <Product>NetArchTest</Product>
     <Description>A fluent API for .Net Standard that can enforce architectural rules in unit tests.</Description>
     <Copyright>Copyright (c) 2019 Ben Morris</Copyright>
-    <PackageLicenseUrl>https://github.com/BenMorris/NetArchTest/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://github.com/BenMorris/NetArchTest/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>https://www.ben-morris.com/writing-archunit-style-tests-for-net-and-c-for-self-testing-architectures/</PackageProjectUrl>
-    <PackageIconUrl>https://www.ben-morris.com/wp-content/library/bm-nuget-icon.png</PackageIconUrl>
+    <PackageIcon>bm-nuget-icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/BenMorris/NetArchTest</RepositoryUrl>
     <PackageTags>test architecture dependencies archtest</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -27,6 +27,10 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.2" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bm-nuget-icon.png" Pack="true" PackagePath=""  />
   </ItemGroup>
 
 </Project>
