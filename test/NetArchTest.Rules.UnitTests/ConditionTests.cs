@@ -530,7 +530,7 @@
                 .That()
                 .ResideInNamespace("NetArchTest.TestStructure.Scope")
                 .And()
-                .DoNotHaveName("PublicClass")
+                .DoNotHaveNameStartingWith("PublicClass")
                 .Should()
                 .NotBePublic().GetResult();
 
