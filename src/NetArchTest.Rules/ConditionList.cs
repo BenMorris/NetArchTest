@@ -80,6 +80,7 @@
         /// Specifies that any subsequent condition should be treated as an "and" condition.
         /// </summary>
         /// <returns>An set of conditions that can be applied to a list of classes.</returns>
+        /// <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         public Conditions And()
         {
             return new Conditions(_types, _should, _sequence);

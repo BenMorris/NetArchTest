@@ -66,6 +66,7 @@
         /// Specifies that any subsequent predicates should be treated as "and" conditions.
         /// </summary>
         /// <returns>An set of predicates that can be applied to a list of classes.</returns>
+        /// <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         public Predicates And()
         {
             return new Predicates(_types, _sequence);
