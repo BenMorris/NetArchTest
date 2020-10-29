@@ -113,6 +113,9 @@
         /// <summary>
         /// Returns namespace of the given type, if the type is nested, namespace of containing type is returned instead
         /// </summary>        
+        /// <remarks>
+        /// For nested classes this will take the name of the declaring class. See https://github.com/BenMorris/NetArchTest/issues/73
+        /// </remarks>
         public static string GetNamespace(this TypeDefinition typeDefinition)
         {
             if ((typeDefinition.IsNestedPrivate) || (typeDefinition.IsNestedPublic))
