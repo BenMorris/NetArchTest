@@ -46,6 +46,7 @@
             Specifies that any subsequent condition should be treated as an "and" condition.
             </summary>
             <returns>An set of conditions that can be applied to a list of classes.</returns>
+            <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         </member>
         <member name="M:NetArchTest.Rules.ConditionList.Or">
             <summary>
@@ -764,6 +765,9 @@
             <summary>
             Returns namespace of the given type, if the type is nested, namespace of containing type is returned instead
             </summary>        
+            <remarks>
+            For nested classes this will take the name of the declaring class. See https://github.com/BenMorris/NetArchTest/issues/73
+            </remarks>
         </member>
         <member name="T:NetArchTest.Rules.Extensions.TypeExtensions">
             <summary>
@@ -1144,6 +1148,7 @@
             Specifies that any subsequent predicates should be treated as "and" conditions.
             </summary>
             <returns>An set of predicates that can be applied to a list of classes.</returns>
+            <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         </member>
         <member name="M:NetArchTest.Rules.PredicateList.Or">
             <summary>
