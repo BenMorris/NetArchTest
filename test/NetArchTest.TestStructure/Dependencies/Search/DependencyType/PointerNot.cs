@@ -12,8 +12,10 @@
         {
             unsafe
             {
+#pragma warning disable 168
                 StructDependency test;
-            }                      
+#pragma warning restore 168
+            }
         }
     }
 }

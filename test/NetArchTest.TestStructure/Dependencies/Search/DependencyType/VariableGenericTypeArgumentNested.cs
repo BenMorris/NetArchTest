@@ -10,7 +10,9 @@
     {
         public VariableGenericTypeArgumentNested()
         {
-            GenericClass<GenericClass<ExampleDependency>> test = null;           
+#pragma warning disable 219
+            GenericClass<GenericClass<ExampleDependency>> test = null;
+#pragma warning restore 219
         }
     }
 }

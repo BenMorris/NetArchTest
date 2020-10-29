@@ -16,7 +16,9 @@
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies" }, "List contains only ancestor namespace.")]
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies" }, "List contains duplicated ancestor namespace.")]
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies.Examples" }, "List contains overlapping namespaces.")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void FindTypesWithAnyDependencies_Found(string[] dependecies, string comment)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             // Arrange
             var search = new DependencySearch();
@@ -41,7 +43,9 @@
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies" }, "List contains overlapping dependencies.")]      
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency" }, "List contains duplicated dependencies.")]
         [InlineData(new string[] { "NetArchTest.TestStructure.Dependencies.Examples.ExampleDependency", "NetArchTest.TestStructure.Dependencies.Examples.AnotherExampleDependency", "NetArchTest.TestStructure.Dependencies", "NetArchTest.TestStructure.Dependencies.Examples" }, "List contains overlapping namespaces.")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void FindTypesWithAllDependencies_Found(string[] dependecies, string comment)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             // Arrange
             var search = new DependencySearch();

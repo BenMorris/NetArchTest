@@ -10,6 +10,9 @@
     public class AttributeOnEvent
     {
         [AttributeDependency()]
+#pragma warning disable 67
         private event Action foo;
+#pragma warning restore 67
+
     }
 }

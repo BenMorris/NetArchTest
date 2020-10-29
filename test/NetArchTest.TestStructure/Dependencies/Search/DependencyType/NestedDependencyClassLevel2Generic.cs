@@ -9,7 +9,9 @@
     {
         private void ExampleMethod()
         {
+#pragma warning disable 219
             NestedDependencyTree.NestedLevel1.NestedLevel2<int>.NestedDependency foo = null;
+#pragma warning restore 219
         }
     }    
 }

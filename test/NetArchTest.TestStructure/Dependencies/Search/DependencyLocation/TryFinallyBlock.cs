@@ -17,7 +17,9 @@
             }
             finally 
             {
+#pragma warning disable 219
                 ExampleDependency foo = null;
+#pragma warning restore 219
             }
         }
     }

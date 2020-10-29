@@ -7,6 +7,8 @@ namespace NetArchTest.TestStructure.Mutability
     {
         protected object Property {get; set;}
 
+#pragma warning disable 169
         private object privateField;
+#pragma warning restore 169
     }
 }

@@ -9,7 +9,9 @@
     {
         public VariableGeneric()
         {
+#pragma warning disable 219
             ExampleDependency<int> dependecy = null;
+#pragma warning restore 219
         }
     }
 }

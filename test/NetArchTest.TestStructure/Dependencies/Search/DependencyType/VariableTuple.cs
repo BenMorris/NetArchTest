@@ -11,7 +11,9 @@
     {
         public VariableTuple()
         {
-            Tuple<int, ExampleDependency> test = null;           
+#pragma warning disable 219
+            Tuple<int, ExampleDependency> test = null;
+#pragma warning restore 219
         }
     }
 }
