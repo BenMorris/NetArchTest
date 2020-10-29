@@ -1014,14 +1014,14 @@ namespace NetArchTest.Rules.UnitTests
         }
 
         [Fact(DisplayName = "Types can be selected if they do not have a dependency on any item in a list.")]
-        public void HaveDependencyOtherThan_MatchesFound_ClassSelected()
+        public void HaveDependenciesOtherThan_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
                 .That()
                 .ResideInNamespace(typeof(HasDependency).Namespace)
                 .And()
-                .HaveDependencyOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
+                .HaveDependenciesOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
                 .GetTypes();
 
             Assert.Equal(2, result.Count());

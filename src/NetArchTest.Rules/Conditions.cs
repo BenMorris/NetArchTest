@@ -675,7 +675,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public ConditionList HaveDependencyOtherThan(params string[] dependencies)
+        public ConditionList HaveDependenciesOtherThan(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.OnlyHaveDependenciesOnAnyOrNone, dependencies, false);
             return new ConditionList(_types, _should, _sequence);

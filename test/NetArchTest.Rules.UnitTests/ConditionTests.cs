@@ -897,7 +897,7 @@
         }
 
         [Fact(DisplayName = "Types can be selected if they have a dependency that is not on the a list.")]
-        public void HaveDependencyOtherThan_MatchesFound_ClassSelected()
+        public void HaveDependenciesOtherThan_MatchesFound_ClassSelected()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
@@ -906,7 +906,7 @@
                 .And()
                 .HaveNameStartingWith("HasDependencies")
                 .Should()
-                .HaveDependencyOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
+                .HaveDependenciesOtherThan(new[] { typeof(ExampleDependency).FullName, "System" })
                 .GetResult();
 
             Assert.True(result.IsSuccessful);

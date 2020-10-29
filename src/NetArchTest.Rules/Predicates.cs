@@ -680,7 +680,7 @@
         /// </summary>
         /// <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
-        public PredicateList HaveDependencyOtherThan(params string[] dependencies)
+        public PredicateList HaveDependenciesOtherThan(params string[] dependencies)
         {
             _sequence.AddFunctionCall(FunctionDelegates.OnlyHaveDependenciesOnAnyOrNone, dependencies, false);
             return new PredicateList(_types, _sequence);

@@ -473,7 +473,7 @@
             <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Conditions.HaveDependencyOtherThan(System.String[])">
+        <member name="M:NetArchTest.Rules.Conditions.HaveDependenciesOtherThan(System.String[])">
             <summary>
             Selects types that have a dependency other than any of the given dependencies.
             </summary>
@@ -1580,7 +1580,7 @@
             <param name="dependencies">The dependencies to match against. These can be namespaces or specific types.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveDependencyOtherThan(System.String[])">
+        <member name="M:NetArchTest.Rules.Predicates.HaveDependenciesOtherThan(System.String[])">
             <summary>
             Selects types that have a dependency other than any of the given dependencies.
             </summary>
