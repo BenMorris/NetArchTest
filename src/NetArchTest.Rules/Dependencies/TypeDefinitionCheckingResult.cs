@@ -86,7 +86,14 @@
             } 
             else
             {
-                _hasDependencyFromOutsideOfSearchTree = true;
+                if (_hasDependencyFromOutsideOfSearchTree == false)
+                {
+                    bool isGlobalAnonymousCompilerGeneratedType = String.IsNullOrEmpty(dependency.Namespace) && dependency.Name.StartsWith("<>");
+                    if (!isGlobalAnonymousCompilerGeneratedType)
+                    {
+                        _hasDependencyFromOutsideOfSearchTree = true;
+                    }
+                }
             }
         }
     }
