@@ -25,5 +25,30 @@
         }
 
 
+        [Fact(DisplayName = "Valid tree does not have dependencies between slices")]
+        public void ValidTreeDoesNotHaveDependenciesBetweenSlices()
+        {
+            var testResult = Types.InAssembly(typeof(ExampleDependency).Assembly)
+                               .Slice()
+                               .ByNamespacePrefix("NetArchTest.TestStructure.Slices.ValidTree")
+                               .Should()
+                               .NotHaveDependenciesBetweenSlices()
+                               .GetResult();
+
+            Assert.True(testResult.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Invalid tree has dependencies between slices")]
+        public void InvalidTreeHasDependenciesBetweenSlices()
+        {
+            var testResult = Types.InAssembly(typeof(ExampleDependency).Assembly)
+                               .Slice()
+                               .ByNamespacePrefix("NetArchTest.TestStructure.Slices.InvalidTree")
+                               .Should()
+                               .NotHaveDependenciesBetweenSlices()
+                               .GetResult();
+
+            Assert.False(testResult.IsSuccessful);
+        }
     }
 }

@@ -625,7 +625,7 @@
             <param name="dependencies">The set of dependencies to look for.</param>
             <returns>A list of found types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesThatOnlyOnlyHaveDependenciesOnAll(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:NetArchTest.Rules.Dependencies.DependencySearch.FindTypesThatOnlyHaveDependenciesOnAll(System.Collections.Generic.IEnumerable{Mono.Cecil.TypeDefinition},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Finds types that have a dependency on every item in the given list of dependencies, but cannot have a dependency that is not in the list.
             </summary>

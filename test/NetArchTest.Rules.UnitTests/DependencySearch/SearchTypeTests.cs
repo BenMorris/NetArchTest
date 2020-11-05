@@ -173,7 +173,7 @@
                 .GetTypeDefinitions();
 
             // Act
-            var result = search.FindTypesThatOnlyOnlyHaveDependenciesOnAll(typeList, new string[] { typeof(Dependency_1).FullName, typeof(Dependency_2).FullName, "System" });
+            var result = search.FindTypesThatOnlyHaveDependenciesOnAll(typeList, new string[] { typeof(Dependency_1).FullName, typeof(Dependency_2).FullName, "System" });
 
             // Assert           
             Assert.Equal(1, result.Count);
