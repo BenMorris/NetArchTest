@@ -7,21 +7,27 @@
 
     internal sealed class SliceList : ISliceList
     {
-        private readonly SlicedTypes _slices;
+        private readonly SlicedTypes _slicedTypes;
 
-        public SliceList(SlicedTypes slices)
+        public SliceList(SlicedTypes slicedTypes)
         {
-            _slices = slices;
+            _slicedTypes = slicedTypes;
         }
 
         public ISliceConditions Should()
         {
-            return new SliceConditions(_slices, true);
+            return new SliceConditions(_slicedTypes, true);
         }
 
         public ISliceConditions ShouldNot()
         {
-            return new SliceConditions(_slices, false);
+            return new SliceConditions(_slicedTypes, false);
+        }
+
+
+        public SlicedTypes GetSlicedTypes()
+        {
+            return _slicedTypes;
         }
     }
 }

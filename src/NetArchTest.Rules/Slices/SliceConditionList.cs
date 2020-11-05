@@ -9,13 +9,13 @@
     internal sealed class SliceConditionList : ISliceConditionList
     {
         private readonly IFilter _filter;
-        private readonly SlicedTypes _slices;
+        private readonly SlicedTypes _slicedTypes;
         private readonly bool _should;
 
-        public SliceConditionList(IFilter filter, SlicedTypes slices, bool should)
+        public SliceConditionList(IFilter filter, SlicedTypes slicedTypes, bool should)
         {
             _filter = filter;
-            _slices = slices;
+            _slicedTypes = slicedTypes;
             _should = should;
         }
 
@@ -23,23 +23,23 @@
 
         public ITestResult GetResult()
         {
-            var filterResults = _filter.Execute(_slices);
+            var filteredTypes = _filter.Execute(_slicedTypes);
 
-            bool successIsWhen = _should;
-            bool success = filterResults.All(x => x.IsPassing == successIsWhen);
-
-            if (filterResults.Count() != _slices.TypeCount)
+            if (filteredTypes.Count() != _slicedTypes.TypeCount)
             {
                 throw new Exception("Filter returned wrong number of results!");
             }
 
-            if (success)
+            bool successIsWhen = _should;
+            bool isSuccessful = filteredTypes.All(x => x.IsPassing == successIsWhen);           
+
+            if (isSuccessful)
             {
                 return TestResult.Success();
             }
             else
             {
-                var failingTypes = filterResults.Where(x => x.IsPassing == !successIsWhen);
+                var failingTypes = filteredTypes.Where(x => x.IsPassing == !successIsWhen);
                 return TestResult.Failure(failingTypes);
             }
         }

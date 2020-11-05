@@ -6,6 +6,6 @@
 
     interface IFilter
     {
-        IEnumerable<TypeResult> Execute(SlicedTypes slices);
+        IEnumerable<TypeResult> Execute(SlicedTypes slicedTypes);
     }
 }

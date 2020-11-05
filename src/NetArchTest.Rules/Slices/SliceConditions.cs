@@ -8,25 +8,25 @@
 
     internal sealed class SliceConditions : ISliceConditions
     {
-        private readonly SlicedTypes _slices;
+        private readonly SlicedTypes _slicedTypes;
         private readonly bool _should;
 
 
         public SliceConditions(SlicedTypes slices, bool should)
         {
-            _slices = slices;
+            _slicedTypes = slices;
             _should = should;
         }
 
 
         public ISliceConditionList HaveDependenciesBetweenSlices()
         {
-            return new SliceConditionList(new HaveDependenciesBetweenSlices(), _slices, _should);
+            return new SliceConditionList(new HaveDependenciesBetweenSlices(), _slicedTypes, _should);
         }
 
         public ISliceConditionList NotHaveDependenciesBetweenSlices()
         {
-            return new SliceConditionList(new HaveDependenciesBetweenSlices(), _slices, !_should);
+            return new SliceConditionList(new HaveDependenciesBetweenSlices(), _slicedTypes, !_should);
         }
     }
 }

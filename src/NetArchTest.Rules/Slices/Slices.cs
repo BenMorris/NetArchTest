@@ -16,11 +16,11 @@
         }
 
 
-        public ISliceList ByPrefix(string prefix)
-        {
+        public ISliceList ByNamespacePrefix(string prefix)
+        {            
             var slicer = new Slicer();
-            var slices = slicer.SliceByPrefix(_types, prefix);
-            return new SliceList(slices);
+            var slicedTypes = slicer.SliceByNamespacePrefix(_types, prefix);
+            return new SliceList(slicedTypes);
         }
     }
 }

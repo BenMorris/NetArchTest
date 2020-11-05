@@ -10,10 +10,6 @@
         public bool IsSuccessful { get; private set; }
         public IEnumerable<IFailingType> FailingTypes { get; private set; }
 
-
-
-
-
      
         internal static TestResult Success()
         {

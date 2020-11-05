@@ -2,6 +2,6 @@
 {
     public interface ISlices
     {
-        ISliceList ByPrefix(string name);
+        ISliceList ByNamespacePrefix(string name);
     }
 }

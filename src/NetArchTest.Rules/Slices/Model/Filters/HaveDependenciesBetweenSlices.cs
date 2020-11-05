@@ -6,7 +6,7 @@
 
     internal sealed class HaveDependenciesBetweenSlices : IFilter
     {
-        public IEnumerable<TypeResult> Execute(SlicedTypes slices)
+        public IEnumerable<TypeResult> Execute(SlicedTypes slicedTypes)
         {
             return null;
         }
