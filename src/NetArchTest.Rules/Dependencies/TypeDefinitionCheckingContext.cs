@@ -96,6 +96,11 @@
                 {
                     CheckCustomAttributes(field);
                     CheckTypeReference(field.FieldType);
+                    if (field.HasConstant &&
+                        field.FieldType.FullName == typeof(string).FullName)
+                    {
+                        _result.CheckDependency(field.Constant.ToString());
+                    }
                 }
             }
         }
@@ -140,19 +145,19 @@
                 foreach (var method in typeToCheck.Methods)
                 {
                     if (_result.CanWeSkipFurtherSearch()) return;
-                    this.CheckMethodHeader(method);
+                    CheckMethodHeader(method);
                 }
 
                 foreach (var method in typeToCheck.Methods)
                 {
                     if (_result.CanWeSkipFurtherSearch()) return;
-                    this.CheckMethodBodyVariables(method);
+                    CheckMethodBodyVariables(method);
                 }
 
                 foreach (var method in typeToCheck.Methods)
                 {
                     if (_result.CanWeSkipFurtherSearch()) return;
-                    this.CheckMethodBodyInstructions(method);
+                    CheckMethodBodyInstructions(method);
                 }
             }
         }
