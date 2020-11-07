@@ -49,6 +49,10 @@
                                .GetResult();
 
             Assert.False(testResult.IsSuccessful);
+
+
+
+            Types.InCurrentDomain().Slice().ByNamespacePrefix("").Should().NotHaveDependenciesBetweenSlices().GetResult();
         }
     }
 }

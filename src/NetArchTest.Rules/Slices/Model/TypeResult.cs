@@ -5,20 +5,17 @@
     using System.Text;
     using Mono.Cecil;
 
-    internal sealed class TypeResult : IFailingType
+    internal sealed class TypeResult 
     { 
         public TypeDefinition Type { get;  }
         public bool IsPassing { get;  }
-        public string Reason { get; set; }
+        
 
 
         public TypeResult(TypeDefinition type, bool isPassing)
         {
             Type = type;
             IsPassing = isPassing;
-        }
-
-
-        TypeDefinition IFailingType.MonoTypeDefinition { get => Type; }
+        }       
     }
 }

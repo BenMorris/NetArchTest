@@ -2,13 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using NetArchTest.Rules.Slices.Model;
 
+    [DebuggerDisplay("FailingTypes = {FailingTypes.Count}")]
     internal sealed class TestResult : ITestResult
     {
         public bool IsSuccessful { get; private set; }
-        public IEnumerable<IFailingType> FailingTypes { get; private set; }
+        
+        public IReadOnlyList<IFailingType> FailingTypes { get; private set; }
 
      
         internal static TestResult Success()
@@ -24,7 +28,8 @@
             return new TestResult
             {
                 IsSuccessful = false,
-                FailingTypes = failingTypes
+                
+                FailingTypes = failingTypes.Select(x => new FailingType(x.Type)).ToArray()
             };
         }
     }

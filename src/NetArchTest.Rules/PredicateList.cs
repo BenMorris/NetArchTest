@@ -35,11 +35,6 @@
             return new Conditions(_sequence.Execute(_types), true);
         }
 
-        public ISlices Slice()
-        {
-            return new NetArchTest.Rules.Slices.Slices(_sequence.Execute(_types));
-        }
-
         /// <summary>
         /// Links a predicate defining a set of classes to a condition that tests them.
         /// </summary>
@@ -48,6 +43,17 @@
         {
             return new Conditions(_sequence.Execute(_types), false);
         }
+
+        /// <summary>
+        /// Allows dividing types into groups, also called slices.
+        /// </summary>
+        /// <returns></returns>
+        public ISlices Slice()
+        {
+            return new NetArchTest.Rules.Slices.Slices(_sequence.Execute(_types));
+        }
+
+        
 
         /// <summary>
         /// Returns the type definitions returned by these predicate.

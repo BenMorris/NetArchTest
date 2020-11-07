@@ -1131,6 +1131,12 @@
             </summary>
             <returns>A condition that tests classes against a given criteria.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.PredicateList.Slice">
+            <summary>
+            Allows dividing types into groups, also called slices.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:NetArchTest.Rules.PredicateList.GetTypeDefinitions">
             <summary>
             Returns the type definitions returned by these predicate.
@@ -1594,6 +1600,94 @@
             <param name="rule">An instance of the custom rule.</param>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="T:NetArchTest.Rules.IFailingType">
+            <summary>
+            Type that failed the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.IFailingType.Type">
+            <summary>
+            System.Type that failed the test.
+            </summary>
+            <remarks>
+            This property may be null if the test project does not have a direct dependency on the type.
+            </remarks>
+        </member>
+        <member name="P:NetArchTest.Rules.IFailingType.TypeName">
+            <summary>
+            Name of the type that failed the test.
+            </summary>       
+        </member>
+        <member name="T:NetArchTest.Rules.ISliceConditionList">
+            <summary>
+            Executor of condition.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ISliceConditionList.GetResult">
+            <summary>
+            Returns an indication of whether all the selected types satisfy the conditions.
+            </summary>
+            <returns>An indication of whether the conditions are true, along with a list of types failing the check if they are not.</returns>
+        </member>
+        <member name="T:NetArchTest.Rules.ISliceConditions">
+            <summary>
+            A set of conditions that can be applied to slices of types.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ISliceConditions.NotHaveDependenciesBetweenSlices">
+            <summary>
+            Selects types that do not have dependencies on types from other slices.
+            </summary>        
+        </member>
+        <member name="M:NetArchTest.Rules.ISliceConditions.HaveDependenciesBetweenSlices">
+            <summary>
+            Selects types that have some dependencies on types from other slices.
+            </summary>  
+        </member>
+        <member name="T:NetArchTest.Rules.ISliceList">
+            <summary>
+            Link between predicate and condition.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ISliceList.Should">
+            <summary>
+            Links a predicate defining a set of classes to a condition that tests them.
+            </summary>
+        </member>
+        <member name="M:NetArchTest.Rules.ISliceList.ShouldNot">
+            <summary>
+            Links a predicate defining a set of classes to a condition that tests them.
+            </summary>
+        </member>
+        <member name="T:NetArchTest.Rules.ISlices">
+            <summary>
+            Allows dividing types into groups, also called slices.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.ISlices.ByNamespacePrefix(System.String)">
+            <summary>
+            Divides types into groups/slices according to the prefix pattern.
+            It only selects types which namespaces start with a given prefix, rest of the types are ignored.
+            Groups are defined by the first part of the namespace that is right after prefix:
+            namespacePrefix.(groupName).restOfNamespace
+            </summary>      
+        </member>
+        <member name="T:NetArchTest.Rules.ITestResult">
+            <summary>
+            Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ISliceConditionList"/>.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.ITestResult.IsSuccessful">
+            <summary>
+            Gets a flag indicating the success or failure of the test.
+            </summary>
+        </member>
+        <member name="P:NetArchTest.Rules.ITestResult.FailingTypes">
+            <summary>
+            Gets a list of the types that failed the test.
+            </summary>
+        </member>
         <member name="T:NetArchTest.Rules.TestResult">
             <summary>
             Defines a result from a test carried out on a <see cref="T:NetArchTest.Rules.ConditionList"/>.
@@ -1724,6 +1818,12 @@
         <member name="M:NetArchTest.Rules.Types.Should">
             <summary>
             Applies a set of conditions to the list of types.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Types.Slice">
+            <summary>
+            Allows dividing types into groups, also called slices.
             </summary>
             <returns></returns>
         </member>

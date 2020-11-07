@@ -304,6 +304,10 @@
             return new Conditions(_types, true);
         }
 
+        /// <summary>
+        /// Allows dividing types into groups, also called slices.
+        /// </summary>
+        /// <returns></returns>
         public ISlices Slice()
         {
             return new NetArchTest.Rules.Slices.Slices(_types);
