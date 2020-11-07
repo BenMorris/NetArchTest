@@ -403,5 +403,11 @@
         {
             Utils.RunDependencyTest(typeof(BaseCtorCall), typeof(StaticType), true, true);
         }
+
+        [Fact(DisplayName = "Finds a dependency when a const string field accesses a type via full type name.")]
+        public void DependencySearch_ConstFieldString_Found()
+        {
+            Utils.RunDependencyTest(typeof(ConstStringFieldValue), typeof(Array), true, true);
+        }
     }
 }

@@ -74,6 +74,11 @@
             }           
         }
 
+        public void CheckDependency(string dependencyTypeFullName)
+        {
+            _foundDependencies.Add(dependencyTypeFullName);
+        }
+
         public void CheckDependency(TypeReference dependency)
         {
             var matchedDependencies = _searchTree.GetAllMatchingNames(dependency);
