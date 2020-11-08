@@ -398,12 +398,6 @@
             Utils.RunDependencyTest(typeof(VariableTuple), typeof(Tuple<int, double>), false, true);
         }
 
-        [Fact(DisplayName = "Finds a dependency StaticType in BaseCtorCall.")]
-        public void DependencySearch_BaseCtorCall_Found()
-        {
-            Utils.RunDependencyTest(typeof(BaseCtorCall), typeof(StaticType), true, true);
-        }
-
         [Fact(DisplayName = "Finds a dependency Array in ConstStringFieldValue.")]
         public void DependencySearch_ConstFieldString_Found()
         {
