@@ -404,10 +404,16 @@
             Utils.RunDependencyTest(typeof(BaseCtorCall), typeof(StaticType), true, true);
         }
 
-        [Fact(DisplayName = "Finds a dependency when a const string field accesses a type via full type name.")]
+        [Fact(DisplayName = "Finds a dependency Array in ConstStringFieldValue.")]
         public void DependencySearch_ConstFieldString_Found()
         {
             Utils.RunDependencyTest(typeof(ConstStringFieldValue), typeof(Array), true, true);
+        }
+
+        [Fact(DisplayName = "Does not find a dependency ArrayJagged in ConstStringFieldValue.")]
+        public void DependencySearch_ConstFieldString_NotFound()
+        {
+            Utils.RunDependencyTest(typeof(ConstStringFieldValue), typeof(ArrayJagged), false, true);
         }
     }
 }
