@@ -76,7 +76,18 @@
 
         public void CheckDependency(string dependencyTypeFullName)
         {
-            _foundDependencies.Add(dependencyTypeFullName);
+            var matchedDependencies = _searchTree.GetAllMatchingNames(dependencyTypeFullName);
+            if (matchedDependencies.Any())
+            {
+                foreach (var match in matchedDependencies)
+                {
+                    _foundDependencies.Add(match);
+                }
+            }
+            else
+            {
+                _hasDependencyFromOutsideOfSearchTree = true;
+            }
         }
 
         public void CheckDependency(TypeReference dependency)

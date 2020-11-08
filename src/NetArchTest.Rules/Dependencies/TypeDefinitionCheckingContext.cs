@@ -96,8 +96,7 @@
                 {
                     CheckCustomAttributes(field);
                     CheckTypeReference(field.FieldType);
-                    if (field.HasConstant &&
-                        field.FieldType.FullName == typeof(string).FullName)
+                    if (field.HasConstant && field.FieldType.FullName == typeof(string).FullName)
                     {
                         _result.CheckDependency(field.Constant.ToString());
                     }
