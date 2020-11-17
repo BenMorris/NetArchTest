@@ -1,4 +1,5 @@
-﻿using NetArchTest.TestStructure.NameMatching.Namespace3.A;
+﻿using NetArchTest.TestStructure.Dependencies.Search.DependencyLocation;
+using NetArchTest.TestStructure.NameMatching.Namespace3.A;
 using NetArchTest.TestStructure.NameMatching.Namespace3.B;
 
 namespace NetArchTest.Rules.UnitTests
@@ -337,6 +338,22 @@ namespace NetArchTest.Rules.UnitTests
 
             Assert.Single(result); // One type found
             Assert.Contains<Type>(typeof(ImplementsExampleInterface), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they implement a generic interface.")]
+        public void ImplementGenericInterface_MatchesFound_ClassesSelected()
+        {
+	        var result = Types.InAssembly(Assembly.GetAssembly(typeof(IGenericInterface<,>)))
+		        .That()
+		        .AreClasses()
+		        .And()
+		        .ImplementInterface(typeof(IGenericInterface<,>))
+		        .GetTypes();
+
+            Assert.Collection(result,
+	            type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
+	            type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type),
+	            type => Assert.Equal(typeof(ImplementedGenericInterface), type));
         }
 
         [Fact(DisplayName = "Types can be selected if they do not implement an interface.")]

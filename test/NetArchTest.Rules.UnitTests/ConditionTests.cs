@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.TestStructure.Dependencies.Search.DependencyLocation;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Linq;
@@ -279,6 +281,36 @@
                 .ImplementInterface(typeof(IExample)).GetResult();
 
             Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they implement a specialized generic interface.")]
+        public void ImplementSpecializedGenericInterface_MatchesFound_ClassesSelected()
+        {
+	        var predicateList = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(IGenericInterface<,>)))
+		        .That()
+		        .AreClasses()
+		        .And()
+		        .ImplementInterface(typeof(IGenericInterface<,>));
+
+	        var typesImplementingGenericInterface = predicateList.GetTypes();
+	        Assert.Collection(typesImplementingGenericInterface,
+		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
+		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type),
+		        type => Assert.Equal(typeof(ImplementedGenericInterface), type));
+
+            var conditionList = predicateList
+		        .Should()
+		        .ImplementInterface(typeof(ISpecializedGenericInterface1<,,>)).Or().ImplementInterface(typeof(ISpecializedGenericInterface2<,,>));
+
+	        var types = conditionList.GetTypes();
+	        Assert.Collection(types,
+		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
+		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type));
+
+            var result = conditionList.GetResult();
+            Assert.True(!result.IsSuccessful);
+            Assert.Single(result.FailingTypes, type => type == typeof(ImplementedGenericInterface));
         }
 
         [Fact(DisplayName = "Types can be selected if they do not implement an interface.")]
