@@ -295,9 +295,10 @@ namespace NetArchTest.Rules.UnitTests
 
 	        var typesImplementingGenericInterface = predicateList.GetTypes();
 	        Assert.Collection(typesImplementingGenericInterface,
-		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
-		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type),
-		        type => Assert.Equal(typeof(ImplementedGenericInterface), type));
+		        type => Assert.Equal(typeof(ImplementedGenericInterface), type),
+
+                type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
+		        type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type));
 
             var conditionList = predicateList
 		        .Should()
