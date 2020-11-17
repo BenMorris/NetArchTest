@@ -351,9 +351,9 @@ namespace NetArchTest.Rules.UnitTests
 		        .GetTypes();
 
             Assert.Collection(result,
+	            type => Assert.Equal(typeof(ImplementedGenericInterface), type),
 	            type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface1), type),
-	            type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type),
-	            type => Assert.Equal(typeof(ImplementedGenericInterface), type));
+	            type => Assert.Equal(typeof(ImplementedSpecializedGenericInterface2), type));
         }
 
         [Fact(DisplayName = "Types can be selected if they do not implement an interface.")]
