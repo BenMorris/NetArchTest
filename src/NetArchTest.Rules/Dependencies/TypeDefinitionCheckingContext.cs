@@ -220,9 +220,6 @@
                                 }
                             }
                             break;
-                        case FieldReference fieldReference:
-                            CheckTypeReference(fieldReference.DeclaringType);
-                            break;
                         case MethodReference methodReference:
                             CheckTypeReference( methodReference.DeclaringType);
                             break;
