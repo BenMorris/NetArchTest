@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetArchTest.TestStructure.Dependencies.Search.DependencyType
+﻿namespace NetArchTest.TestStructure.Dependencies.Examples
 {
     public struct Id
     {
