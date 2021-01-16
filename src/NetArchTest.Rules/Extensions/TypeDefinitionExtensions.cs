@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using Mono.Cecil;
     using System.Runtime.CompilerServices;
+    using Mono.Collections.Generic;
 
     /// <summary>
     /// Extensions for the <see cref="TypeDefinition"/> class.
@@ -107,7 +108,12 @@
 
         public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
         {
-            return typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
+            return typeDefinition.CustomAttributes.IsCompilerGenerated();
+        }
+
+        public static bool IsCompilerGenerated(this Collection<CustomAttribute> customAttributes)
+        {
+            return customAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
         }
 
         /// <summary>
