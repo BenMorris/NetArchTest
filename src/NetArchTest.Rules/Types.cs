@@ -83,8 +83,7 @@
                 if (!assembly.IsDynamic)
                 {
                     // Load the assembly using Mono.Cecil.
-                    UriBuilder uri = new UriBuilder(assembly.CodeBase);
-                    string path = Uri.UnescapeDataString(uri.Path);
+
 
                     AssemblyDefinition assemblyDef = null;
                     if (searchDirectories?.Any() ?? false)
@@ -95,11 +94,11 @@
                             defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
                         }
 
-                        assemblyDef = ReadAssemblyDefinition(path, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
+                        assemblyDef = ReadAssemblyDefinition(assembly.Location, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
                     }
                     else
                     { 
-                        assemblyDef = ReadAssemblyDefinition(path);
+                        assemblyDef = ReadAssemblyDefinition(assembly.Location);
                     }
 
                     // Read all the types in the assembly 
@@ -134,9 +133,7 @@
                 if (!assembly.IsDynamic)
                 {
                     // Load the assembly using Mono.Cecil.
-                    UriBuilder uri = new UriBuilder(assembly.CodeBase);
-                    string path = Uri.UnescapeDataString(uri.Path);
-                    var assemblyDef = ReadAssemblyDefinition(path);
+                    var assemblyDef = ReadAssemblyDefinition(assembly.Location);
 
                     if (assemblyDef != null)
                     {
