@@ -208,7 +208,7 @@ namespace NetArchTest.Rules
 		        return input.Where(c => !ClassIsStatic(c));
 	        }
 
-	        bool ClassIsStatic(TypeDefinition c) => c.IsAbstract && c.IsSealed && !c.IsInterface && !c.GetConstructors().Any();
+	        bool ClassIsStatic(TypeDefinition c) => c.IsAbstract && c.IsSealed && !c.IsInterface && !c.GetConstructors().Any(m => m.IsPublic);
         };
 
         /// <summary> Function for finding types with generic parameters. </summary>
