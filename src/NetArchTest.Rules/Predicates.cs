@@ -352,6 +352,26 @@
         }
 
         /// <summary>
+        /// Selects types that are static.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, true);
+	        return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not static.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreNotStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, false);
+	        return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that are nested.
         /// </summary>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>

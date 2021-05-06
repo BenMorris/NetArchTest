@@ -392,8 +392,9 @@ namespace NetArchTest.Rules.UnitTests
                 .And()
                 .AreClasses().GetTypes();
 
-            Assert.Single(result); // One type found
+            Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(ExampleClass), result);
+            Assert.Contains<Type>(typeof(ExampleStaticClass), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they are not classes.")]
@@ -462,8 +463,38 @@ namespace NetArchTest.Rules.UnitTests
                 .And()
                 .AreNotInterfaces().GetTypes();
 
-            Assert.Single(result); // One type found
+            Assert.Equal(2, result.Count()); // Two types found
             Assert.Contains<Type>(typeof(ExampleClass), result);
+            Assert.Contains<Type>(typeof(ExampleStaticClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are static.")]
+        public void AreStatic_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.Classes")
+		        .And()
+		        .AreStatic().GetTypes();
+
+	        Assert.Single(result); // One type found
+	        Assert.Contains<Type>(typeof(ExampleStaticClass), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are not static.")]
+        public void AreNotStatic_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.Classes")
+		        .And()
+		        .AreNotStatic().GetTypes();
+
+	        Assert.Equal(2, result.Count()); // Two types found
+            Assert.Contains<Type>(typeof(ExampleClass), result);
+	        Assert.Contains<Type>(typeof(IExampleInterface), result);
         }
 
         [Fact(DisplayName = "Types can be selected if they are nested.")]

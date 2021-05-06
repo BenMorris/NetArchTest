@@ -270,6 +270,18 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeStatic">
+            <summary>
+            Selects types that are static.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeStatic">
+            <summary>
+            Selects types that are not static.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.BeNested">
             <summary>
             Selects types that are nested.
@@ -837,6 +849,9 @@
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeInterface">
             <summary> Function for finding interfaces. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeStatic">
+            <summary> Function for finding static classes. </summary>
+        </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeGeneric">
             <summary> Function for finding types with generic parameters. </summary>
         </member>
@@ -1366,6 +1381,18 @@
         <member name="M:NetArchTest.Rules.Predicates.AreNotInterfaces">
             <summary>
             Selects types that are not interfaces.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreStatic">
+            <summary>
+            Selects types that are static.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotStatic">
+            <summary>
+            Selects types that are not static.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
