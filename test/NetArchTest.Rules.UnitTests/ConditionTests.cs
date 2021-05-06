@@ -442,7 +442,7 @@ namespace NetArchTest.Rules.UnitTests
 		        .ResideInNamespace("NetArchTest.TestStructure.Classes")
 		        .And()
 		        .HaveName(nameof(ExampleClass))
-                .Should()
+		        .Should()
 		        .NotBeStatic().GetResult();
 
 	        Assert.True(result.IsSuccessful);
