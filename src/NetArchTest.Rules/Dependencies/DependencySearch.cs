@@ -62,7 +62,7 @@
         /// <param name="input">The set of type definitions to search.</param>
         /// <param name="dependencies">The set of dependencies to look for.</param>
         /// <returns>A list of found types.</returns>
-        public IReadOnlyList<TypeDefinition> FindTypesThatOnlyOnlyHaveDependenciesOnAll(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
+        public IReadOnlyList<TypeDefinition> FindTypesThatOnlyHaveDependenciesOnAll(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
             return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAll, dependencies);
         }

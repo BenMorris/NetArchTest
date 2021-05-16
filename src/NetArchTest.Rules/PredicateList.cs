@@ -45,6 +45,17 @@
         }
 
         /// <summary>
+        /// Allows dividing types into groups, also called slices.
+        /// </summary>
+        /// <returns></returns>
+        public ISlices Slice()
+        {
+            return new NetArchTest.Rules.Slices.Slices(_sequence.Execute(_types));
+        }
+
+        
+
+        /// <summary>
         /// Returns the type definitions returned by these predicate.
         /// </summary>
         /// <returns>A list of type definitions.</returns>
