@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <Authors>Ben Morris</Authors>
     <Product>NetArchTest</Product>
     <Description>A fluent API for .Net Standard that can enforce architectural rules in unit tests.</Description>
-    <Copyright>Copyright (c) 2019 Ben Morris</Copyright>
+    <Copyright>Copyright (c) 2021 Ben Morris</Copyright>
     <PackageLicense>https://github.com/BenMorris/NetArchTest/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>https://www.ben-morris.com/writing-archunit-style-tests-for-net-and-c-for-self-testing-architectures/</PackageProjectUrl>
     <PackageIcon>bm-nuget-icon.png</PackageIcon>
@@ -14,6 +14,8 @@
     <PackageTags>test architecture dependencies archtest</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyVersion>1.3.1.0</AssemblyVersion>
+    <FileVersion>1.3.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
