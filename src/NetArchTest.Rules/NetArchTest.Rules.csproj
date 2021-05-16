@@ -20,8 +20,6 @@
 
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
-    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
