@@ -13,24 +13,17 @@
     <RepositoryUrl>https://github.com/BenMorris/NetArchTest</RepositoryUrl>
     <PackageTags>test architecture dependencies archtest</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>NetArchTest.Rules.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>NetArchTest.Rules.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bm-nuget-icon.png" Pack="true" PackagePath=""  />
+    <None Include="bm-nuget-icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

@@ -21,9 +21,7 @@
             var assembly = Assembly.GetAssembly(type);
 
             // Load the assembly into the Mono.Cecil library
-            UriBuilder uri = new UriBuilder(assembly.CodeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            var assemblyDef = AssemblyDefinition.ReadAssembly(path);
+            var assemblyDef = AssemblyDefinition.ReadAssembly(assembly.Location);
 
             // Find the matching type
             var dependencies = (assemblyDef.Modules
