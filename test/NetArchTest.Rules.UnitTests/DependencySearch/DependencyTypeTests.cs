@@ -409,5 +409,11 @@
         {
             Utils.RunDependencyTest(typeof(ConstStringFieldValue), typeof(ArrayJagged), false, true);
         }
+      
+        [Fact(DisplayName = "Finds a dependency StaticType in BaseCtorCall.")]
+        public void DependencySearch_BaseCtorCall_Found()
+        {
+            Utils.RunDependencyTest(typeof(BaseCtorCall), typeof(StaticType), true, true);
+        }
     }
 }

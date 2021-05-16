@@ -224,6 +224,12 @@
                                 }
                             }
                             break;
+                        case FieldReference fieldReference:
+                            if (!fieldReference.Resolve().CustomAttributes.IsCompilerGenerated())
+                            {
+                                CheckTypeReference(fieldReference.DeclaringType);
+                            }
+                            break;
                         case MethodReference methodReference:
                             CheckTypeReference( methodReference.DeclaringType);
                             break;

@@ -270,6 +270,18 @@
             </summary>
             <returns>An updated set of conditions that can be applied to a list of types.</returns>
         </member>
+        <member name="M:NetArchTest.Rules.Conditions.BeStatic">
+            <summary>
+            Selects types that are static.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Conditions.NotBeStatic">
+            <summary>
+            Selects types that are not static.
+            </summary>
+            <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        </member>
         <member name="M:NetArchTest.Rules.Conditions.BeNested">
             <summary>
             Selects types that are nested.
@@ -837,6 +849,9 @@
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeInterface">
             <summary> Function for finding interfaces. </summary>
         </member>
+        <member name="F:NetArchTest.Rules.FunctionDelegates.BeStatic">
+            <summary> Function for finding static classes. </summary>
+        </member>
         <member name="F:NetArchTest.Rules.FunctionDelegates.BeGeneric">
             <summary> Function for finding types with generic parameters. </summary>
         </member>
@@ -1177,14 +1192,14 @@
             Initializes a new instance of the <see cref="T:NetArchTest.Rules.Predicates"/> class.
             </summary>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveName(System.String)">
+        <member name="M:NetArchTest.Rules.Predicates.HaveName(System.String[])">
             <summary>
             Selects types that have a specific name.
             </summary>
             <param name="name">The name of the class to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveName(System.String)">
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveName(System.String[])">
             <summary>
             Selects types that do not have a particular name.
             </summary>
@@ -1205,7 +1220,7 @@
             <param name="pattern">The regular expression pattern to match against.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.HaveNameStartingWith(System.String)">
+        <member name="M:NetArchTest.Rules.Predicates.HaveNameStartingWith(System.String[])">
             <summary>
             Selects types whose names start with the specified text.
             </summary>
@@ -1220,7 +1235,7 @@
             <param name="comparer">The string comparer.</param>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>
-        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameStartingWith(System.String)">
+        <member name="M:NetArchTest.Rules.Predicates.DoNotHaveNameStartingWith(System.String[])">
             <summary>
             Selects types whose names do not start with the specified text.
             </summary>
@@ -1366,6 +1381,18 @@
         <member name="M:NetArchTest.Rules.Predicates.AreNotInterfaces">
             <summary>
             Selects types that are not interfaces.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreStatic">
+            <summary>
+            Selects types that are static.
+            </summary>
+            <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        </member>
+        <member name="M:NetArchTest.Rules.Predicates.AreNotStatic">
+            <summary>
+            Selects types that are not static.
             </summary>
             <returns>An updated set of predicates that can be applied to a list of types.</returns>
         </member>

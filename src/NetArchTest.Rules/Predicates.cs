@@ -40,9 +40,12 @@
         /// </summary>
         /// <param name="name">The name of the class to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList HaveName(string name)
+        public PredicateList HaveName(params string[] name)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveName, name, true);
+            foreach (var item in name)
+            {
+                _sequence.AddFunctionCall(FunctionDelegates.HaveName, item, true);
+            }
             return new PredicateList(_types, _sequence);
         }
 
@@ -51,9 +54,12 @@
         /// </summary>
         /// <param name="name">The name of the class to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList DoNotHaveName(string name)
+        public PredicateList DoNotHaveName(params string[] name)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveName, name, false);
+            foreach (var item in name)
+            {
+                _sequence.AddFunctionCall(FunctionDelegates.HaveName, item, false);
+            }
             return new PredicateList(_types, _sequence);
         }
 
@@ -84,9 +90,12 @@
         /// </summary>
         /// <param name="start">The text to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList HaveNameStartingWith(string start)
+        public PredicateList HaveNameStartingWith(params string[] start)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, start, true);
+            foreach (var item in start)
+            {
+                _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, item, true);
+            }
             return new PredicateList(_types, _sequence);
         }
 
@@ -107,9 +116,12 @@
         /// </summary>
         /// <param name="start">The text to match against.</param>
         /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
-        public PredicateList DoNotHaveNameStartingWith(string start)
+        public PredicateList DoNotHaveNameStartingWith(params string[] start)
         {
-            _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, start, false);
+            foreach (var item in start)
+            {
+                _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, item, false);
+            }
             return new PredicateList(_types, _sequence);
         }
 
@@ -337,6 +349,26 @@
         {
             _sequence.AddFunctionCall(FunctionDelegates.BeInterface, true, false);
             return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are static.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, true);
+	        return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not static.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreNotStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, false);
+	        return new PredicateList(_types, _sequence);
         }
 
         /// <summary>
