@@ -2,12 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
 #pragma warning disable 169
 
     public class Class_A
     {
+        public static void LetUsCreateSomeAnonymousTypes()
+        {
+            var numbers = Enumerable.Range(0, 1);
+            var result = from x in numbers
+                         join z in numbers on x equals z
+                         select (x, z);
+        }
     }
 
     public class Class_B  
