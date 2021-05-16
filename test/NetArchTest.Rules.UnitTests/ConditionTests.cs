@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules.UnitTests
+﻿using NetArchTest.TestStructure.Classes;
+
+namespace NetArchTest.Rules.UnitTests
 {
     using System;
     using System.Linq;
@@ -414,6 +416,36 @@
                 .NotBeInterfaces().GetResult();
 
             Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are static.")]
+        public void AreStatic_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.Classes")
+		        .And()
+		        .HaveNameEndingWith("StaticClass")
+		        .Should()
+		        .BeStatic().GetResult();
+
+	        Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are not static.")]
+        public void AreNotStatic_MatchesFound_ClassesSelected()
+        {
+	        var result = Types
+		        .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+		        .That()
+		        .ResideInNamespace("NetArchTest.TestStructure.Classes")
+		        .And()
+		        .HaveName(nameof(ExampleClass))
+		        .Should()
+		        .NotBeStatic().GetResult();
+
+	        Assert.True(result.IsSuccessful);
         }
 
         [Fact(DisplayName = "Types can be selected if they are nested.")]

@@ -345,6 +345,26 @@
         }
 
         /// <summary>
+        /// Selects types that are static.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, true);
+	        return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not static.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotBeStatic()
+        {
+	        _sequence.AddFunctionCall(FunctionDelegates.BeStatic, true, false);
+	        return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
         /// Selects types that are nested.
         /// </summary>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>

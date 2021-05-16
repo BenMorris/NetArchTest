@@ -1,4 +1,6 @@
-﻿namespace NetArchTest.Rules
+﻿using Mono.Cecil.Rocks;
+
+namespace NetArchTest.Rules
 {
     using System;
     using System.Collections.Generic;
@@ -192,6 +194,21 @@
             {
                 return input.Where(c => !c.IsInterface);
             }
+        };
+
+        /// <summary> Function for finding static classes. </summary>
+        internal static FunctionDelegate<bool> BeStatic = delegate(IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        {
+	        if (condition)
+	        {
+		        return input.Where(ClassIsStatic);
+	        }
+	        else
+	        {
+		        return input.Where(c => !ClassIsStatic(c));
+	        }
+
+	        bool ClassIsStatic(TypeDefinition c) => c.IsAbstract && c.IsSealed && !c.IsInterface && !c.GetConstructors().Any(m => m.IsPublic);
         };
 
         /// <summary> Function for finding types with generic parameters. </summary>
