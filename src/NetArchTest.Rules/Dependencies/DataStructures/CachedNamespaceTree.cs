@@ -32,5 +32,10 @@
             }
             return node.value;
         }
+
+        public IEnumerable<string> GetAllMatchingNames(string fullName)
+        {
+            return _searchTree.GetAllMatchingNames(fullName).ToArray();
+        }
     }
 }
