@@ -20,7 +20,7 @@
         /// <returns>A list of found types.</returns>
         public IReadOnlyList<TypeDefinition> FindTypesThatHaveDependencyOnAny(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {  
-            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.HaveDependencyOnAny, dependencies);           
+            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.HaveDependencyOnAny, dependencies, true);           
         }
 
         /// <summary>
@@ -31,7 +31,7 @@
         /// <returns>A list of found types.</returns>
         public IReadOnlyList<TypeDefinition> FindTypesThatHaveDependencyOnAll(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {  
-            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.HaveDependencyOnAll, dependencies);         
+            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.HaveDependencyOnAll, dependencies, true);         
         }
 
         /// <summary>
@@ -42,7 +42,7 @@
         /// <returns>A list of found types.</returns>
         public IReadOnlyList<TypeDefinition> FindTypesThatOnlyHaveDependenciesOnAnyOrNone(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {           
-            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAnyOrNone, dependencies);
+            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAnyOrNone, dependencies, false);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
         /// <returns>A list of found types.</returns>
         public IReadOnlyList<TypeDefinition> FindTypesThatOnlyHaveDependenciesOnAny(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
-            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAny, dependencies);
+            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAny, dependencies, false);
         }
 
         /// <summary>
@@ -64,17 +64,17 @@
         /// <returns>A list of found types.</returns>
         public IReadOnlyList<TypeDefinition> FindTypesThatOnlyOnlyHaveDependenciesOnAll(IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies)
         {
-            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAll, dependencies);
+            return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAll, dependencies, false);
         }
 
-        private List<TypeDefinition> FindTypes(IEnumerable<TypeDefinition> input, TypeDefinitionCheckingResult.SearchType searchType, IEnumerable<string> dependencies)
+        private List<TypeDefinition> FindTypes(IEnumerable<TypeDefinition> input, TypeDefinitionCheckingResult.SearchType searchType, IEnumerable<string> dependencies, bool serachForDependencyInFieldConstant)
         {
             var output = new List<TypeDefinition>();
             var searchTree = new CachedNamespaceTree(dependencies);
 
             foreach (var type in input)
             {
-                var context = new TypeDefinitionCheckingContext(type, searchType, searchTree);
+                var context = new TypeDefinitionCheckingContext(type, searchType, searchTree, serachForDependencyInFieldConstant);
                 if (context.IsTypeFound())
                 {
                     output.Add(type);
