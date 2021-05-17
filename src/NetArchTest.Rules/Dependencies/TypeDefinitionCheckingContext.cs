@@ -225,13 +225,16 @@
                             }
                             break;
                         case FieldReference fieldReference:
-                            if (!fieldReference.Resolve().CustomAttributes.IsCompilerGenerated())
+                            if (fieldReference.DeclaringType != _typeToCheck)
                             {
                                 CheckTypeReference(fieldReference.DeclaringType);
                             }
                             break;
                         case MethodReference methodReference:
-                            CheckTypeReference( methodReference.DeclaringType);
+                            if (methodReference.DeclaringType != _typeToCheck)
+                            {
+                                CheckTypeReference(methodReference.DeclaringType);
+                            }
                             break;
                     }
                 }
