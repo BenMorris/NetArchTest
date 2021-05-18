@@ -108,12 +108,7 @@
 
         public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
         {
-            return typeDefinition.CustomAttributes.IsCompilerGenerated();
-        }
-
-        public static bool IsCompilerGenerated(this Collection<CustomAttribute> customAttributes)
-        {
-            return customAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
+            return typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
         }
 
         /// <summary>
