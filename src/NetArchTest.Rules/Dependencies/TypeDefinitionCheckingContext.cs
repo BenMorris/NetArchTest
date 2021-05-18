@@ -9,13 +9,14 @@
     internal class TypeDefinitionCheckingContext
     {
         private readonly TypeDefinition _typeToCheck;
-        private readonly TypeDefinitionCheckingResult _result;
-        
+        private readonly TypeDefinitionCheckingResult _result;        
+        private readonly bool _serachForDependencyInFieldConstant;
 
-        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, TypeDefinitionCheckingResult.SearchType searchType, ISearchTree searchTree)
+        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, TypeDefinitionCheckingResult.SearchType searchType, ISearchTree searchTree, bool serachForDependencyInFieldConstant = false)
         {
             _typeToCheck = typeToCheck;
-            _result = new TypeDefinitionCheckingResult(searchType, searchTree);         
+            _result = new TypeDefinitionCheckingResult(searchType, searchTree);
+            _serachForDependencyInFieldConstant = serachForDependencyInFieldConstant;
         }
 
         public bool IsTypeFound()
@@ -96,7 +97,7 @@
                 {
                     CheckCustomAttributes(field);
                     CheckTypeReference(field.FieldType);
-                    if (field.HasConstant && field.FieldType.FullName == typeof(string).FullName)
+                    if (_serachForDependencyInFieldConstant && field.HasConstant && field.FieldType.FullName == typeof(string).FullName)
                     {
                         _result.CheckDependency(field.Constant.ToString());
                     }

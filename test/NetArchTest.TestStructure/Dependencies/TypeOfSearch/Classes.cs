@@ -9,6 +9,8 @@
 
     public class Class_A
     {
+        string stringField = "I am not a dependency!";
+
         public static void LetUsCreateSomeAnonymousTypes()
         {
             var numbers = Enumerable.Range(0, 1);
