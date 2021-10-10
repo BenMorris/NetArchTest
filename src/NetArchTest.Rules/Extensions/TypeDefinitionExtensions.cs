@@ -119,7 +119,7 @@
         /// </remarks>
         public static string GetNamespace(this TypeDefinition typeDefinition)
         {
-            if ((typeDefinition.IsNestedPrivate) || (typeDefinition.IsNestedPublic))
+            if ((typeDefinition.IsNested))
             {
                 return typeDefinition.DeclaringType.FullName;
             }
