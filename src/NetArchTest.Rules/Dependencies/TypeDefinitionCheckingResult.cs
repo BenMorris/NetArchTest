@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using Mono.Cecil;
     using NetArchTest.Rules.Dependencies.DataStructures;
 
@@ -105,6 +106,10 @@
                 if (_hasDependencyFromOutsideOfSearchTree == false)
                 {
                     bool isGlobalAnonymousCompilerGeneratedType = String.IsNullOrEmpty(dependency.Namespace) && dependency.Name.StartsWith("<>");
+                    if (dependency is TypeDefinition typeDefinition)
+                    {
+                        isGlobalAnonymousCompilerGeneratedType |= typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
+                    }
                     if (!isGlobalAnonymousCompilerGeneratedType)
                     {
                         _hasDependencyFromOutsideOfSearchTree = true;

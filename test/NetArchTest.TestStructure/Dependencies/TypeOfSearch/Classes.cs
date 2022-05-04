@@ -18,6 +18,22 @@
                          join z in numbers on x equals z
                          select (x, z);
         }
+
+
+        public static int LetUsUseSwitchExpressionWithMoreThan7(string element)
+        {            
+            return element switch
+            {
+                "one" => 1,
+                "two" => 2,
+                "three" => 3,
+                "four" => 4,
+                "five" => 5,
+                "six" => 6,
+                "seven" => 7,
+                _ => 8,
+            };
+        }
     }
 
     public class Class_B  
