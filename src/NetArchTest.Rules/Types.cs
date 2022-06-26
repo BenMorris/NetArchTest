@@ -21,7 +21,7 @@
 
         /// <summary> The list of namespaces to exclude from the current domain. </summary>
         private static readonly List<string> _exclusionList = new List<string>
-        { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit" };
+        { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit", "<PrivateImplementationDetails>" };
 
         private static readonly NamespaceTree _exclusionTree = new NamespaceTree(_exclusionList);
 
