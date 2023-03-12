@@ -37,15 +37,19 @@
         public TestResult GetResult()
         {
             bool success;
+            IEnumerable<TypeDefinition> typeDefinitions;
+
             if (_should)
             {
                 // All the classes should meet the condition
-                success = (_sequence.Execute(_types).Count() == _types.Count());
+                typeDefinitions = _sequence.Execute(_types);
+                success = (typeDefinitions.Count() == _types.Count());
             }
             else
             {
                 // No classes should meet the condition
-                success = (!_sequence.Execute(_types).Any());
+                typeDefinitions = (_sequence.Execute(_types));
+                success = (!typeDefinitions.Any());
             }
 
             if (success)
@@ -53,9 +57,10 @@
                 return TestResult.Success();
             }
 
-            // If we've failed, get a collection of failing types so these can be reported in a failing test.
-            var failedTypes = _sequence.Execute(_types, selected: !_should).ToList();
-            return TestResult.Failure(failedTypes);
+            return TestResult.Failure(
+                _should 
+                    ? _types.Except(typeDefinitions).ToList()
+                    : typeDefinitions.Distinct().ToList());
         }
 
         /// <summary>

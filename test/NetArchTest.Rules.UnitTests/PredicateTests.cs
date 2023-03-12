@@ -1080,5 +1080,21 @@ namespace NetArchTest.Rules.UnitTests
             // The custom rule was executed at least once
             Assert.True(rule.TestMethodCalled);
         }
+        
+        [Fact(DisplayName = "Custom rule that returns false doesnt evaluate twice.")]
+        public void GetResult_Doesnt_Evaluate_Twice()
+        {
+            var customRule = new CustomRuleExample(_ => false);
+
+            var t = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .HaveName("ClassA1")
+                .Should()
+                .MeetCustomRule(customRule)
+                .GetResult();
+            
+            Assert.True(customRule.TimesTimesCalled == 1);
+        }
     }
 }
