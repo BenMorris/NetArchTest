@@ -124,227 +124,128 @@ namespace NetArchTest.Rules
         };
 
         /// <summary> Function for finding interfaces. </summary>
-        internal static FunctionDelegate<bool> BeInterface = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeInterface = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsInterface);
-            }
-            else
-            {
-                return input.Where(c => !c.IsInterface);
-            }
+            return input.Where(c => c.IsInterface == condition);
         };
 
         /// <summary> Function for finding static classes. </summary>
-        internal static FunctionDelegate<bool> BeStatic = delegate(IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeStatic = delegate(IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-	        if (condition)
-	        {
-		        return input.Where(ClassIsStatic);
-	        }
-	        else
-	        {
-		        return input.Where(c => !ClassIsStatic(c));
-	        }
+            return input.Where(c => ClassIsStatic(c) == condition);
 
-	        bool ClassIsStatic(TypeDefinition c) => c.IsAbstract && c.IsSealed && !c.IsInterface && !c.GetConstructors().Any(m => m.IsPublic);
+            bool ClassIsStatic(TypeDefinition c) => 
+                c.IsAbstract 
+                && c.IsSealed 
+                && !c.IsInterface 
+                && !c.GetConstructors().Any(m => m.IsPublic);
         };
 
         /// <summary> Function for finding types with generic parameters. </summary>
-        internal static FunctionDelegate<bool> BeGeneric = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeGeneric = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.HasGenericParameters);
-            }
-            else
-            {
-                return input.Where(c => !c.HasGenericParameters);
-            }
+            return input.Where(c => c.HasGenericParameters == condition);
         };
 
 
         /// <summary> Function for finding nested classes. </summary>
-        internal static FunctionDelegate<bool> BeNested = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeNested = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsNested);
-            }
-            else
-            {
-                return input.Where(c => !c.IsNested);
-            }
+            return input.Where(c => c.IsNested == condition);
         };
 
         /// <summary> Function for finding nested public classes. </summary>
-        internal static FunctionDelegate<bool> BeNestedPublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeNestedPublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsNestedPublic);
-            }
-            else
-            {
-                return input.Where(c => !c.IsNestedPublic);
-            }
+            return input.Where(c => c.IsNestedPublic == condition);
         };
 
         /// <summary> Function for finding nested private classes. </summary>
-        internal static FunctionDelegate<bool> BeNestedPrivate = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeNestedPrivate = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsNestedPrivate);
-            }
-            else
-            {
-                return input.Where(c => !c.IsNestedPrivate);
-            }
+            return input.Where(c => c.IsNestedPrivate == condition);
         };
 
-
         /// <summary> Function for finding public classes. </summary>
-        internal static FunctionDelegate<bool> BePublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BePublic = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsNested ? c.IsNestedPublic : c.IsPublic);
-            }
-            else
-            {
-                return input.Where(c => c.IsNested ? !c.IsNestedPublic : c.IsNotPublic);
-            }
+            return condition 
+                ? input.Where(c => c.IsNested ? c.IsNestedPublic : c.IsPublic)
+                : input.Where(c => c.IsNested ? !c.IsNestedPublic : c.IsNotPublic);
         };
 
         /// <summary> Function for finding sealed classes. </summary>
-        internal static FunctionDelegate<bool> BeSealed = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeSealed = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsSealed);
-            }
-            else
-            {
-                return input.Where(c => !c.IsSealed);
-            }
+            return input.Where(c => c.IsSealed == condition);
         };
 
         /// <summary> Function for finding immutable classes. </summary>
-        internal static FunctionDelegate<bool> BeImmutable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeImmutable = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsImmutable());
-            }
-            else
-            {
-                return input.Where(c => !c.IsImmutable());
-            }
+            return input.Where(c => c.IsImmutable() == condition);
         };
 
         /// <summary> Function for finding nullable classes. </summary>
-        internal static FunctionDelegate<bool> HasNullableMembers = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+        internal static readonly FunctionDelegate<bool> HasNullableMembers = delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.HasNullableMembers());
-            }
-            else
-            {
-                return input.Where(c => !c.HasNullableMembers());
-            }
+            return input.Where(c => c.HasNullableMembers() == condition);
         };
 
         /// <summary> Function for finding types in a particular namespace. </summary>
-        internal static FunctionDelegate<string> ResideInNamespace = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
+        internal static readonly FunctionDelegate<string> ResideInNamespace = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                return input.Where(c => !c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
-            }
+            return input.Where(c => 
+                c.FullName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase) == condition);
         };
 
         /// <summary> Function for matching a type name using a regular expression. </summary>
-        internal static FunctionDelegate<string> ResideInNamespaceMatching = delegate (IEnumerable<TypeDefinition> input, string pattern, bool condition)
+        internal static readonly FunctionDelegate<string> ResideInNamespaceMatching = delegate (IEnumerable<TypeDefinition> input, string pattern, bool condition)
         {
-            Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
-            if (condition)
-            {
-                return input.Where(c => r.Match(c.GetNamespace()).Success);
-            }
-            else
-            {
-                return input.Where(c => !r.Match(c.GetNamespace()).Success);
-            }
+            var r = new Regex(pattern, RegexOptions.IgnoreCase);
+            
+            return input.Where(c => r.Match(c.GetNamespace()).Success == condition);
         };
 
         /// <summary> Function for finding types that have a dependency on any of the supplied types. </summary>
-        internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOnAny = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
+        internal static readonly FunctionDelegate<IEnumerable<string>> HaveDependencyOnAny = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {
             // Get the types that contain the dependencies
             var search = new DependencySearch();
             var results = search.FindTypesThatHaveDependencyOnAny(input, dependencies);
 
-            if (condition)
-            {
-                return results;
-            }
-            else
-            {
-                return input.Where(t => !results.Contains(t));
-            }
+            return condition
+                ? results
+                : input.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding types that have a dependency on all of the supplied types. </summary>
-        internal static FunctionDelegate<IEnumerable<string>> HaveDependencyOnAll = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
+        internal static readonly FunctionDelegate<IEnumerable<string>> HaveDependencyOnAll = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {
             // Get the types that contain the dependencies
             var search = new DependencySearch();
             var results = search.FindTypesThatHaveDependencyOnAll(input, dependencies);
 
-            if (condition)
-            {
-                return results;
-            }
-            else
-            {
-                return input.Where(t => !results.Contains(t));
-            }
+            return condition
+                ? results
+                : input.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding types that have a dependency on type other than one of the supplied types.</summary>
-        internal static FunctionDelegate<IEnumerable<string>> OnlyHaveDependenciesOnAnyOrNone = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
+        internal static readonly FunctionDelegate<IEnumerable<string>> OnlyHaveDependenciesOnAnyOrNone = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {            
             var search = new DependencySearch();
             var results = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(input, dependencies);
 
-            if (condition)
-            {
-                return results;
-            }
-            else
-            {
-                return input.Where(t => !results.Contains(t));
-            }
+            return condition
+                ? results
+                : input.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding public classes. </summary>
-        internal static FunctionDelegate<ICustomRule> MeetCustomRule = delegate (IEnumerable<TypeDefinition> input, ICustomRule rule, bool condition)
+        internal static readonly FunctionDelegate<ICustomRule> MeetCustomRule = delegate (IEnumerable<TypeDefinition> input, ICustomRule rule, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(t => rule.MeetsRule(t));
-            }
-            else
-            {
-                return input.Where(t => !rule.MeetsRule(t));
-            }
+            return input.Where(t => rule.MeetsRule(t) == condition);
         };
     }
 }
