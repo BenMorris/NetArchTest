@@ -28,108 +28,67 @@ namespace NetArchTest.Rules
         internal delegate IEnumerable<TypeDefinition> FunctionDelegate<T>(IEnumerable<TypeDefinition> input, T arg, bool condition);
 
         /// <summary> Function for finding a specific type name. </summary>
-        internal static FunctionDelegate<string> HaveName = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
+        internal static readonly FunctionDelegate<string> HaveName = delegate (IEnumerable<TypeDefinition> input, string name, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                return input.Where(c => !c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            }
+            return input.Where(c => 
+                c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) == condition);
         };
 
         /// <summary> Function for matching a type name using a regular expression. </summary>
-        internal static FunctionDelegate<string> HaveNameMatching = delegate (IEnumerable<TypeDefinition> input, string pattern, bool condition)
+        internal static readonly FunctionDelegate<string> HaveNameMatching = delegate (IEnumerable<TypeDefinition> input, string pattern, bool condition)
         {
-            Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
-            if (condition)
-            {
-                return input.Where(c => r.Match(c.Name).Success);
-            }
-            else
-            {
-                return input.Where(c => !r.Match(c.Name).Success);
-            }
+            var r = new Regex(pattern, RegexOptions.IgnoreCase);
+            
+            return input.Where(c => r.Match(c.Name).Success == condition);
         };
 
         /// <summary> Function for matching the start of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameStartingWith = MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison.InvariantCultureIgnoreCase);
+        internal static readonly FunctionDelegate<string> HaveNameStartingWith = MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison.InvariantCultureIgnoreCase);
 
         internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameStartingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string start, bool condition)
         {
-	        if (condition)
-	        {
-		        return input.Where(c => c.Name.StartsWith(start, comparer));
-	        }
-		    else
-	        {
-		        return input.Where(c => !c.Name.StartsWith(start, comparer));
-	        }
+            return input.Where(c => c.Name.StartsWith(start, comparer) == condition);
         };
 
         /// <summary> Function for matching the end of a type name. </summary>
-        internal static FunctionDelegate<string> HaveNameEndingWith = MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison.InvariantCultureIgnoreCase);
+        internal static readonly FunctionDelegate<string> HaveNameEndingWith = MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison.InvariantCultureIgnoreCase);
 
         internal static FunctionDelegate<string> MakeFunctionDelegateUsingStringComparerForHaveNameEndingWith(StringComparison comparer) => delegate (IEnumerable<TypeDefinition> input, string end, bool condition)
         {
-	        if (condition)
-	        {
-		        return input.Where(c => c.Name.EndsWith(end, comparer));
-	        }
-	        else
-	        {
-		        return input.Where(c => !c.Name.EndsWith(end, comparer));
-	        }
+            return input.Where(c => c.Name.EndsWith(end, comparer) == condition);
         };
 
         /// <summary> Function for finding classes with a particular custom attribute. </summary>
-        internal static FunctionDelegate<Type> HaveCustomAttribute = delegate (IEnumerable<TypeDefinition> input, Type attribute, bool condition)
+        internal static readonly FunctionDelegate<Type> HaveCustomAttribute = delegate (IEnumerable<TypeDefinition> input, Type attribute, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.CustomAttributes.Any(a => attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase)));
-            }
-            else
-            {
-                return input.Where(c => !c.CustomAttributes.Any(a => attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase)));
-            }
+            return input.Where(c => 
+                c.CustomAttributes.Any(a => 
+                    attribute.FullName?.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                == condition);
         };
 
         /// <summary> Function for finding classes decorated with a particular custom attribute or derived one</summary>
-        internal static FunctionDelegate<Type> HaveCustomAttributeOrInherit = delegate (IEnumerable<TypeDefinition> input, Type attribute, bool condition)
+        internal static readonly FunctionDelegate<Type> HaveCustomAttributeOrInherit = delegate (IEnumerable<TypeDefinition> input, Type attribute, bool condition)
         {
-            // Convert the incoming type to a definition
             var target = attribute.ToTypeDefinition();
-            if (condition)
-            {
-                return input.Where(c => c.CustomAttributes.Any(a => a.AttributeType.Resolve().IsSubclassOf(target) || attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase)));
-            }
-            else
-            {
-                return input.Where(c => !(c.CustomAttributes.Any(a => a.AttributeType.Resolve().IsSubclassOf(target) || attribute.FullName.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase))));
-            }
+
+            return input.Where(c => 
+                c.CustomAttributes.Any(a => 
+                    a.AttributeType.Resolve().IsSubclassOf(target) || (attribute.FullName?.Equals(a.AttributeType.FullName, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                ) == condition);
         };
 
 
         /// <summary> Function for finding classes that inherit from a particular type. </summary>
-        internal static FunctionDelegate<Type> Inherits = delegate (IEnumerable<TypeDefinition> input, Type type, bool condition)
+        internal static readonly FunctionDelegate<Type> Inherits = delegate (IEnumerable<TypeDefinition> input, Type type, bool condition)
         {
-            // Convert the incoming type to a definition
             var target = type.ToTypeDefinition();
-            if (condition)
-            {
-                return input.Where(c => c.IsSubclassOf(target));
-            }
-            else
-            {
-                return input.Where(c => !c.IsSubclassOf(target));
-            }
+
+            return input.Where(c => c.IsSubclassOf(target) == condition);
         };
 
         /// <summary> Function for finding classes that implement a particular interface. </summary>
-        internal static FunctionDelegate<Type> ImplementsInterface = delegate (IEnumerable<TypeDefinition> input, Type typeInterface, bool condition)
+        internal static readonly FunctionDelegate<Type> ImplementsInterface = delegate (IEnumerable<TypeDefinition> input, Type typeInterface, bool condition)
         {
             if (!typeInterface.IsInterface)
             {
@@ -146,41 +105,22 @@ namespace NetArchTest.Rules
                     found.Add(type);
                 }
             }
-
-            if (condition)
-            {
-                return found;
-            }
-            else
-            {
-                return input.Where(c => !found.Contains(c));
-            }
+            
+            return condition
+                ? found
+                : input.Where(c => !found.Contains(c));
         };
 
         /// <summary> Function for finding abstract classes. </summary>
-        internal static FunctionDelegate<bool> BeAbstract = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeAbstract = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsAbstract);
-            }
-            else
-            {
-                return input.Where(c => !c.IsAbstract);
-            }
+            return input.Where(c => c.IsAbstract == condition);
         };
 
         /// <summary> Function for finding classes. </summary>
-        internal static FunctionDelegate<bool> BeClass = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        internal static readonly FunctionDelegate<bool> BeClass = delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
         {
-            if (condition)
-            {
-                return input.Where(c => c.IsClass);
-            }
-            else
-            {
-                return input.Where(c => !c.IsClass);
-            }
+            return input.Where(c => c.IsClass == condition);
         };
 
         /// <summary> Function for finding interfaces. </summary>
