@@ -8,7 +8,7 @@
     /// <summary>
     /// Extensions for the <see cref="Type"/> class.
     /// </summary>
-    static internal class TypeExtensions
+    internal static class TypeExtensions
     {
         /// <summary>
         /// Converts the value to a <see cref="TypeDefinition"/> instance.

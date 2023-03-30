@@ -5,7 +5,7 @@ namespace NetArchTest.Rules.Extensions
     using System.Collections.Generic;
     using Mono.Cecil;
 
-    static internal class TypeReferenceExtensions
+    internal static class TypeReferenceExtensions
     {
         /// <summary>
         /// Tests whether a Type is a non-nullable value type
