@@ -10,10 +10,10 @@
     public sealed class PolicyDefinition
     {
         /// <summary> The function that defines the list of types to execute against each rule. </summary>
-        private Func<Types> _typesLocator;
+        private readonly Func<Types> _typesLocator;
 
         /// <summary> The list of tests that have been added to the policy. </summary>
-        private List<PolicyTest> _tests = new List<PolicyTest>();
+        private readonly List<PolicyTest> _tests = new List<PolicyTest>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolicyDefinition"/> class.
