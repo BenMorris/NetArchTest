@@ -22,21 +22,21 @@
         /// <summary>
         /// Gets a flag indicating the success or failure of the test.
         /// </summary>
-        public bool IsSuccessful { get; private set; }
+        public bool IsSuccessful { get; }
 
         /// <summary>
         /// Gets a collection populated with a list of any types that failed the test.
         /// </summary>
-        public IEnumerable<Type> FailingTypes { get; private set; }
+        public IEnumerable<Type> FailingTypes { get; }
 
         /// <summary>
         /// Gets the simple name associated with the test.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the detailed description associated with the test.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
     }
 }
