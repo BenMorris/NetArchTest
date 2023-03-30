@@ -28,12 +28,12 @@
         /// <summary>
         /// The simple name of the policy.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// A detailed description of the policy.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Adds a rule to the policy that can optionally be marked with a name and description.
