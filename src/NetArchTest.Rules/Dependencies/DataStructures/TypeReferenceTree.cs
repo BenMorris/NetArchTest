@@ -25,37 +25,42 @@
         private NameNode TraverseThroughReferenceName(TypeReference reference, StartOfTypeNode startOfTypeNode)
         {
             NameNode deepestNameNode;
-            if ((reference.IsArray == false) && (reference.IsByReference == false) && (reference.IsPointer == false))
+            
+            if (reference.IsArray == false && reference.IsByReference == false && reference.IsPointer == false)
             {
                 deepestNameNode = startOfTypeNode.GetNamespace(reference.GetNamespace()).GetName(reference.Name);
-                deepestNameNode = GoDeeperIntoGenericArgumentList(reference, deepestNameNode);
-            } 
-            else
-            {
-                var referenceAsTypeSpecification = reference as TypeSpecification;
-                deepestNameNode = TraverseThroughReferenceName(referenceAsTypeSpecification.ElementType, startOfTypeNode);
-                deepestNameNode = deepestNameNode.AddTypeSpecification(referenceAsTypeSpecification);
+                return GoDeeperIntoGenericArgumentList(reference, deepestNameNode);
             }
-            return deepestNameNode;
+            
+            var referenceAsTypeSpecification = reference as TypeSpecification;
+            deepestNameNode = TraverseThroughReferenceName(referenceAsTypeSpecification?.ElementType, startOfTypeNode);
+            
+            return deepestNameNode.AddTypeSpecification(referenceAsTypeSpecification);
         }
         private NameNode GoDeeperIntoGenericArgumentList(TypeReference reference, NameNode nameNode)
         {
             var deepestNameNode = nameNode;
-            if (reference.IsGenericInstance)
+
+            if (!reference.IsGenericInstance)
             {
-                var startOfTypeNode = deepestNameNode.StartArgumentList();
-                var referenceAsGenericInstance = reference as GenericInstanceType;
-                if (referenceAsGenericInstance.HasGenericArguments)
-                {
-                    for (int i = 0; i < referenceAsGenericInstance.GenericArguments.Count; i++)
-                    {
-                        deepestNameNode = TraverseThroughReferenceName(referenceAsGenericInstance.GenericArguments[i], startOfTypeNode);
-                        if (i < referenceAsGenericInstance.GenericArguments.Count - 1) startOfTypeNode = deepestNameNode.AddAnotherArgument();
-                    }                    
-                }
-                deepestNameNode = deepestNameNode.EndArgumentList();
+                return deepestNameNode;
             }
-            return deepestNameNode;
+            
+            var startOfTypeNode = deepestNameNode.StartArgumentList();
+            var referenceAsGenericInstance = reference as GenericInstanceType;
+
+            if (referenceAsGenericInstance?.HasGenericArguments ?? true)
+            {
+                return deepestNameNode.EndArgumentList();
+            }
+            
+            for (int i = 0; i < referenceAsGenericInstance.GenericArguments.Count; i++)
+            {
+                deepestNameNode = TraverseThroughReferenceName(referenceAsGenericInstance.GenericArguments[i], startOfTypeNode);
+                if (i < referenceAsGenericInstance.GenericArguments.Count - 1) startOfTypeNode = deepestNameNode.AddAnotherArgument();
+            }   
+            
+            return deepestNameNode.EndArgumentList();
         }
 
         [DebuggerDisplay("StartOfTypeNode (namespaces : {namespaces.Count})")]
