@@ -1,10 +1,7 @@
 ﻿namespace NetArchTest.Rules.Dependencies.DataStructures
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
     using Mono.Cecil;
     using NetArchTest.Rules.Extensions;
 

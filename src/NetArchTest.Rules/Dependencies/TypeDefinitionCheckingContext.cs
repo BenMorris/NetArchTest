@@ -2,8 +2,6 @@
 
 namespace NetArchTest.Rules.Dependencies
 {
-    using System;
-    using System.Collections.Generic;
     using Mono.Cecil;
     using NetArchTest.Rules.Dependencies.DataStructures;
     using NetArchTest.Rules.Extensions;
