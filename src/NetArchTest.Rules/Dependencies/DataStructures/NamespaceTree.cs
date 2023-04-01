@@ -44,6 +44,7 @@
             {
                 get; private set;
             }
+            
             /// <summary>Returns full path from root to terminated node. Only available on terminated node.</summary>
             public string FullName
             {
@@ -58,13 +59,14 @@
             public Node GetOrAddNode(string name)
             {
                 name = NormalizeString(name);
-
                 Node result;
+                
                 if (!Nodes.TryGetValue(name, out result))
                 {
                     result = new Node();
                     Nodes.Add(name, result);
                 }
+                
                 return result;
             }
 
@@ -122,9 +124,11 @@
             }
 
             var deepestNode = _root;
+            
             foreach (var token in TypeParser.Parse(fullName, parseNames))
             {              
                 int subnameEndIndex = -1;
+                
                 while (subnameEndIndex != token.Length)
                 {
                     int subnameStartIndex = subnameEndIndex + 1;
@@ -133,6 +137,7 @@
                     deepestNode = deepestNode.GetOrAddNode(token.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex));
                 }
             }
+            
             if (!deepestNode.IsTerminated)
             {
                 deepestNode.Terminate(fullName);
@@ -157,14 +162,15 @@
         public IEnumerable<string> GetAllMatchingNames(string fullName)
         {
             var deepestNode = _root;
-
             int subnameEndIndex = -1;
+            
             while (subnameEndIndex != fullName.Length)
             {
                 int subnameStartIndex = subnameEndIndex + 1;
                 subnameEndIndex = GetSubnameEndIndex(fullName, subnameStartIndex);
 
                 string name = fullName.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex);
+                
                 if (!deepestNode.TryGetNode(name, out deepestNode))
                 {
                     yield break;
@@ -184,12 +190,14 @@
             foreach (var token in GetTokens(reference))
             {
                 int subnameEndIndex = -1;
+                
                 while (subnameEndIndex != token.Length)
                 {
                     int subnameStartIndex = subnameEndIndex + 1;
                     subnameEndIndex = GetSubnameEndIndex(token, subnameStartIndex);
 
                     string name = token.Substring(subnameStartIndex, subnameEndIndex - subnameStartIndex);
+                    
                     if (!deepestNode.TryGetNode(name, out deepestNode))
                     {
                         yield break;
@@ -216,18 +224,22 @@
             else
             {
                 var referenceAsTypeSpecification = reference as TypeSpecification;
+                
                 foreach (var token in GetTokens(referenceAsTypeSpecification.ElementType))
                 {
                     yield return token;
                 }
+                
                 if (reference.IsByReference)
                 {
                     yield return "&";
                 }
+                
                 if (reference.IsPointer)
                 {
                     yield return "*";
                 }
+                
                 if (reference.IsArray)
                 {
                     var referenceAsArrayType = reference as ArrayType;
@@ -238,15 +250,18 @@
             if (reference.IsGenericInstance)
             {                
                 var referenceAsGenericInstance = reference as GenericInstanceType;
+                
                 if (referenceAsGenericInstance.HasGenericArguments)
                 {
                     yield return "<";
+                    
                     for (int i = 0; i < referenceAsGenericInstance.GenericArguments.Count; i++)
                     {
                         foreach (var token in GetTokens(referenceAsGenericInstance.GenericArguments[i]))
                         {
                             yield return token;                            
                         }
+                        
                         yield return ",";
                     }
                 }
@@ -257,6 +272,7 @@
         private static int GetSubnameEndIndex(string namespaceFullName, int subnameStartIndex)
         {
             int nextSeparatorIndex = namespaceFullName.IndexOfAny(_namespaceSeparators, subnameStartIndex);
+            
             if (nextSeparatorIndex < 0)
             {
                 nextSeparatorIndex = namespaceFullName.Length;

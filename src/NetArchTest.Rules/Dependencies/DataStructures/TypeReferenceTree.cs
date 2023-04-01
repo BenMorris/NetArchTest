@@ -16,7 +16,6 @@
     {
         private readonly StartOfTypeNode _root = new StartOfTypeNode();
 
-        
         public NameNode GetNode(TypeReference reference)
         {          
             return TraverseThroughReferenceName(reference, _root);
@@ -71,11 +70,13 @@
             public NamespaceNode GetNamespace(string @namespace)
             {
                 NamespaceNode result;
+                
                 if (!namespaces.TryGetValue(@namespace, out result))
                 {
                     result = new NamespaceNode();
                     namespaces.Add(@namespace, result);
                 }
+                
                 return result;
             }
         }
@@ -88,11 +89,13 @@
             public NameNode GetName(string name)
             {                
                 NameNode result;
+                
                 if (!names.TryGetValue(name, out result))
                 {
                     result = new NameNode();
                     names.Add(name, result);
                 }
+                
                 return result;
             }
         }
@@ -132,6 +135,7 @@
                 if (typeSpecification.IsArray)
                 {
                     var arrayType = typeSpecification as ArrayType;
+                    
                     if (arrayType.Rank > 1)
                     {
                         specificationNumber = 666;
@@ -139,11 +143,13 @@
                 }
 
                 NameNode result;
+                
                 if (!typeSpecifications.TryGetValue(specificationNumber, out result))
                 {
                     result = new NameNode();
                     typeSpecifications.Add(specificationNumber, result);
                 }
+                
                 return result;
             }
         }

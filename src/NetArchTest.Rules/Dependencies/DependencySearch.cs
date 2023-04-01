@@ -75,6 +75,7 @@
             foreach (var type in input)
             {
                 var context = new TypeDefinitionCheckingContext(type, searchType, searchTree, serachForDependencyInFieldConstant);
+                
                 if (context.IsTypeFound())
                 {
                     output.Add(type);
