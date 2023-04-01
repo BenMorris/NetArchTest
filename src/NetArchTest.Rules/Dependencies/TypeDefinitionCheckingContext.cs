@@ -27,7 +27,6 @@ namespace NetArchTest.Rules.Dependencies
             return _result.IsTypeFound();
         }
 
-
         /// <summary>
         /// Finds matching dependencies for a given type by walking through the type.
         /// </summary>
@@ -55,6 +54,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(typeToCheck.BaseType);
             }
         }
+        
         private void CheckCustomAttributes(ICustomAttributeProvider typeToCheck)
         {
             if (!typeToCheck.HasCustomAttributes)
@@ -67,6 +67,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(ca.AttributeType);
             }
         }    
+        
         private void CheckImplementedInterfaces(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasInterfaces)
@@ -79,6 +80,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(i.InterfaceType);
             }
         }
+        
         private void CheckGenericTypeParametersConstraints(IGenericParameterProvider typeToCheck)
         {
             if (!typeToCheck.HasGenericParameters)
@@ -92,6 +94,7 @@ namespace NetArchTest.Rules.Dependencies
                 .ToList()
                 .ForEach(c => CheckTypeReference(c.ConstraintType));
         }
+        
         private void CheckFields(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasFields)
@@ -110,6 +113,7 @@ namespace NetArchTest.Rules.Dependencies
                 }
             }
         }
+        
         private void CheckProperties(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasProperties)
@@ -123,6 +127,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(property.PropertyType);
             }
         }
+        
         private void CheckEvents(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasEvents)
@@ -150,6 +155,7 @@ namespace NetArchTest.Rules.Dependencies
                 }
             }
         }
+        
         private void CheckMethods(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasMethods)
@@ -177,6 +183,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckMethodBodyInstructions(method);
             }
         }
+        
         private void CheckNestedCompilerGeneratedTypes(TypeDefinition typeToCheck)
         {
             if (!typeToCheck.HasNestedTypes)
@@ -193,6 +200,7 @@ namespace NetArchTest.Rules.Dependencies
                     CheckType(n);
                 });
         }
+        
         private void CheckMethodHeader(MethodDefinition methodToCheck)
         {
             CheckCustomAttributes(methodToCheck);
@@ -211,6 +219,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(parameter.ParameterType);
             }
         }
+        
         private void CheckMethodBodyVariables(MethodDefinition methodToCheck)
         {
             if (!methodToCheck.HasBody || !methodToCheck.Body.HasVariables)
@@ -223,6 +232,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckTypeReference(variable.VariableType);
             }
         }
+        
         private void CheckMethodBodyInstructions(MethodDefinition methodToCheck)
         {
             if (!methodToCheck.HasBody)
@@ -304,6 +314,7 @@ namespace NetArchTest.Rules.Dependencies
             var referenceAsTypeSpecification = reference as TypeSpecification;
             CheckTypeReference(referenceAsTypeSpecification?.ElementType);
         }
+        
         private void CheckDependency(TypeReference dependency)
         {
             _result.CheckDependency(dependency);

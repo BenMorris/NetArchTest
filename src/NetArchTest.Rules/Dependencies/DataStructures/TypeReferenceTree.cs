@@ -99,24 +99,26 @@
             private StartOfTypeNode startNode;
             private StartOfTypeNode andNode;
             private Dictionary<int, NameNode> typeSpecifications { get; set; }
-
-
+            
             public StartOfTypeNode StartArgumentList()
             {
                 startNode = startNode ?? new StartOfTypeNode();
                 return startNode;
             }
+            
             public StartOfTypeNode AddAnotherArgument()
             {
                 andNode = andNode ?? new StartOfTypeNode();
                 return andNode;
             }
+            
             public NameNode EndArgumentList()
             {
                 // We only need to know where a new list starts and where a comma is placed for unambiguous identification of a generic type,
                 // thus we do not need store information about list end, and we can simply return the last name from the list
                 return this;
             }
+            
             public NameNode AddTypeSpecification(TypeSpecification typeSpecification)
             {
                 typeSpecifications = typeSpecifications ?? new Dictionary<int, NameNode>();
