@@ -45,7 +45,7 @@
             var startOfTypeNode = deepestNameNode.StartArgumentList();
             var referenceAsGenericInstance = reference as GenericInstanceType;
 
-            if (referenceAsGenericInstance?.HasGenericArguments ?? true)
+            if (!referenceAsGenericInstance?.HasGenericArguments ?? true)
             {
                 return deepestNameNode.EndArgumentList();
             }
