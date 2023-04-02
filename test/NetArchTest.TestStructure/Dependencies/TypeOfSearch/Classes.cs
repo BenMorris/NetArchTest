@@ -1,9 +1,6 @@
 ﻿namespace NetArchTest.TestStructure.Dependencies.TypeOfSearch
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
 #pragma warning disable 169
 
