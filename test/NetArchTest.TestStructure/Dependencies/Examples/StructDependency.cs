@@ -9,9 +9,4 @@ namespace NetArchTest.TestStructure.Dependencies.Examples
     {
       
     }
-
-    struct StructDependency<T>
-    {
-
-    }
 }

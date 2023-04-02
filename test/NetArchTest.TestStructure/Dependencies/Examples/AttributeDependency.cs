@@ -8,13 +8,5 @@ namespace NetArchTest.TestStructure.Dependencies.Examples
     [AttributeUsage(AttributeTargets.All, Inherited = false)]
     class AttributeDependency :  Attribute
     {
-        public AttributeDependency()
-        {
-
-        }
-        public AttributeDependency(object obj)
-        {
-
-        }
     }
 }
