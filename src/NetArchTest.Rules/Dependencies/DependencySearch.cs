@@ -67,14 +67,14 @@
             return FindTypes(input, TypeDefinitionCheckingResult.SearchType.OnlyHaveDependenciesOnAll, dependencies, false);
         }
 
-        private List<TypeDefinition> FindTypes(IEnumerable<TypeDefinition> input, TypeDefinitionCheckingResult.SearchType searchType, IEnumerable<string> dependencies, bool serachForDependencyInFieldConstant)
+        private List<TypeDefinition> FindTypes(IEnumerable<TypeDefinition> input, TypeDefinitionCheckingResult.SearchType searchType, IEnumerable<string> dependencies, bool searchForDependencyInFieldConstant)
         {
             var output = new List<TypeDefinition>();
             var searchTree = new CachedNamespaceTree(dependencies);
 
             foreach (var type in input)
             {
-                var context = new TypeDefinitionCheckingContext(type, searchType, searchTree, serachForDependencyInFieldConstant);
+                var context = new TypeDefinitionCheckingContext(type, searchType, searchTree, searchForDependencyInFieldConstant);
                 if (context.IsTypeFound())
                 {
                     output.Add(type);
