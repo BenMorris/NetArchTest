@@ -8,7 +8,7 @@ namespace NetArchTest.Rules.Extensions
     /// <summary>
     /// Extensions for the <see cref="PropertyDefinition"/> class.
     /// </summary>
-    static internal class PropertyDefinitionExtensions
+    internal static class PropertyDefinitionExtensions
     {
         /// <summary>
         /// Tests whether a property is readonly

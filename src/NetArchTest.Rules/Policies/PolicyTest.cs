@@ -20,16 +20,16 @@
         /// <summary>
         /// The definition of the test expressed as a function.
         /// </summary>
-        internal Func<Types, ConditionList> Definition { get; private set; }
+        internal Func<Types, ConditionList> Definition { get; }
 
         /// <summary>
         /// Gets the simple name associated with the test.
         /// </summary>
-        internal string Name { get; private set; }
+        internal string Name { get; }
 
         /// <summary>
         /// Gets the detailed description associated with the test.
         /// </summary>
-        internal string Description { get; private set; }
+        internal string Description { get; }
     }
 }

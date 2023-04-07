@@ -8,10 +8,10 @@
     public sealed class Policy
     {
         /// <summary> The simple name of the policy. </summary>
-        private string _name;
+        private readonly string _name;
 
         /// <summary> A detailed description of the policy. </summary>
-        private string _description;
+        private readonly string _description;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Policy"/> class.

@@ -8,7 +8,7 @@ namespace NetArchTest.Rules.Extensions
     /// <summary>
     /// Extensions for the <see cref="FieldDefinition"/> class.
     /// </summary>
-    static internal class FieldDefinitionExtensions
+    internal static class FieldDefinitionExtensions
     {
         /// <summary>
         /// Tests whether a field is readonly
