@@ -95,7 +95,6 @@ namespace NetArchTest.Rules
                     ) == condition);
             };
 
-
         /// <summary>
         /// Function for finding classes that inherit from a particular type.
         /// </summary>
@@ -180,7 +179,6 @@ namespace NetArchTest.Rules
             {
                 return input.Where(c => c.HasGenericParameters == condition);
             };
-
 
         /// <summary>
         /// Function for finding nested classes.
