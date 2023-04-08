@@ -222,7 +222,7 @@ namespace NetArchTest.Rules
         /// Function for finding sealed classes.
         /// </summary>
         internal static readonly FunctionDelegate<bool> BeSealed = 
-            delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+            delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
             {
                 return input.Where(c => c.IsSealed == condition);
             };
@@ -231,7 +231,7 @@ namespace NetArchTest.Rules
         /// Function for finding immutable classes.
         /// </summary>
         internal static readonly FunctionDelegate<bool> BeImmutable = 
-            delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+            delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
             {
                 return input.Where(c => c.IsImmutable() == condition);
             };
@@ -240,7 +240,7 @@ namespace NetArchTest.Rules
         /// Function for finding nullable classes.
         /// </summary>
         internal static readonly FunctionDelegate<bool> HasNullableMembers = 
-            delegate (IEnumerable<TypeDefinition> input, bool dummmy, bool condition)
+            delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
             {
                 return input.Where(c => c.HasNullableMembers() == condition);
             };
