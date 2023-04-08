@@ -329,7 +329,6 @@
             return new ConditionList(_types, _should, _sequence);
         }
 
-
         /// <summary>
         /// Selects types that are interfaces.
         /// </summary>
@@ -674,6 +673,7 @@
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, new List<string> { dependency }, false);
             return new ConditionList(_types, _should, _sequence);
         }
+        
         /// <summary>
         /// Selects types that do not have a dependency on any of the particular types.
         /// </summary>
