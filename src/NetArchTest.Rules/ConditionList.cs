@@ -7,7 +7,8 @@
     using Mono.Cecil;
 
     /// <summary>
-    /// A set of conditions and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), GetResult()) applied to them.
+    /// A set of conditions and types that have have conjunctions (i.e. "and", "or")
+    /// and executors (i.e. Types(), GetResult()) applied to them.
     /// </summary>
     public sealed class ConditionList
     {
