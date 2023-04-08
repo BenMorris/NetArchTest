@@ -10,12 +10,6 @@ namespace NetArchTest.Rules
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
 
-    internal class StringAndComparisonStrategy
-    {
-		public string Value { get; }
-        public StringComparison Comparer { get; }
-    }
-
     /// <summary>
     /// Defines the various functions that can be applied to a collection of types.
     /// </summary>
