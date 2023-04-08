@@ -36,21 +36,13 @@
         /// <returns>An indication of whether the conditions are true, along with a list of types failing the check if they are not.</returns>
         public TestResult GetResult()
         {
-            bool success;
-            IEnumerable<TypeDefinition> typeDefinitions;
+            var typeDefinitions = _sequence
+                .Execute(_types)
+                .ToList();
 
-            if (_should)
-            {
-                // All the classes should meet the condition
-                typeDefinitions = _sequence.Execute(_types);
-                success = (typeDefinitions.Count() == _types.Count());
-            }
-            else
-            {
-                // No classes should meet the condition
-                typeDefinitions = (_sequence.Execute(_types));
-                success = (!typeDefinitions.Any());
-            }
+            var success = _should
+                ? typeDefinitions.Count == _types.Count()
+                : !typeDefinitions.Any();
 
             if (success)
             {
