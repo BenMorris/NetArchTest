@@ -84,6 +84,8 @@ namespace NetArchTest.Rules
         /// <summary> Function for finding classes that implement a particular interface. </summary>
         internal static readonly FunctionDelegate<Type> ImplementsInterface = delegate (IEnumerable<TypeDefinition> input, Type typeInterface, bool condition)
         {
+            var typeDefinitions = input.ToList();
+            
             if (!typeInterface.IsInterface)
             {
                 throw new ArgumentException($"The type {typeInterface.FullName} is not an interface.");
@@ -92,7 +94,7 @@ namespace NetArchTest.Rules
             var target = typeInterface.FullName;
             var found = new List<TypeDefinition>();
 
-            foreach (var type in input)
+            foreach (var type in typeDefinitions)
             {
                 if (type.Interfaces.Any(t => t.InterfaceType.Resolve().FullName.Equals(target, StringComparison.InvariantCultureIgnoreCase)))
                 {
@@ -102,7 +104,7 @@ namespace NetArchTest.Rules
             
             return condition
                 ? found
-                : input.Where(c => !found.Contains(c));
+                : typeDefinitions.Where(c => !found.Contains(c));
         };
 
         /// <summary> Function for finding abstract classes. </summary>
@@ -204,36 +206,42 @@ namespace NetArchTest.Rules
         /// <summary> Function for finding types that have a dependency on any of the supplied types. </summary>
         internal static readonly FunctionDelegate<IEnumerable<string>> HaveDependencyOnAny = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {
+            var typeDefinitions = input.ToList();
+            
             // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesThatHaveDependencyOnAny(input, dependencies);
+            var results = search.FindTypesThatHaveDependencyOnAny(typeDefinitions, dependencies);
 
             return condition
                 ? results
-                : input.Where(t => !results.Contains(t));
+                : typeDefinitions.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding types that have a dependency on all of the supplied types. </summary>
         internal static readonly FunctionDelegate<IEnumerable<string>> HaveDependencyOnAll = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
         {
+            var typeDefinitions = input.ToList();
+            
             // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesThatHaveDependencyOnAll(input, dependencies);
+            var results = search.FindTypesThatHaveDependencyOnAll(typeDefinitions, dependencies);
 
             return condition
                 ? results
-                : input.Where(t => !results.Contains(t));
+                : typeDefinitions.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding types that have a dependency on type other than one of the supplied types.</summary>
         internal static readonly FunctionDelegate<IEnumerable<string>> OnlyHaveDependenciesOnAnyOrNone = delegate (IEnumerable<TypeDefinition> input, IEnumerable<string> dependencies, bool condition)
-        {            
+        {
+            var typeDefinitions = input.ToList();
+            
             var search = new DependencySearch();
-            var results = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(input, dependencies);
+            var results = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(typeDefinitions, dependencies);
 
             return condition
                 ? results
-                : input.Where(t => !results.Contains(t));
+                : typeDefinitions.Where(t => !results.Contains(t));
         };
 
         /// <summary> Function for finding public classes. </summary>
