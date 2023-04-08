@@ -10,13 +10,19 @@
     /// </summary>
     public sealed class Conditions
     {
-        /// <summary> A list of types that conditions can be applied to. </summary>
+        /// <summary>
+        /// A list of types that conditions can be applied to.
+        /// </summary>
         private readonly IEnumerable<TypeDefinition> _types;
 
-        /// <summary> The sequence of conditions that is applied to the type of list. </summary>
+        /// <summary>
+        /// The sequence of conditions that is applied to the type of list.
+        /// </summary>
         private readonly FunctionSequence _sequence;
 
-        /// <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
+        /// <summary>
+        /// Determines the polarity of the selection, i.e. "should" or "should not".
+        /// </summary>
         private readonly bool _should;
 
         /// <summary>
