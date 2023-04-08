@@ -60,18 +60,14 @@
         /// </summary>
         /// <returns>A list of types.</returns>
         public int Count()
-        {
-            return _sequence.Execute(_types).Count();
-        }
+            => _sequence.Execute(_types).Count();
 
         /// <summary>
         /// Returns the list of types that satisfy the conditions.
         /// </summary>
         /// <returns>A list of types.</returns>
         public IEnumerable<Type> GetTypes()
-        {
-            return _sequence.Execute(_types).Select(t => t.ToType());
-        }
+            => _sequence.Execute(_types).Select(t => t.ToType());
 
         /// <summary>
         /// Specifies that any subsequent condition should be treated as an "and" condition.
@@ -79,9 +75,7 @@
         /// <returns>An set of conditions that can be applied to a list of classes.</returns>
         /// <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         public Conditions And()
-        {
-            return new Conditions(_types, _should, _sequence);
-        }
+            => new Conditions(_types, _should, _sequence);
 
         /// <summary>
         /// Specifies that any subsequent conditions should be treated as part of an "or" condition.
