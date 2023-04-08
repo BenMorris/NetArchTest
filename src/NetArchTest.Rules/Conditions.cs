@@ -182,7 +182,7 @@
         }
 
         /// <summary>
-        /// Selects types are decorated with a specific custom attribut.
+        /// Selects types are decorated with a specific custom attribute.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
