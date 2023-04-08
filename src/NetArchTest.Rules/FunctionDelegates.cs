@@ -84,27 +84,21 @@ namespace NetArchTest.Rules
         /// <summary> Function for finding classes that implement a particular interface. </summary>
         internal static readonly FunctionDelegate<Type> ImplementsInterface = delegate (IEnumerable<TypeDefinition> input, Type typeInterface, bool condition)
         {
-            var typeDefinitions = input.ToList();
-            
             if (!typeInterface.IsInterface)
             {
                 throw new ArgumentException($"The type {typeInterface.FullName} is not an interface.");
             }
-
-            var target = typeInterface.FullName;
-            var found = new List<TypeDefinition>();
-
-            foreach (var type in typeDefinitions)
-            {
-                if (type.Interfaces.Any(t => t.InterfaceType.Resolve().FullName.Equals(target, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    found.Add(type);
-                }
-            }
             
+            var typeDefinitions = input.ToList();
+            var target = typeInterface.FullName;
+
+            var matchingTypes = typeDefinitions
+                .Where(t => t.Interfaces.Any(i =>
+                    i.InterfaceType.Resolve().FullName.Equals(target, StringComparison.InvariantCultureIgnoreCase)));
+
             return condition
-                ? found
-                : typeDefinitions.Where(c => !found.Contains(c));
+                ? matchingTypes
+                : typeDefinitions.Except(matchingTypes);
         };
 
         /// <summary> Function for finding abstract classes. </summary>
@@ -208,13 +202,12 @@ namespace NetArchTest.Rules
         {
             var typeDefinitions = input.ToList();
             
-            // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesThatHaveDependencyOnAny(typeDefinitions, dependencies);
+            var matchingTypes = search.FindTypesThatHaveDependencyOnAny(typeDefinitions, dependencies);
 
             return condition
-                ? results
-                : typeDefinitions.Where(t => !results.Contains(t));
+                ? matchingTypes
+                : typeDefinitions.Except(matchingTypes);
         };
 
         /// <summary> Function for finding types that have a dependency on all of the supplied types. </summary>
@@ -222,13 +215,12 @@ namespace NetArchTest.Rules
         {
             var typeDefinitions = input.ToList();
             
-            // Get the types that contain the dependencies
             var search = new DependencySearch();
-            var results = search.FindTypesThatHaveDependencyOnAll(typeDefinitions, dependencies);
+            var matchingTypes = search.FindTypesThatHaveDependencyOnAll(typeDefinitions, dependencies);
 
             return condition
-                ? results
-                : typeDefinitions.Where(t => !results.Contains(t));
+                ? matchingTypes
+                : typeDefinitions.Except(matchingTypes);
         };
 
         /// <summary> Function for finding types that have a dependency on type other than one of the supplied types.</summary>
@@ -237,11 +229,11 @@ namespace NetArchTest.Rules
             var typeDefinitions = input.ToList();
             
             var search = new DependencySearch();
-            var results = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(typeDefinitions, dependencies);
+            var matchingTypes = search.FindTypesThatOnlyHaveDependenciesOnAnyOrNone(typeDefinitions, dependencies);
 
             return condition
-                ? results
-                : typeDefinitions.Where(t => !results.Contains(t));
+                ? matchingTypes
+                : typeDefinitions.Except(matchingTypes);
         };
 
         /// <summary> Function for finding public classes. </summary>
