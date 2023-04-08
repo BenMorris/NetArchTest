@@ -10,7 +10,7 @@
     /// <summary>
     /// Extensions for the <see cref="TypeDefinition"/> class.
     /// </summary>
-    static internal class TypeDefinitionExtensions
+    internal static class TypeDefinitionExtensions
     {
         /// <summary>
         /// Tests whether one class inherits from another.

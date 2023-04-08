@@ -23,6 +23,7 @@
 
         private readonly SearchType _searchType;
         private readonly ISearchTree _searchTree;
+        
         /// <summary> The list of dependencies that have been found in the search.</summary>
         private HashSet<string> _foundDependencies = new HashSet<string>();
         private bool _hasDependencyFromOutsideOfSearchTree;
@@ -78,6 +79,7 @@
         public void CheckDependency(string dependencyTypeFullName)
         {
             var matchedDependencies = _searchTree.GetAllMatchingNames(dependencyTypeFullName);
+            
             if (matchedDependencies.Any())
             {
                 foreach (var match in matchedDependencies)
@@ -94,6 +96,7 @@
         public void CheckDependency(TypeReference dependency)
         {
             var matchedDependencies = _searchTree.GetAllMatchingNames(dependency);
+            
             if (matchedDependencies.Any())
             {
                 foreach (var match in matchedDependencies)
@@ -106,10 +109,12 @@
                 if (_hasDependencyFromOutsideOfSearchTree == false)
                 {
                     bool isGlobalAnonymousCompilerGeneratedType = String.IsNullOrEmpty(dependency.Namespace) && dependency.Name.StartsWith("<>");
+                    
                     if (dependency is TypeDefinition typeDefinition)
                     {
                         isGlobalAnonymousCompilerGeneratedType |= typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
                     }
+                    
                     if (!isGlobalAnonymousCompilerGeneratedType)
                     {
                         _hasDependencyFromOutsideOfSearchTree = true;

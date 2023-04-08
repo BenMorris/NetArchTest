@@ -22,27 +22,22 @@
         /// Gets whether or not the policy has any rule violations
         /// </summary>
         public bool HasViolations
-        {
-            get
-            {
-                return Results.Any(r => !r.IsSuccessful);
-            }
-        }
+            => Results.Any(r => !r.IsSuccessful);
 
         /// <summary>
         /// Gets the results of each rule that was added the policy.
         /// </summary>
-        public IReadOnlyList<PolicyResult> Results { get; private set; }
+        public IReadOnlyList<PolicyResult> Results { get; }
 
         /// <summary>
         /// Gets the simple name associated with the policy.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the detailed description associated with the policy.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
     }
 }

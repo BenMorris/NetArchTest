@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using System.Text;   
 
     internal static class TypeParser
     {
@@ -26,6 +25,7 @@
            
             var monoTypeParser = Activator.CreateInstance(mono_TypeParserType, BindingFlags.Instance | BindingFlags.NonPublic, null, args: new object[] { fullName }, null);
             var monoType = mono_ParseTypeMethod.Invoke(monoTypeParser, new object[] { false });
+            
             foreach(var token in WalkThroughMonoType(monoType))
             {
                 yield return token;
@@ -37,6 +37,7 @@
             yield return mono_type_fullnameField.GetValue(monoType) as string;
             
             var nested = mono_nested_namesField.GetValue(monoType) as string[];
+            
             if (nested != null)
             {
                 foreach (var nestedName in nested)
@@ -46,6 +47,7 @@
             } 
 
             var generics = mono_generic_argumentsField.GetValue(monoType) as object[];
+            
             if (generics != null)
             {
                 yield return "<";
@@ -60,6 +62,7 @@
             }
 
             var specs = mono_specsField.GetValue(monoType) as int[];
+            
             if (specs != null)
             {
                 for (int i = 0; i < specs.Length; ++i)
