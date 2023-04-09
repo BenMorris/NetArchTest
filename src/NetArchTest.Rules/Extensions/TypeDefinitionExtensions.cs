@@ -36,9 +36,7 @@
         /// <param name="b"></param>
         /// <returns>An indication of whether the both types are from the same assembly.</returns>
         public static bool IsFromSameAssemblyAs(this TypeDefinition a, TypeDefinition b)
-        {
-            return a.Module.Assembly.ToString() == b.Module.Assembly.ToString();
-        }
+            => a.Module.Assembly.ToString() == b.Module.Assembly.ToString();
 
         /// <summary>
         /// Tests whether the provided types are the same type.
@@ -47,9 +45,8 @@
         /// <param name="b"></param>
         /// <returns>An indication of whether the types are the same.</returns>
         public static bool IsSameTypeAs(this TypeDefinition a, TypeDefinition b)
-        {
-            return a.IsFromSameAssemblyAs(b) && a.MetadataToken == b.MetadataToken;
-        }
+            => a.IsFromSameAssemblyAs(b) 
+               && a.MetadataToken == b.MetadataToken;
 
         /// <summary>
         /// Enumerate the base classes throughout the chain of inheritence.
@@ -106,9 +103,8 @@
         }
 
         public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
-        {
-            return typeDefinition.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
-        }
+            => typeDefinition.CustomAttributes
+                .Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName);
 
         /// <summary>
         /// Returns namespace of the given type, if the type is nested, namespace of containing type is returned instead
@@ -117,12 +113,8 @@
         /// For nested classes this will take the name of the declaring class. See https://github.com/BenMorris/NetArchTest/issues/73
         /// </remarks>
         public static string GetNamespace(this TypeDefinition typeDefinition)
-        {
-            if ((typeDefinition.IsNested))
-            {
-                return typeDefinition.DeclaringType.FullName;
-            }
-            return typeDefinition.Namespace;
-        }
+            => typeDefinition.IsNested
+                ? typeDefinition.DeclaringType.FullName
+                : typeDefinition.Namespace;
     }
 }
