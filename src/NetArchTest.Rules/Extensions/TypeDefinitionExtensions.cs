@@ -18,15 +18,9 @@
         /// <param name="parent">The parent that is inherited.</param>
         /// <returns>An indication of whether the child inherits from the parent.</returns>
         public static bool IsSubclassOf(this TypeDefinition child, TypeDefinition parent)
-        {
-            if (parent != null)
-            {
-                return !child.IsSameTypeAs(parent)
-                       && child.EnumerateBaseClasses().Any(b => b.IsSameTypeAs(parent));
-            }
-
-            return false;
-        }
+            => parent != null 
+               && (!child.IsSameTypeAs(parent) 
+                   && child.EnumerateBaseClasses().Any(b => b.IsSameTypeAs(parent)));
 
         /// <summary>
         /// Tests whether two type definitions are from the same assembly.
@@ -71,11 +65,14 @@
             // Nested types have a forward slash that should be replaced with "+"
             // C++ template instantiations contain comma separator for template arguments,
             // getting address operators and pointer type designations which should be prefixed by backslash
-            var fullName = typeDefinition.FullName.Replace("/", "+")
+            var fullName = typeDefinition.FullName
+                .Replace("/", "+")
                 .Replace(",", "\\,")
                 .Replace("&", "\\&")
                 .Replace("*", "\\*");
-            return Type.GetType(string.Concat(fullName, ", ", typeDefinition.Module.Assembly.FullName), true);
+            
+            return Type.GetType(
+                string.Concat(fullName, ", ", typeDefinition.Module.Assembly.FullName), true);
         }
 
         /// <summary>
@@ -84,11 +81,8 @@
         /// <param name="typeDefinition">The class to test.</param>
         /// <returns>An indication of whether the type is immutable</returns>
         public static bool IsImmutable(this TypeDefinition typeDefinition)
-        {
-            var propertiesAreReadonly = typeDefinition.Properties.All(p => p.IsReadonly());
-            var fieldsAreReadonly = typeDefinition.Fields.All(f => f.IsReadonly());
-            return propertiesAreReadonly && fieldsAreReadonly;
-        }
+            => typeDefinition.Properties.All(p => p.IsReadonly())
+               && typeDefinition.Fields.All(f => f.IsReadonly());
 
         /// <summary>
         /// Tests whether a Type has any members that are non-nullable value types
@@ -96,11 +90,8 @@
         /// <param name="typeDefinition">The class to test.</param>
         /// <returns>An indication of whether the type has any members that are non-nullable value types</returns>
         public static bool HasNullableMembers(this TypeDefinition typeDefinition)
-        {
-            var propertiesAreNullable = typeDefinition.Properties.All(p => p.IsNullable());
-            var fieldsAreNullable = typeDefinition.Fields.All(f => f.IsNullable());
-            return propertiesAreNullable && fieldsAreNullable;
-        }
+            => typeDefinition.Properties.All(p => p.IsNullable())
+               && typeDefinition.Fields.All(f => f.IsNullable());
 
         public static bool IsCompilerGenerated(this TypeDefinition typeDefinition)
             => typeDefinition.CustomAttributes
