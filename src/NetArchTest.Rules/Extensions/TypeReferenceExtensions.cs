@@ -2,6 +2,9 @@ namespace NetArchTest.Rules.Extensions
 {
     using Mono.Cecil;
 
+    /// <summary>
+    /// Extensions for the <see cref="TypeReference"/> class.
+    /// </summary>
     internal static class TypeReferenceExtensions
     {
         /// <summary>
