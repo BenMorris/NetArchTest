@@ -8,7 +8,7 @@ namespace NetArchTest.Rules.Extensions
         /// Tests whether a Type is a non-nullable value type
         /// </summary>
         /// <param name="typeReference">The class to test.</param>
-        /// <returns>An indication of whether the type has any memebers that are non-nullable value types</returns>
+        /// <returns>An indication of whether the type has any members that are non-nullable value types</returns>
         public static bool IsNullable(this TypeReference typeReference)
             => !typeReference.IsValueType 
                || typeReference.Resolve().ToType() == typeof(System.Nullable<>);
