@@ -49,7 +49,7 @@
                && a.MetadataToken == b.MetadataToken;
 
         /// <summary>
-        /// Enumerate the base classes throughout the chain of inheritence.
+        /// Enumerate the base classes throughout the chain of inheritance.
         /// </summary>
         /// <param name="classType">The class to enumerate.</param>
         /// <returns>The enumeration of base classes.</returns>
@@ -91,10 +91,10 @@
         }
 
         /// <summary>
-        /// Tests whether a Type has any memebers that are non-nullable value types
+        /// Tests whether a Type has any members that are non-nullable value types
         /// </summary>
         /// <param name="typeDefinition">The class to test.</param>
-        /// <returns>An indication of whether the type has any memebers that are non-nullable value types</returns>
+        /// <returns>An indication of whether the type has any members that are non-nullable value types</returns>
         public static bool HasNullableMembers(this TypeDefinition typeDefinition)
         {
             var propertiesAreNullable = typeDefinition.Properties.All(p => p.IsNullable());
