@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using Mono.Cecil;
     using System.Runtime.CompilerServices;
-    using Mono.Collections.Generic;
 
     /// <summary>
     /// Extensions for the <see cref="TypeDefinition"/> class.

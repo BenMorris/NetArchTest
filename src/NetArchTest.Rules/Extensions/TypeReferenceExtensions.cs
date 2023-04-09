@@ -1,8 +1,5 @@
 namespace NetArchTest.Rules.Extensions
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Mono.Cecil;
 
     internal static class TypeReferenceExtensions
