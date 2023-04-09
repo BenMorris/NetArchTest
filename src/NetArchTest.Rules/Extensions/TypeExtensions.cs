@@ -17,16 +17,13 @@
         /// <returns>The converted value.</returns>
         public static TypeDefinition ToTypeDefinition(this Type type)
         {
-            // Get the assembly using reflection
             var assembly = Assembly.GetAssembly(type);
-
-            // Load the assembly into the Mono.Cecil library
             var assemblyDef = AssemblyDefinition.ReadAssembly(assembly.Location);
 
             // Find the matching type
-            var dependencies = (assemblyDef.Modules
+            var dependencies = assemblyDef.Modules
                 .SelectMany(t => t.Types)
-                .Where(t => t.IsClass && t.Namespace != null && t.FullName.Equals(type.FullName, StringComparison.InvariantCultureIgnoreCase)));
+                .Where(t => t.IsClass && t.Namespace != null && t.FullName.Equals(type.FullName, StringComparison.InvariantCultureIgnoreCase));
 
             return dependencies.FirstOrDefault();
         }
