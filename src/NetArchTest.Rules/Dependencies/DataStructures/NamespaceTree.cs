@@ -95,7 +95,7 @@
         /// <summary> Holds the root for the namespace tree. </summary>
         private readonly Node _root = new Node();
 
-        private static readonly char[] _namespaceSeparators = new char[] { '.', ':', '/', '+' };
+        private static readonly char[] _namespaceSeparators = { '.', ':', '/', '+' };
 
         /// <summary>
         /// Initially fills the tree with given names.
@@ -140,7 +140,7 @@
         }
 
         /// <summary> Count of terminated nodes in the tree. </summary>
-        public int TerminatedNodesCount { get; private set; } = 0;
+        public int TerminatedNodesCount { get; private set; }
 
         /// <summary>
         /// Retrieves the sequence of all matching names for given full name.
