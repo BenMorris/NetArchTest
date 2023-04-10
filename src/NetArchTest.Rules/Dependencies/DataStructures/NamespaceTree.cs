@@ -60,13 +60,14 @@
             public Node GetOrAddNode(string name)
             {
                 name = NormalizeString(name);
-                Node result;
-                
-                if (!Nodes.TryGetValue(name, out result))
+
+                if (Nodes.TryGetValue(name, out var result))
                 {
-                    result = new Node();
-                    Nodes.Add(name, result);
+                    return result;
                 }
+
+                result = new Node();
+                Nodes.Add(name, result);
                 
                 return result;
             }
