@@ -134,13 +134,13 @@
                     }
                 }
 
-                NameNode result;
-                
-                if (!typeSpecifications.TryGetValue(specificationNumber, out result))
+                if (typeSpecifications.TryGetValue(specificationNumber, out var result))
                 {
-                    result = new NameNode();
-                    typeSpecifications.Add(specificationNumber, result);
+                    return result;
                 }
+                
+                result = new NameNode();
+                typeSpecifications.Add(specificationNumber, result);
                 
                 return result;
             }
