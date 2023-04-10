@@ -38,12 +38,16 @@
         [DebuggerDisplay("Node (nodes : {Nodes.Count})")]
         private sealed class Node
         {
-            /// <summary> Maps child namespace to its root node. </summary>
+            /// <summary>
+            /// Maps child namespace to its root node.
+            /// </summary>
             private Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
                         
             public bool IsTerminated { get; private set; }
 
-            /// <summary>Returns full path from root to terminated node. Only available on terminated node.</summary>
+            /// <summary>
+            /// Returns full path from root to terminated node. Only available on terminated node.
+            /// </summary>
             public string FullName { get; private set; }
 
             /// <summary>
@@ -86,7 +90,9 @@
                 => str.Normalize(NormalizationForm.FormC);
         }
 
-        /// <summary> Holds the root for the namespace tree. </summary>
+        /// <summary>
+        /// Holds the root for the namespace tree.
+        /// </summary>
         private readonly Node _root = new Node();
 
         private static readonly char[] _namespaceSeparators = { '.', ':', '/', '+' };
@@ -133,7 +139,9 @@
             }
         }
 
-        /// <summary> Count of terminated nodes in the tree. </summary>
+        /// <summary>
+        /// Count of terminated nodes in the tree.
+        /// </summary>
         public int TerminatedNodesCount { get; private set; }
 
         /// <summary>
