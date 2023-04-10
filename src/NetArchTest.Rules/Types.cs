@@ -53,7 +53,7 @@
                 }
             }
 
-            return Types.InAssemblies(currentDomain);
+            return InAssemblies(currentDomain);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return Types.InAssemblies(new List<Assembly> { assembly }, searchDirectories);
+            return InAssemblies(new List<Assembly> { assembly }, searchDirectories);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@
                     // Read all the types in the assembly 
                     if (assemblyDef != null)
                     {
-                        types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
+                        types.AddRange(GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
                     }
                 }
             }
@@ -155,7 +155,7 @@
                 }
             }
 
-            var list = Types.GetAllTypes(types);
+            var list = GetAllTypes(types);
             return new Types(list);
         }
 
@@ -186,7 +186,7 @@
             if (assemblyDef != null)
             {
                 // Read all the types in the assembly 
-                var list = Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
+                var list = GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
                 return new Types(list);
             }
             else
@@ -243,7 +243,7 @@
                 throw new DirectoryNotFoundException($"Could not find the path {path}.");
             }
 
-            var list = Types.GetAllTypes(types);
+            var list = GetAllTypes(types);
             return new Types(list);
         }
 
