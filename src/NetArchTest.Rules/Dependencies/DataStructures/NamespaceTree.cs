@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using Mono.Cecil;
     using NetArchTest.Rules.Extensions;
@@ -77,10 +78,9 @@
             /// <param name="node">Child node with given name, if it exists; otherwise, null.</param>
             /// <returns>True, if child node with given name exists; otherwise, false.</returns>
             public bool TryGetNode(string name, out Node node)
-            {
-                return Nodes.TryGetValue(NormalizeString(name), out node) && node != null;
-            }
-                       
+                => Nodes.TryGetValue(NormalizeString(name), out node) 
+                   && node != null;
+
             public void Terminate(string fullName)
             {
                 IsTerminated = true;
@@ -88,9 +88,7 @@
             }
 
             private static string NormalizeString(string str)
-            {
-                return str.Normalize(NormalizationForm.FormC);
-            }
+                => str.Normalize(NormalizationForm.FormC);
         }
 
         /// <summary> Holds the root for the namespace tree. </summary>
@@ -104,12 +102,7 @@
         /// <param name="fullNames">Sequence of full names.</param>
         /// <param name="parseNames">if names should be parsed by mono parser</param>
         public NamespaceTree(IEnumerable<string> fullNames, bool parseNames = false)
-        {
-            foreach (string fullName in fullNames)
-            {
-                Add(fullName, parseNames);
-            }
-        }
+            => fullNames.ToList().ForEach(fn => Add(fn, parseNames));
 
         /// <summary>
         /// Splits full name into subnamespaces and adds corresponding nodes to the tree.
