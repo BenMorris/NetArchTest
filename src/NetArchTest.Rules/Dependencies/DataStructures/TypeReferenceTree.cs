@@ -60,17 +60,18 @@
         [DebuggerDisplay("StartOfTypeNode (namespaces : {namespaces.Count})")]
         public sealed class StartOfTypeNode
         {
-            private Dictionary<string, NamespaceNode> namespaces { get; set; } = new Dictionary<string, NamespaceNode>();
+            private Dictionary<string, NamespaceNode> namespaces { get; set; } = 
+                new Dictionary<string, NamespaceNode>();
 
             public NamespaceNode GetNamespace(string @namespace)
             {
-                NamespaceNode result;
-                
-                if (!namespaces.TryGetValue(@namespace, out result))
+                if (namespaces.TryGetValue(@namespace, out var result))
                 {
-                    result = new NamespaceNode();
-                    namespaces.Add(@namespace, result);
+                    return result;
                 }
+                
+                result = new NamespaceNode();
+                namespaces.Add(@namespace, result);
                 
                 return result;
             }
