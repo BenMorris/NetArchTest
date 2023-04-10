@@ -278,45 +278,35 @@
         /// </summary>
         /// <returns>The list of <see cref="TypeDefinition"/> objects in this list.</returns>
         internal IEnumerable<TypeDefinition> GetTypeDefinitions()
-        {
-            return _types;
-        }
+            => _types;
 
         /// <summary>
         /// Returns the list of <see cref="Type"/> objects describing the types in this list.
         /// </summary>
         /// <returns>The list of <see cref="Type"/> objects in this list.</returns>
         public IEnumerable<Type> GetTypes()
-        {
-            return (_types.Select(t => t.ToType()));
-        }
+            => _types.Select(t => t.ToType());
 
         /// <summary>
         /// Allows a list of types to be applied to one or more filters.
         /// </summary>
         /// <returns>A list of types onto which you can apply a series of filters.</returns>
         public Predicates That()
-        {
-            return new Predicates(_types);
-        }
+            => new Predicates(_types);
 
         /// <summary>
         /// Applies a set of conditions to the list of types.
         /// </summary>
         /// <returns></returns>
         public Conditions Should()
-        {
-            return new Conditions(_types, true);
-        }
+            => new Conditions(_types, true);
 
         /// <summary>
         /// Applies a negative set of conditions to the list of types.
         /// </summary>
         /// <returns></returns>
         public Conditions ShouldNot()
-        {
-            return new Conditions(_types, false);
-        }
+            => new Conditions(_types, false);
 
         /// <summary>
         /// Reads the assembly, ignoring a BadImageFormatException
