@@ -101,15 +101,16 @@
         public sealed class NameNode
         {
             public T value;
-            private StartOfTypeNode startNode;
-            private StartOfTypeNode andNode;
+            
+            private StartOfTypeNode _startNode;
+            private StartOfTypeNode _andNode;
             private Dictionary<int, NameNode> typeSpecifications { get; set; }
             
             public StartOfTypeNode StartArgumentList()
-                => startNode = startNode ?? new StartOfTypeNode();
+                => _startNode = _startNode ?? new StartOfTypeNode();
 
             public StartOfTypeNode AddAnotherArgument()
-                => andNode = andNode ?? new StartOfTypeNode();
+                => _andNode = _andNode ?? new StartOfTypeNode();
 
             public NameNode EndArgumentList()
             {
