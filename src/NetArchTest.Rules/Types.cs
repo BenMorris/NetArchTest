@@ -8,7 +8,6 @@
     using System.Runtime.CompilerServices;
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
-    using NetArchTest.Rules.Dependencies;
     using NetArchTest.Rules.Dependencies.DataStructures;
 
     /// <summary>
