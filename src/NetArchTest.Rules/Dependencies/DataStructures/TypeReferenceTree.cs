@@ -106,17 +106,11 @@
             private Dictionary<int, NameNode> typeSpecifications { get; set; }
             
             public StartOfTypeNode StartArgumentList()
-            {
-                startNode = startNode ?? new StartOfTypeNode();
-                return startNode;
-            }
-            
+                => startNode = startNode ?? new StartOfTypeNode();
+
             public StartOfTypeNode AddAnotherArgument()
-            {
-                andNode = andNode ?? new StartOfTypeNode();
-                return andNode;
-            }
-            
+                => andNode = andNode ?? new StartOfTypeNode();
+
             public NameNode EndArgumentList()
             {
                 // We only need to know where a new list starts and where a comma is placed for unambiguous identification of a generic type,
