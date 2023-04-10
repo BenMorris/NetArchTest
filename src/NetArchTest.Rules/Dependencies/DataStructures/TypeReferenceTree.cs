@@ -83,14 +83,15 @@
             private Dictionary<string, NameNode> names { get; set; } = new Dictionary<string, NameNode>();
 
             public NameNode GetName(string name)
-            {                
-                NameNode result;
-                
-                if (!names.TryGetValue(name, out result))
+            {
+
+                if (names.TryGetValue(name, out var result))
                 {
-                    result = new NameNode();
-                    names.Add(name, result);
+                    return result;
                 }
+                
+                result = new NameNode();
+                names.Add(name, result);
                 
                 return result;
             }
