@@ -15,10 +15,14 @@
     /// </summary>
     public sealed class Types
     {
-        /// <summary> The list of types represented by this instance. </summary>
+        /// <summary>
+        /// The list of types represented by this instance.
+        /// </summary>
         private readonly List<TypeDefinition> _types;
 
-        /// <summary> The list of namespaces to exclude from the current domain. </summary>
+        /// <summary>
+        /// The list of namespaces to exclude from the current domain.
+        /// </summary>
         private static readonly List<string> _exclusionList = new List<string>
         { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit", "<PrivateImplementationDetails>" };
 

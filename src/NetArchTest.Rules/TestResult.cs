@@ -11,7 +11,9 @@
     /// </summary>
     public sealed class TestResult
     {
-        /// <summary> The list of types that failed the test. </summary>
+        /// <summary>
+        /// The list of types that failed the test.
+        /// </summary>
         private IReadOnlyList<TypeDefinition> _failingTypes;
 
         private TestResult()
