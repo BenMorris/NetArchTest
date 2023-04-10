@@ -41,16 +41,10 @@
             /// <summary> Maps child namespace to its root node. </summary>
             private Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
                         
-            public bool IsTerminated
-            {
-                get; private set;
-            }
-            
+            public bool IsTerminated { get; private set; }
+
             /// <summary>Returns full path from root to terminated node. Only available on terminated node.</summary>
-            public string FullName
-            {
-                get; private set;
-            }
+            public string FullName { get; private set; }
 
             /// <summary>
             /// Adds new child node with given name or returns existing one.
