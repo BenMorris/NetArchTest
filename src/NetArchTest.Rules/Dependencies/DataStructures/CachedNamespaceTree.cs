@@ -9,7 +9,7 @@
         /// <summary> The list of dependencies being searched for. </summary>
         private readonly NamespaceTree _searchTree;
 
-        public int TerminatedNodesCount { get => _searchTree.TerminatedNodesCount; }
+        public int TerminatedNodesCount => _searchTree.TerminatedNodesCount;
 
         public CachedNamespaceTree(IEnumerable<string> dependencies)
         {
@@ -20,23 +20,14 @@
         /// Searching search tree is costly (it requires a lot of operations on strings like SubString, IndexOf).
         /// For a given type we always get the same answer, so let us cache what search tree returns.
         /// </summary>        
-        private readonly TypeReferenceTree<string[]> _cachedAnswersFromSearchTree = new TypeReferenceTree<string[]>(); 
+        private readonly TypeReferenceTree<string[]> _cachedAnswersFromSearchTree = 
+            new TypeReferenceTree<string[]>(); 
         
         public IEnumerable<string> GetAllMatchingNames(TypeReference type)
-        {
-            var node = _cachedAnswersFromSearchTree.GetNode(type);
-            
-            if (node.value == null)
-            {
-                node.value = _searchTree.GetAllMatchingNames(type).ToArray();
-            }
-            
-            return node.value;
-        }
+            => _cachedAnswersFromSearchTree.GetNode(type)?.value 
+               ?? _searchTree.GetAllMatchingNames(type);
 
         public IEnumerable<string> GetAllMatchingNames(string fullName)
-        {
-            return _searchTree.GetAllMatchingNames(fullName).ToArray();
-        }
+            => _searchTree.GetAllMatchingNames(fullName);
     }
 }
