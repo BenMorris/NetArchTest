@@ -14,9 +14,7 @@
         private readonly StartOfTypeNode _root = new StartOfTypeNode();
 
         public NameNode GetNode(TypeReference reference)
-        {          
-            return TraverseThroughReferenceName(reference, _root);
-        }
+            => TraverseThroughReferenceName(reference, _root);
 
         private NameNode TraverseThroughReferenceName(TypeReference reference, StartOfTypeNode startOfTypeNode)
         {
