@@ -1,7 +1,6 @@
 ﻿namespace NetArchTest.Rules.Dependencies.DataStructures
 {  
     using System.Collections.Generic;
-    using System.Linq;   
     using Mono.Cecil;
 
     internal class CachedNamespaceTree : ISearchTree
