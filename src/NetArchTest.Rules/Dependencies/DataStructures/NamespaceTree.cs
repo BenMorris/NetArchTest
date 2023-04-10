@@ -267,14 +267,11 @@
 
         private static int GetSubnameEndIndex(string namespaceFullName, int subnameStartIndex)
         {
-            int nextSeparatorIndex = namespaceFullName.IndexOfAny(_namespaceSeparators, subnameStartIndex);
-            
-            if (nextSeparatorIndex < 0)
-            {
-                nextSeparatorIndex = namespaceFullName.Length;
-            }
+            var nextSeparatorIndex = namespaceFullName.IndexOfAny(_namespaceSeparators, subnameStartIndex);
 
-            return nextSeparatorIndex;
+            return nextSeparatorIndex < 0
+                ? namespaceFullName.Length
+                : nextSeparatorIndex;
         }
     }
 }
