@@ -5,7 +5,9 @@
 
     internal class CachedNamespaceTree : ISearchTree
     {
-        /// <summary> The list of dependencies being searched for. </summary>
+        /// <summary>
+        /// The list of dependencies being searched for.
+        /// </summary>
         private readonly NamespaceTree _searchTree;
 
         public int TerminatedNodesCount => _searchTree.TerminatedNodesCount;
