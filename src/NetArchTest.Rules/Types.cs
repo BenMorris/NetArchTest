@@ -40,6 +40,7 @@
         public static Types InCurrentDomain()
         {
             var currentDomain = new List<Assembly>();
+            
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (!_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())                   
@@ -170,10 +171,12 @@
             // Load the assembly from the current directory
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var path = Path.Combine(dir, filename);
+            
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException($"Could not find the assembly file {path}.");
             }
+            
             var assemblyDef = ReadAssemblyDefinition(path);
 
             if (assemblyDef != null)
@@ -212,10 +215,12 @@
                 if (searchDirectories?.Any() ?? false)
                 {
                     var defaultAssemblyResolver = new DefaultAssemblyResolver();
+                    
                     foreach (var searchDirectory in searchDirectories)
                     {
                         defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
                     }
+                    
                     readerParams.AssemblyResolver = defaultAssemblyResolver;
                 }
 

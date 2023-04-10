@@ -41,7 +41,6 @@
         public IReadOnlyList<string> FailingTypeNames
             => _failingTypes?.Select(t => t.FullName).ToList();
 
-
         /// <summary>
         /// Creates a new instance of <see cref="TestResult"/> indicating a successful test.
         /// </summary>

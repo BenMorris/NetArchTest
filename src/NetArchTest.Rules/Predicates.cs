@@ -49,6 +49,7 @@
             {
                 _sequence.AddFunctionCall(FunctionDelegates.HaveName, item, true);
             }
+            
             return new PredicateList(_types, _sequence);
         }
 
@@ -63,6 +64,7 @@
             {
                 _sequence.AddFunctionCall(FunctionDelegates.HaveName, item, false);
             }
+            
             return new PredicateList(_types, _sequence);
         }
 
@@ -99,6 +101,7 @@
             {
                 _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, item, true);
             }
+            
             return new PredicateList(_types, _sequence);
         }
 
@@ -125,6 +128,7 @@
             {
                 _sequence.AddFunctionCall(FunctionDelegates.HaveNameStartingWith, item, false);
             }
+            
             return new PredicateList(_types, _sequence);
         }
 
@@ -435,7 +439,6 @@
             _sequence.AddFunctionCall(FunctionDelegates.BeNestedPrivate, true, false);
             return new PredicateList(_types, _sequence);
         }
-
 
         /// <summary>
         /// Selects types that have public scope.

@@ -78,6 +78,5 @@
             _sequence.CreateGroup();
             return new Predicates(_types, _sequence);
         }
-
     }
 }
