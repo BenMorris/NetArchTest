@@ -14,9 +14,7 @@
         private readonly StartOfTypeNode _root = new StartOfTypeNode();
 
         public NameNode GetNode(TypeReference reference)
-        {          
-            return TraverseThroughReferenceName(reference, _root);
-        }
+            => TraverseThroughReferenceName(reference, _root);
 
         private NameNode TraverseThroughReferenceName(TypeReference reference, StartOfTypeNode startOfTypeNode)
         {
@@ -62,17 +60,18 @@
         [DebuggerDisplay("StartOfTypeNode (namespaces : {namespaces.Count})")]
         public sealed class StartOfTypeNode
         {
-            private Dictionary<string, NamespaceNode> namespaces { get; set; } = new Dictionary<string, NamespaceNode>();
+            private Dictionary<string, NamespaceNode> namespaces { get; set; } = 
+                new Dictionary<string, NamespaceNode>();
 
             public NamespaceNode GetNamespace(string @namespace)
             {
-                NamespaceNode result;
-                
-                if (!namespaces.TryGetValue(@namespace, out result))
+                if (namespaces.TryGetValue(@namespace, out var result))
                 {
-                    result = new NamespaceNode();
-                    namespaces.Add(@namespace, result);
+                    return result;
                 }
+                
+                result = new NamespaceNode();
+                namespaces.Add(@namespace, result);
                 
                 return result;
             }
@@ -84,14 +83,15 @@
             private Dictionary<string, NameNode> names { get; set; } = new Dictionary<string, NameNode>();
 
             public NameNode GetName(string name)
-            {                
-                NameNode result;
-                
-                if (!names.TryGetValue(name, out result))
+            {
+
+                if (names.TryGetValue(name, out var result))
                 {
-                    result = new NameNode();
-                    names.Add(name, result);
+                    return result;
                 }
+                
+                result = new NameNode();
+                names.Add(name, result);
                 
                 return result;
             }
@@ -101,22 +101,17 @@
         public sealed class NameNode
         {
             public T value;
-            private StartOfTypeNode startNode;
-            private StartOfTypeNode andNode;
+            
+            private StartOfTypeNode _startNode;
+            private StartOfTypeNode _andNode;
             private Dictionary<int, NameNode> typeSpecifications { get; set; }
             
             public StartOfTypeNode StartArgumentList()
-            {
-                startNode = startNode ?? new StartOfTypeNode();
-                return startNode;
-            }
-            
+                => _startNode = _startNode ?? new StartOfTypeNode();
+
             public StartOfTypeNode AddAnotherArgument()
-            {
-                andNode = andNode ?? new StartOfTypeNode();
-                return andNode;
-            }
-            
+                => _andNode = _andNode ?? new StartOfTypeNode();
+
             public NameNode EndArgumentList()
             {
                 // We only need to know where a new list starts and where a comma is placed for unambiguous identification of a generic type,
@@ -139,13 +134,13 @@
                     }
                 }
 
-                NameNode result;
-                
-                if (!typeSpecifications.TryGetValue(specificationNumber, out result))
+                if (typeSpecifications.TryGetValue(specificationNumber, out var result))
                 {
-                    result = new NameNode();
-                    typeSpecifications.Add(specificationNumber, result);
+                    return result;
                 }
+                
+                result = new NameNode();
+                typeSpecifications.Add(specificationNumber, result);
                 
                 return result;
             }

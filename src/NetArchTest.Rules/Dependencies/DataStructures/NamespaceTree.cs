@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using Mono.Cecil;
     using NetArchTest.Rules.Extensions;
@@ -37,19 +38,17 @@
         [DebuggerDisplay("Node (nodes : {Nodes.Count})")]
         private sealed class Node
         {
-            /// <summary> Maps child namespace to its root node. </summary>
+            /// <summary>
+            /// Maps child namespace to its root node.
+            /// </summary>
             private Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
                         
-            public bool IsTerminated
-            {
-                get; private set;
-            }
-            
-            /// <summary>Returns full path from root to terminated node. Only available on terminated node.</summary>
-            public string FullName
-            {
-                get; private set;
-            }
+            public bool IsTerminated { get; private set; }
+
+            /// <summary>
+            /// Returns full path from root to terminated node. Only available on terminated node.
+            /// </summary>
+            public string FullName { get; private set; }
 
             /// <summary>
             /// Adds new child node with given name or returns existing one.
@@ -59,13 +58,14 @@
             public Node GetOrAddNode(string name)
             {
                 name = NormalizeString(name);
-                Node result;
-                
-                if (!Nodes.TryGetValue(name, out result))
+
+                if (Nodes.TryGetValue(name, out var result))
                 {
-                    result = new Node();
-                    Nodes.Add(name, result);
+                    return result;
                 }
+
+                result = new Node();
+                Nodes.Add(name, result);
                 
                 return result;
             }
@@ -77,10 +77,9 @@
             /// <param name="node">Child node with given name, if it exists; otherwise, null.</param>
             /// <returns>True, if child node with given name exists; otherwise, false.</returns>
             public bool TryGetNode(string name, out Node node)
-            {
-                return Nodes.TryGetValue(NormalizeString(name), out node) && node != null;
-            }
-                       
+                => Nodes.TryGetValue(NormalizeString(name), out node) 
+                   && node != null;
+
             public void Terminate(string fullName)
             {
                 IsTerminated = true;
@@ -88,15 +87,15 @@
             }
 
             private static string NormalizeString(string str)
-            {
-                return str.Normalize(NormalizationForm.FormC);
-            }
+                => str.Normalize(NormalizationForm.FormC);
         }
 
-        /// <summary> Holds the root for the namespace tree. </summary>
+        /// <summary>
+        /// Holds the root for the namespace tree.
+        /// </summary>
         private readonly Node _root = new Node();
 
-        private static readonly char[] _namespaceSeparators = new char[] { '.', ':', '/', '+' };
+        private static readonly char[] _namespaceSeparators = { '.', ':', '/', '+' };
 
         /// <summary>
         /// Initially fills the tree with given names.
@@ -104,12 +103,7 @@
         /// <param name="fullNames">Sequence of full names.</param>
         /// <param name="parseNames">if names should be parsed by mono parser</param>
         public NamespaceTree(IEnumerable<string> fullNames, bool parseNames = false)
-        {
-            foreach (string fullName in fullNames)
-            {
-                Add(fullName, parseNames);
-            }
-        }
+            => fullNames.ToList().ForEach(fn => Add(fn, parseNames));
 
         /// <summary>
         /// Splits full name into subnamespaces and adds corresponding nodes to the tree.
@@ -145,8 +139,10 @@
             }
         }
 
-        /// <summary> Count of terminated nodes in the tree. </summary>
-        public int TerminatedNodesCount { get; private set; } = 0;
+        /// <summary>
+        /// Count of terminated nodes in the tree.
+        /// </summary>
+        public int TerminatedNodesCount { get; private set; }
 
         /// <summary>
         /// Retrieves the sequence of all matching names for given full name.
@@ -271,14 +267,11 @@
 
         private static int GetSubnameEndIndex(string namespaceFullName, int subnameStartIndex)
         {
-            int nextSeparatorIndex = namespaceFullName.IndexOfAny(_namespaceSeparators, subnameStartIndex);
-            
-            if (nextSeparatorIndex < 0)
-            {
-                nextSeparatorIndex = namespaceFullName.Length;
-            }
+            var nextSeparatorIndex = namespaceFullName.IndexOfAny(_namespaceSeparators, subnameStartIndex);
 
-            return nextSeparatorIndex;
+            return nextSeparatorIndex < 0
+                ? namespaceFullName.Length
+                : nextSeparatorIndex;
         }
     }
 }
