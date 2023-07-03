@@ -8,7 +8,6 @@
     using System.Runtime.CompilerServices;
     using NetArchTest.Rules.Extensions;
     using Mono.Cecil;
-    using NetArchTest.Rules.Dependencies;
     using NetArchTest.Rules.Dependencies.DataStructures;
 
     /// <summary>
@@ -16,10 +15,14 @@
     /// </summary>
     public sealed class Types
     {
-        /// <summary> The list of types represented by this instance. </summary>
+        /// <summary>
+        /// The list of types represented by this instance.
+        /// </summary>
         private readonly List<TypeDefinition> _types;
 
-        /// <summary> The list of namespaces to exclude from the current domain. </summary>
+        /// <summary>
+        /// The list of namespaces to exclude from the current domain.
+        /// </summary>
         private static readonly List<string> _exclusionList = new List<string>
         { "System", "Microsoft", "Mono.Cecil", "netstandard", "NetArchTest.Rules", "<Module>", "xunit", "<PrivateImplementationDetails>" };
 
@@ -40,16 +43,10 @@
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
         public static Types InCurrentDomain()
         {
-            var currentDomain = new List<Assembly>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (!_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())                   
-                {
-                    currentDomain.Add(assembly);
-                }
-            }
+            var currentDomain = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !_exclusionTree.GetAllMatchingNames(a.FullName).Any());
 
-            return Types.InAssemblies(currentDomain);
+            return InAssemblies(currentDomain);
         }
 
         /// <summary>
@@ -65,7 +62,7 @@
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return Types.InAssemblies(new List<Assembly> { assembly }, searchDirectories);
+            return InAssemblies(new List<Assembly> { assembly }, searchDirectories);
         }
 
         /// <summary>
@@ -77,35 +74,39 @@
         public static Types InAssemblies(IEnumerable<Assembly> assemblies, IEnumerable<string> searchDirectories = null)
         {
             var types = new List<TypeDefinition>();
+            var directories = searchDirectories?.ToList()
+                ?? new List<string>();
 
             foreach (var assembly in assemblies)
             {
-                if (!assembly.IsDynamic)
+                if (assembly.IsDynamic)
                 {
-                    // Load the assembly using Mono.Cecil.
-
-
-                    AssemblyDefinition assemblyDef = null;
-                    if (searchDirectories?.Any() ?? false)
+                    continue;
+                }
+                
+                AssemblyDefinition assemblyDef;
+                
+                if (directories.Any())
+                {
+                    var defaultAssemblyResolver = new DefaultAssemblyResolver();
+                    
+                    foreach (var dir in directories)
                     {
-                        var defaultAssemblyResolver = new DefaultAssemblyResolver();
-                        foreach (var searchDirectory in searchDirectories)
-                        {
-                            defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
-                        }
-
-                        assemblyDef = ReadAssemblyDefinition(assembly.Location, new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
-                    }
-                    else
-                    { 
-                        assemblyDef = ReadAssemblyDefinition(assembly.Location);
+                        defaultAssemblyResolver.AddSearchDirectory(dir);
                     }
 
-                    // Read all the types in the assembly 
-                    if (assemblyDef != null)
-                    {
-                        types.AddRange(Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
-                    }
+                    assemblyDef = ReadAssemblyDefinition(assembly.Location,
+                        new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
+                }
+                else
+                { 
+                    assemblyDef = ReadAssemblyDefinition(assembly.Location);
+                }
+
+                // Read all the types in the assembly 
+                if (assemblyDef != null)
+                {
+                    types.AddRange(GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)));
                 }
             }
 
@@ -130,28 +131,32 @@
 
             foreach (var assembly in assemblies)
             {
-                if (!assembly.IsDynamic)
+                if (assembly.IsDynamic)
                 {
-                    // Load the assembly using Mono.Cecil.
-                    var assemblyDef = ReadAssemblyDefinition(assembly.Location);
+                    continue;
+                }
+                
+                var assemblyDef = ReadAssemblyDefinition(assembly.Location);
 
-                    if (assemblyDef != null)
-                    {
-                        // Read all the types in the assembly 
-                        var matches = (assemblyDef.Modules
-                            .SelectMany(t => t.Types)
-                            .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
-                            .ToList();
+                if (assemblyDef == null)
+                {
+                    continue;
+                }
+                
+                // Read all the types in the assembly 
+                var matches = 
+                    (assemblyDef.Modules
+                        .SelectMany(t => t.Types)
+                        .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
+                    .ToList();
 
-                        if (matches.Count > 0)
-                        {
-                            types.AddRange(matches);
-                        }
-                    }
+                if (matches.Count > 0)
+                {
+                    types.AddRange(matches);
                 }
             }
 
-            var list = Types.GetAllTypes(types);
+            var list = GetAllTypes(types);
             return new Types(list);
         }
 
@@ -169,25 +174,21 @@
             }
 
             // Load the assembly from the current directory
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) 
+                      ?? string.Empty;
+            
             var path = Path.Combine(dir, filename);
+            
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException($"Could not find the assembly file {path}.");
             }
+            
             var assemblyDef = ReadAssemblyDefinition(path);
 
-            if (assemblyDef != null)
-            {
-                // Read all the types in the assembly 
-                var list = Types.GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types));
-                return new Types(list);
-            }
-            else
-            {
-                // Return an empty list
-                return new Types(new List<TypeDefinition>());
-            }
+            return assemblyDef != null
+                ? new Types(GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)))
+                : new Types(new List<TypeDefinition>());
         }
 
         /// <summary>
@@ -204,38 +205,39 @@
             }
 
             var types = new List<TypeDefinition>();
+            var directories = searchDirectories?.ToList() ?? new List<string>();
 
-            if (Directory.Exists(path))
-            {
-                var files = Directory.GetFiles(path, "*.dll");
-                var readerParams = new ReaderParameters();
-
-                if (searchDirectories?.Any() ?? false)
-                {
-                    var defaultAssemblyResolver = new DefaultAssemblyResolver();
-                    foreach (var searchDirectory in searchDirectories)
-                    {
-                        defaultAssemblyResolver.AddSearchDirectory(searchDirectory);
-                    }
-                    readerParams.AssemblyResolver = defaultAssemblyResolver;
-                }
-
-                foreach (var file in files)
-                {
-                    var assembly = ReadAssemblyDefinition(file, readerParams);
-                 
-                    if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
-                    {
-                        types.AddRange(assembly.Modules.SelectMany(t => t.Types));
-                    }
-                }
-            }
-            else
+            if (!Directory.Exists(path))
             {
                 throw new DirectoryNotFoundException($"Could not find the path {path}.");
             }
 
-            var list = Types.GetAllTypes(types);
+            var files = Directory.GetFiles(path, "*.dll");
+            var readerParams = new ReaderParameters();
+
+            if (directories.Any())
+            {
+                var defaultAssemblyResolver = new DefaultAssemblyResolver();
+                    
+                foreach (var dir in directories)
+                {
+                    defaultAssemblyResolver.AddSearchDirectory(dir);
+                }
+                    
+                readerParams.AssemblyResolver = defaultAssemblyResolver;
+            }
+
+            foreach (var file in files)
+            {
+                var assembly = ReadAssemblyDefinition(file, readerParams);
+                 
+                if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
+                {
+                    types.AddRange(assembly.Modules.SelectMany(t => t.Types));
+                }
+            }
+
+            var list = GetAllTypes(types);
             return new Types(list);
         }
 
@@ -246,20 +248,17 @@
         /// <returns>The expanded collection of types</returns>
         private static IEnumerable<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> types)
         {
-            var output = new List<TypeDefinition>(types.Where(x => !_exclusionTree.GetAllMatchingNames(x.FullName).Any()));          
+            var output = new List<TypeDefinition>(
+                types.Where(x => !_exclusionTree.GetAllMatchingNames(x.FullName).Any()));          
 
-            for (int i = 0; i < output.Count; ++i)
+            for (var i = 0; i < output.Count; ++i)
             {
                 var type = output[i];
-
-                foreach (var nested in type.NestedTypes)
-                {                   
-                    // Ignore all compiler-generated nested classes
-                    if (!nested.CustomAttributes.Any(x => x?.AttributeType?.FullName == typeof(CompilerGeneratedAttribute).FullName))
-                    {
-                        output.Add(nested);
-                    }                   
-                }
+                
+                output.AddRange(type.NestedTypes
+                    .Where(t => 
+                        t.CustomAttributes.All(x => 
+                            x?.AttributeType?.FullName != typeof(CompilerGeneratedAttribute).FullName)));
             }
 
             return output;
@@ -270,45 +269,35 @@
         /// </summary>
         /// <returns>The list of <see cref="TypeDefinition"/> objects in this list.</returns>
         internal IEnumerable<TypeDefinition> GetTypeDefinitions()
-        {
-            return _types;
-        }
+            => _types;
 
         /// <summary>
         /// Returns the list of <see cref="Type"/> objects describing the types in this list.
         /// </summary>
         /// <returns>The list of <see cref="Type"/> objects in this list.</returns>
         public IEnumerable<Type> GetTypes()
-        {
-            return (_types.Select(t => t.ToType()));
-        }
+            => _types.Select(t => t.ToType());
 
         /// <summary>
         /// Allows a list of types to be applied to one or more filters.
         /// </summary>
         /// <returns>A list of types onto which you can apply a series of filters.</returns>
         public Predicates That()
-        {
-            return new Predicates(_types);
-        }
+            => new Predicates(_types);
 
         /// <summary>
         /// Applies a set of conditions to the list of types.
         /// </summary>
         /// <returns></returns>
         public Conditions Should()
-        {
-            return new Conditions(_types, true);
-        }
+            => new Conditions(_types, true);
 
         /// <summary>
         /// Applies a negative set of conditions to the list of types.
         /// </summary>
         /// <returns></returns>
         public Conditions ShouldNot()
-        {
-            return new Conditions(_types, false);
-        }
+            => new Conditions(_types, false);
 
         /// <summary>
         /// Reads the assembly, ignoring a BadImageFormatException
@@ -320,14 +309,9 @@
         {
             try
             {
-                if (parameters == null)
-                {
-                    return AssemblyDefinition.ReadAssembly(path);
-                }
-                else
-                {
-                    return AssemblyDefinition.ReadAssembly(path, parameters);
-                }
+                return parameters == null
+                    ? AssemblyDefinition.ReadAssembly(path)
+                    : AssemblyDefinition.ReadAssembly(path, parameters);
             }
             catch (BadImageFormatException)
             {

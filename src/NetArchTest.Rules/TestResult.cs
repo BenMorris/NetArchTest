@@ -11,7 +11,9 @@
     /// </summary>
     public sealed class TestResult
     {
-        /// <summary> The list of types that failed the test. </summary>
+        /// <summary>
+        /// The list of types that failed the test.
+        /// </summary>
         private IReadOnlyList<TypeDefinition> _failingTypes;
 
         private TestResult()
@@ -40,7 +42,6 @@
         /// </remarks>
         public IReadOnlyList<string> FailingTypeNames
             => _failingTypes?.Select(t => t.FullName).ToList();
-
 
         /// <summary>
         /// Creates a new instance of <see cref="TestResult"/> indicating a successful test.
