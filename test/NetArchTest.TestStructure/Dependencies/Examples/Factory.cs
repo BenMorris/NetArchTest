@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NetArchTest.TestStructure.Dependencies.Examples
+﻿namespace NetArchTest.TestStructure.Dependencies.Examples
 {
     public static class Factory
     {

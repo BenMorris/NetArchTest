@@ -1,6 +1,5 @@
 ﻿namespace NetArchTest.TestStructure.Dependencies.Search.DependencyType
 {
-    using System.Threading.Tasks;
     using NetArchTest.TestStructure.Dependencies.Examples;
 
     /// <summary>
