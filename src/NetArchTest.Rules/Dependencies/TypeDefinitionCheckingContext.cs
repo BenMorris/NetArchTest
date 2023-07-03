@@ -10,13 +10,13 @@ namespace NetArchTest.Rules.Dependencies
     {
         private readonly TypeDefinition _typeToCheck;
         private readonly TypeDefinitionCheckingResult _result;        
-        private readonly bool _serachForDependencyInFieldConstant;
+        private readonly bool _searchForDependencyInFieldConstant;
 
-        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, TypeDefinitionCheckingResult.SearchType searchType, ISearchTree searchTree, bool serachForDependencyInFieldConstant = false)
+        public TypeDefinitionCheckingContext(TypeDefinition typeToCheck, TypeDefinitionCheckingResult.SearchType searchType, ISearchTree searchTree, bool searchForDependencyInFieldConstant = false)
         {
             _typeToCheck = typeToCheck;
             _result = new TypeDefinitionCheckingResult(searchType, searchTree);
-            _serachForDependencyInFieldConstant = serachForDependencyInFieldConstant;
+            _searchForDependencyInFieldConstant = searchForDependencyInFieldConstant;
         }
 
         public bool IsTypeFound()
@@ -105,7 +105,7 @@ namespace NetArchTest.Rules.Dependencies
                 CheckCustomAttributes(field);
                 CheckTypeReference(field.FieldType);
                 
-                if (_serachForDependencyInFieldConstant && field.HasConstant && field.FieldType.FullName == typeof(string).FullName)
+                if (_searchForDependencyInFieldConstant && field.HasConstant && field.FieldType.FullName == typeof(string).FullName)
                 {
                     _result.CheckDependency(field.Constant.ToString());
                 }
