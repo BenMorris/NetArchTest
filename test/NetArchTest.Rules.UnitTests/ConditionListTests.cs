@@ -143,8 +143,8 @@
             Assert.Contains<Type>(typeof(ClassA3), result.FailingTypes);
         }
 
-        [Fact(DisplayName = "If a condition succeeds then a list of failing types should be null.")]
-        public void GetResult_Success_ReturnNullFailedTypes()
+        [Fact(DisplayName = "If a condition succeeds then a list of failing types should be empty.")]
+        public void GetResult_Success_ReturnEmptyFailedTypes()
         {
             var result = Types
                 .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
@@ -161,7 +161,8 @@
                 .GetResult();
 
             Assert.True(result.IsSuccessful);
-            Assert.Null(result.FailingTypes);
+            Assert.NotNull(result.FailingTypes);
+            Assert.Empty(result.FailingTypes);
         }
     }
 }

@@ -50,7 +50,8 @@
         internal static TestResult Success()
             => new TestResult
             {
-                IsSuccessful = true
+                IsSuccessful = true,
+                _failingTypes = new List<TypeDefinition>(0),
             };
 
         /// <summary>
