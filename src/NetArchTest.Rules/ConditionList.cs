@@ -7,17 +7,24 @@
     using Mono.Cecil;
 
     /// <summary>
-    /// A set of conditions and types that have have conjunctions (i.e. "and", "or") and executors (i.e. Types(), GetResult()) applied to them.
+    /// A set of conditions and types that have have conjunctions (i.e. "and", "or")
+    /// and executors (i.e. Types(), GetResult()) applied to them.
     /// </summary>
     public sealed class ConditionList
     {
-        /// <summary> A list of types that conditions can be applied to. </summary>
+        /// <summary>
+        /// A list of types that conditions can be applied to.
+        /// </summary>
         private readonly IEnumerable<TypeDefinition> _types;
 
-        /// <summary> The sequence of conditions that is applied to the type of list. </summary>
+        /// <summary>
+        /// The sequence of conditions that is applied to the type of list.
+        /// </summary>
         private readonly FunctionSequence _sequence;
 
-        /// <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
+        /// <summary>
+        /// Determines the polarity of the selection, i.e. "should" or "should not".
+        /// </summary>
         private readonly bool _should;
 
         /// <summary>
@@ -36,21 +43,13 @@
         /// <returns>An indication of whether the conditions are true, along with a list of types failing the check if they are not.</returns>
         public TestResult GetResult()
         {
-            bool success;
-            IEnumerable<TypeDefinition> typeDefinitions;
+            var typeDefinitions = _sequence
+                .Execute(_types)
+                .ToList();
 
-            if (_should)
-            {
-                // All the classes should meet the condition
-                typeDefinitions = _sequence.Execute(_types);
-                success = (typeDefinitions.Count() == _types.Count());
-            }
-            else
-            {
-                // No classes should meet the condition
-                typeDefinitions = (_sequence.Execute(_types));
-                success = (!typeDefinitions.Any());
-            }
+            var success = _should
+                ? typeDefinitions.Count == _types.Count()
+                : !typeDefinitions.Any();
 
             if (success)
             {
@@ -68,18 +67,14 @@
         /// </summary>
         /// <returns>A list of types.</returns>
         public int Count()
-        {
-            return _sequence.Execute(_types).Count();
-        }
+            => _sequence.Execute(_types).Count();
 
         /// <summary>
         /// Returns the list of types that satisfy the conditions.
         /// </summary>
         /// <returns>A list of types.</returns>
         public IEnumerable<Type> GetTypes()
-        {
-            return _sequence.Execute(_types).Select(t => t.ToType());
-        }
+            => _sequence.Execute(_types).Select(t => t.ToType());
 
         /// <summary>
         /// Specifies that any subsequent condition should be treated as an "and" condition.
@@ -87,9 +82,7 @@
         /// <returns>An set of conditions that can be applied to a list of classes.</returns>
         /// <remarks>And() has higher priority than Or() and it is computed first.</remarks>
         public Conditions And()
-        {
-            return new Conditions(_types, _should, _sequence);
-        }
+            => new Conditions(_types, _should, _sequence);
 
         /// <summary>
         /// Specifies that any subsequent conditions should be treated as part of an "or" condition.

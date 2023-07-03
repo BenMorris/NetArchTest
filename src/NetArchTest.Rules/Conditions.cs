@@ -10,13 +10,19 @@
     /// </summary>
     public sealed class Conditions
     {
-        /// <summary> A list of types that conditions can be applied to. </summary>
+        /// <summary>
+        /// A list of types that conditions can be applied to.
+        /// </summary>
         private readonly IEnumerable<TypeDefinition> _types;
 
-        /// <summary> The sequence of conditions that is applied to the type of list. </summary>
+        /// <summary>
+        /// The sequence of conditions that is applied to the type of list.
+        /// </summary>
         private readonly FunctionSequence _sequence;
 
-        /// <summary> Determines the polarity of the selection, i.e. "should" or "should not". </summary>
+        /// <summary>
+        /// Determines the polarity of the selection, i.e. "should" or "should not".
+        /// </summary>
         private readonly bool _should;
 
         /// <summary>
@@ -176,7 +182,7 @@
         }
 
         /// <summary>
-        /// Selects types are decorated with a specific custom attribut.
+        /// Selects types are decorated with a specific custom attribute.
         /// </summary>
         /// <param name="attribute">The attribute to match against.</param>
         /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
@@ -322,7 +328,6 @@
             _sequence.AddFunctionCall(FunctionDelegates.BeGeneric, true, false);
             return new ConditionList(_types, _should, _sequence);
         }
-
 
         /// <summary>
         /// Selects types that are interfaces.
@@ -668,6 +673,7 @@
             _sequence.AddFunctionCall(FunctionDelegates.HaveDependencyOnAny, new List<string> { dependency }, false);
             return new ConditionList(_types, _should, _sequence);
         }
+        
         /// <summary>
         /// Selects types that do not have a dependency on any of the particular types.
         /// </summary>
