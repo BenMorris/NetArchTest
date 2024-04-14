@@ -734,5 +734,25 @@
             _sequence.AddFunctionCall(FunctionDelegates.MeetCustomRule, rule, true);
             return new PredicateList(_types, _sequence);
         }
+
+        /// <summary>
+        /// Selects types that are enumerations.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreEnums()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeEnum, true, true);
+            return new PredicateList(_types, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not enumerations.
+        /// </summary>
+        /// <returns>An updated set of predicates that can be applied to a list of types.</returns>
+        public PredicateList AreNotEnums()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeEnum, true, false);
+            return new PredicateList(_types, _sequence);
+        }
     }
 }

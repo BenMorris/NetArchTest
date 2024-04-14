@@ -29,6 +29,7 @@ namespace NetArchTest.Rules.UnitTests
     using Xunit;
     using NetArchTest.TestStructure.Nullable;
     using NetArchTest.TestStructure.Dependencies.Examples;
+    using NetArchTest.TestStructure.Enumerations;
 
     public class PredicateTests
     {
@@ -1095,6 +1096,35 @@ namespace NetArchTest.Rules.UnitTests
                 .GetResult();
             
             Assert.True(customRule.TimesTimesCalled == 1);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are enumerations.")]
+        public void AreEnums_MatchesFound_EnumsSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Enumerations")
+                .And()
+                .AreEnums().GetTypes();
+
+            Assert.Equal(2, result.Count()); // Two types found
+            Assert.Contains<Type>(typeof(ExampleEnum), result);
+            Assert.Contains<Type>(typeof(FlagEnum), result);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are not enumerations.")]
+        public void AreNotEnums_MatchesFound_EnumsSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Enumerations")
+                .And()
+                .AreNotEnums().GetTypes();
+
+            Assert.Single(result); // One type found
+            Assert.Contains<Type>(typeof(NoEnum), result);
         }
     }
 }

@@ -322,5 +322,14 @@ namespace NetArchTest.Rules
             {
                 return input.Where(t => rule.MeetsRule(t) == condition);
             };
+
+        /// <summary>
+        /// Function for finding enumerations.
+        /// </summary>
+        internal static readonly FunctionDelegate<bool> BeEnum =
+            delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+            {
+                return input.Where(c => c.IsEnum == condition);
+            };
     }
 }

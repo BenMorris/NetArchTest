@@ -984,5 +984,35 @@ namespace NetArchTest.Rules.UnitTests
             // The custom rule was executed at least once
             Assert.True(rule.TestMethodCalled);
         }
+
+        [Fact(DisplayName = "Types can be selected if they are enumerations.")]
+        public void AreEnums_MatchesFound_EnumsSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Enumerations")
+                .And()
+                .DoNotHaveName("NoEnum")
+                .Should()
+                .BeEnums().GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types can be selected if they are not enumerations.")]
+        public void AreNotEnums_MatchesFound_EnumsSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassA1)))
+                .That()
+                .ResideInNamespace("NetArchTest.TestStructure.Enumerations")
+                .And()
+                .HaveName("NoEnum")
+                .Should()
+                .NotBeEnums().GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
     }
 }

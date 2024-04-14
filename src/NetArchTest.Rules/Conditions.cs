@@ -717,5 +717,25 @@
             _sequence.AddFunctionCall(FunctionDelegates.MeetCustomRule, rule, true);
             return new ConditionList(_types, _should, _sequence);
         }
+
+        /// <summary>
+        /// Selects types that are enumerations.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList BeEnums()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeEnum, true, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+
+        /// <summary>
+        /// Selects types that are not enumerations.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotBeEnums()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.BeEnum, true, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
     }
 }
