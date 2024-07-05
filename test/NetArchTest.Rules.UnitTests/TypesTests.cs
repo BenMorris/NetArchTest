@@ -115,6 +115,21 @@ namespace NetArchTest.Rules.UnitTests
             Assert.Equal(expected, result.Count());
         }
 
+        [Fact(DisplayName = "A types collection can be created from a list of files.")]
+        public void FromFiles_TypesReturned()
+        {
+            // Arrange
+            var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var filenames = Directory.GetFiles(dir, "NetArchTest*.dll");
+
+            // Act
+            var result = Types.FromFiles(filenames).That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
+
+            // Assert
+            Assert.Equal(expected, result.Count());
+        }
+
         [Fact(DisplayName = "When loading a type a BadImageFormatException will be caught and an empty list will be returned.")]
         public void FromFile_BadImage_CaughtAndEmptyListReturned()
         {
