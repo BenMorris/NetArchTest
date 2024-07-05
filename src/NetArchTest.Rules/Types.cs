@@ -218,7 +218,7 @@
                     throw new FileNotFoundException($"Could not find the assembly file {path}.");
                 }
 
-                var assembly = ReadAssemblyDefinition(file);
+                var assembly = ReadAssemblyDefinition(path);
 
                 if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
                 {

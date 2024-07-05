@@ -87,26 +87,32 @@ namespace NetArchTest.Rules.UnitTests
             Assert.Contains<Type>(typeof(SomeIdentity), result);
         }
 
-        [Fact(DisplayName = "A types collection can be created from a filename.")]
-        public void FromFile_TypesReturned()
+        [Theory(DisplayName = "A types collection can be created from a filename.")]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void FromFile_TypesReturned(bool rootedDirectory)
         {
             // Arrange
             var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
+            var filename = "NetArchTest.TestStructure.dll";
+            var path = rootedDirectory ? Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename) : filename;
 
             // Act
-            var result = Types.FromFile("NetArchTest.TestStructure.dll").That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
+            var result = Types.FromFile(path).That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
 
             // Assert
             Assert.Equal(expected, result.Count());
             Assert.All(result, r => r.FullName.StartsWith("NetArchTest.TestStructure"));
         }
 
-        [Fact(DisplayName = "A types collection can be created from a path.")]
-        public void FromPath_TypesReturned()
+        [Theory(DisplayName = "A types collection can be created from a path.")]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void FromPath_TypesReturned(bool rootedDirectory)
         {
             // Arrange
             var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var dir = rootedDirectory ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) : ".";
 
             // Act
             var result = Types.FromPath(dir).That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
@@ -115,13 +121,19 @@ namespace NetArchTest.Rules.UnitTests
             Assert.Equal(expected, result.Count());
         }
 
-        [Fact(DisplayName = "A types collection can be created from a list of files.")]
-        public void FromFiles_TypesReturned()
+        [Theory(DisplayName = "A types collection can be created from a list of files.")]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void FromFiles_TypesReturned(bool rootedDirectories)
         {
             // Arrange
             var expected = Types.InCurrentDomain().That().ResideInNamespace("NetArchTest.TestStructure").GetTypeDefinitions().Count();
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filenames = Directory.GetFiles(dir, "NetArchTest*.dll");
+            if (!rootedDirectories)
+            {
+                filenames = filenames.Select(Path.GetFileName).ToArray();
+            }
 
             // Act
             var result = Types.FromFiles(filenames).That().ResideInNamespace("NetArchTest.TestStructure").GetTypes();
