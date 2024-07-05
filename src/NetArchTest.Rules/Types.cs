@@ -83,13 +83,13 @@
                 {
                     continue;
                 }
-                
+
                 AssemblyDefinition assemblyDef;
-                
+
                 if (directories.Any())
                 {
                     var defaultAssemblyResolver = new DefaultAssemblyResolver();
-                    
+
                     foreach (var dir in directories)
                     {
                         defaultAssemblyResolver.AddSearchDirectory(dir);
@@ -99,7 +99,7 @@
                         new ReaderParameters { AssemblyResolver = defaultAssemblyResolver });
                 }
                 else
-                { 
+                {
                     assemblyDef = ReadAssemblyDefinition(assembly.Location);
                 }
 
@@ -135,16 +135,16 @@
                 {
                     continue;
                 }
-                
+
                 var assemblyDef = ReadAssemblyDefinition(assembly.Location);
 
                 if (assemblyDef == null)
                 {
                     continue;
                 }
-                
+
                 // Read all the types in the assembly 
-                var matches = 
+                var matches =
                     (assemblyDef.Modules
                         .SelectMany(t => t.Types)
                         .Where(t => t.Namespace != null && t.Namespace.StartsWith(name, StringComparison.InvariantCultureIgnoreCase)))
@@ -165,7 +165,7 @@
         /// </summary>
         /// <param name="filename">The filename of the module. This is case insensitive.</param>
         /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
-        /// <remarks>Assumes that the module is in the same directory as the executing assembly.</remarks>
+        /// <remarks>Assumes that the module is in the same directory as the executing assembly, unless absolute path is provided.</remarks>
         public static Types FromFile(string filename)
         {
             if (string.IsNullOrEmpty(filename))
@@ -174,21 +174,60 @@
             }
 
             // Load the assembly from the current directory
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) 
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                       ?? string.Empty;
-            
-            var path = Path.Combine(dir, filename);
-            
+
+            var path = Path.IsPathRooted(filename) ?
+                filename :
+                Path.Combine(dir, filename);
+
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException($"Could not find the assembly file {path}.");
             }
-            
+
             var assemblyDef = ReadAssemblyDefinition(path);
 
             return assemblyDef != null
                 ? new Types(GetAllTypes(assemblyDef.Modules.SelectMany(t => t.Types)))
                 : new Types(new List<TypeDefinition>());
+        }
+
+        /// <summary>
+        /// Creates a list of all the types in a list of particular module files.
+        /// </summary>
+        /// <param name="filenames">The list of filenames of the modules. This is case insensitive.</param>
+        /// <returns>A list of types that can have predicates and conditions applied to it.</returns>
+        /// <remarks>Assumes that the modules are in the same directory as the executing assembly, unless absolute paths are provided.</remarks>
+        public static Types FromFiles(IEnumerable<string> filenames)
+        {
+            var types = new List<TypeDefinition>();
+
+            // Load the assemblies from the current directory
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                      ?? string.Empty;
+
+            foreach (var file in filenames)
+            {
+                var path = Path.IsPathRooted(file) ?
+                    file :
+                    Path.Combine(dir, file);
+
+                if (!File.Exists(path))
+                {
+                    throw new FileNotFoundException($"Could not find the assembly file {path}.");
+                }
+
+                var assembly = ReadAssemblyDefinition(file);
+
+                if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
+                {
+                    types.AddRange(assembly.Modules.SelectMany(t => t.Types));
+                }
+            }
+
+            var list = GetAllTypes(types);
+            return new Types(list);
         }
 
         /// <summary>
@@ -218,19 +257,19 @@
             if (directories.Any())
             {
                 var defaultAssemblyResolver = new DefaultAssemblyResolver();
-                    
+
                 foreach (var dir in directories)
                 {
                     defaultAssemblyResolver.AddSearchDirectory(dir);
                 }
-                    
+
                 readerParams.AssemblyResolver = defaultAssemblyResolver;
             }
 
             foreach (var file in files)
             {
                 var assembly = ReadAssemblyDefinition(file, readerParams);
-                 
+
                 if (assembly != null && !_exclusionTree.GetAllMatchingNames(assembly.FullName).Any())
                 {
                     types.AddRange(assembly.Modules.SelectMany(t => t.Types));
@@ -249,15 +288,15 @@
         private static IEnumerable<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> types)
         {
             var output = new List<TypeDefinition>(
-                types.Where(x => !_exclusionTree.GetAllMatchingNames(x.FullName).Any()));          
+                types.Where(x => !_exclusionTree.GetAllMatchingNames(x.FullName).Any()));
 
             for (var i = 0; i < output.Count; ++i)
             {
                 var type = output[i];
-                
+
                 output.AddRange(type.NestedTypes
-                    .Where(t => 
-                        t.CustomAttributes.All(x => 
+                    .Where(t =>
+                        t.CustomAttributes.All(x =>
                             x?.AttributeType?.FullName != typeof(CompilerGeneratedAttribute).FullName)));
             }
 
