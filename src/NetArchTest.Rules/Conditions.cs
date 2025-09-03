@@ -717,5 +717,25 @@
             _sequence.AddFunctionCall(FunctionDelegates.MeetCustomRule, rule, true);
             return new ConditionList(_types, _should, _sequence);
         }
+        
+        /// <summary>
+        /// Selects types that have a private parameterless constructor.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList HavePrivateParameterlessConstructor()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HavePrivateParameterlessConstructor, true, true);
+            return new ConditionList(_types, _should, _sequence);
+        }
+        
+        /// <summary>
+        /// Selects types that do not have a private parameterless constructor.
+        /// </summary>
+        /// <returns>An updated set of conditions that can be applied to a list of types.</returns>
+        public ConditionList NotHavePrivateParameterlessConstructor()
+        {
+            _sequence.AddFunctionCall(FunctionDelegates.HavePrivateParameterlessConstructor, true, false);
+            return new ConditionList(_types, _should, _sequence);
+        }
     }
 }

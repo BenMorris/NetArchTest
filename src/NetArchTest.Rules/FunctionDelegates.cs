@@ -6,8 +6,8 @@ namespace NetArchTest.Rules
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using NetArchTest.Rules.Dependencies;
-    using NetArchTest.Rules.Extensions;
+    using Dependencies;
+    using Extensions;
     using Mono.Cecil;
 
     /// <summary>
@@ -322,5 +322,26 @@ namespace NetArchTest.Rules
             {
                 return input.Where(t => rule.MeetsRule(t) == condition);
             };
+
+        /// <summary>
+        /// Function for finding types with private and parameterless constructor
+        /// </summary>
+        internal static readonly FunctionDelegate<bool> HavePrivateParameterlessConstructor =
+        delegate (IEnumerable<TypeDefinition> input, bool dummy, bool condition)
+        {
+            return input.Where(typeDefinition =>
+            {
+                if (typeDefinition == null || !typeDefinition.IsClass || typeDefinition.IsAbstract)
+                    return false;
+        
+                var constructors = typeDefinition.Methods.Where(m => m.IsConstructor && !m.IsStatic);
+                var hasPrivateParameterlessConstructor =  constructors.Any(c => c.IsPrivate && !c.HasParameters);
+        
+                // Return types that match the condition when condition=true, 
+                // or types that don't match when condition=false
+                return condition ? hasPrivateParameterlessConstructor : !hasPrivateParameterlessConstructor;
+            });
+        };
+
     }
 }

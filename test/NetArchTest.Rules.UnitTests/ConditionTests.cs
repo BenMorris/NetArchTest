@@ -1,4 +1,5 @@
 ﻿using NetArchTest.TestStructure.Classes;
+using NetArchTest.TestStructure.Constructors;
 
 namespace NetArchTest.Rules.UnitTests
 {
@@ -983,6 +984,64 @@ namespace NetArchTest.Rules.UnitTests
 
             // The custom rule was executed at least once
             Assert.True(rule.TestMethodCalled);
+        }
+        
+        [Fact(DisplayName = "Types with private parameterless constructors are selected.")]
+        public void HavePrivateParameterlessConstructor_MatchFound_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassWithPrivateParameterlessConstructor)))
+                .That()
+                .HaveName(nameof(ClassWithPrivateParameterlessConstructor))
+                .Should()
+                .HavePrivateParameterlessConstructor()
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types without private parameterless constructors are not selected.")]
+        public void HavePrivateParameterlessConstructor_NoMatch_ClassNotSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassWithoutPrivateParameterlessConstructor)))
+                .That()
+                .HaveName(nameof(ClassWithoutPrivateParameterlessConstructor))
+                .Should()
+                .HavePrivateParameterlessConstructor()
+                .GetResult();
+
+            Assert.False(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Types without private parameterless constructors can be selected using negation.")]
+        public void NotHavePrivateParameterlessConstructor_NoMatch_ClassSelected()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassWithoutPrivateParameterlessConstructor)))
+                .That()
+                .HaveName(nameof(ClassWithoutPrivateParameterlessConstructor))
+                .Should()
+                .NotHavePrivateParameterlessConstructor()
+                .GetResult();
+
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact(DisplayName = "Multiple classes can be tested for private parameterless constructors.")]
+        public void HavePrivateParameterlessConstructor_MultipleClasses_CorrectSelection()
+        {
+            var result = Types
+                .InAssembly(Assembly.GetAssembly(typeof(ClassWithPrivateParameterlessConstructor)))
+                .That()
+                .ResideInNamespace(typeof(ClassWithPrivateParameterlessConstructor).Namespace)
+                .Should()
+                .HavePrivateParameterlessConstructor()
+                .GetResult();
+
+            // Only ClassWithPrivateParameterlessConstructor should match
+            Assert.Single(result.FailingTypes.Where(t => t.Name == nameof(ClassWithoutPrivateParameterlessConstructor)));
+            Assert.Single(result.FailingTypes.Where(t => t.Name == nameof(ClassWithOnlyParameterizedConstructors)));
         }
     }
 }
